@@ -1,0 +1,163 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Name>HemaVideoDB</Name>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectVersion>4.1</ProjectVersion>
+    <ProjectGuid>{36380d86-5e1f-49f2-ae5f-7500415bd98d}</ProjectGuid>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.SqlAzureV12DatabaseSchemaProvider</DSP>
+    <OutputType>Database</OutputType>
+    <RootPath>
+    </RootPath>
+    <RootNamespace>HemaVideoDB</RootNamespace>
+    <AssemblyName>HemaVideoDB</AssemblyName>
+    <ModelCollation>1033,CI</ModelCollation>
+    <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
+    <DeployToDatabase>True</DeployToDatabase>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetLanguage>CS</TargetLanguage>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <SqlServerVerification>False</SqlServerVerification>
+    <IncludeCompositeObjects>True</IncludeCompositeObjects>
+    <TargetDatabaseSet>True</TargetDatabaseSet>
+    <DefaultCollation>SQL_Latin1_General_CP1_CI_AS</DefaultCollation>
+    <DefaultFilegroup>PRIMARY</DefaultFilegroup>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
+    <!-- Default to the v11.0 targets path if the targets file for the current VS version is not found -->
+    <SSDTExists Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets')">True</SSDTExists>
+    <VisualStudioVersion Condition="'$(SSDTExists)' == ''">11.0</VisualStudioVersion>
+  </PropertyGroup>
+  <Import Condition="'$(SQLDBExtensionsRefPath)' != ''" Project="$(SQLDBExtensionsRefPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <ItemGroup>
+    <Folder Include="Properties" />
+    <Folder Include="Sources\" />
+    <Folder Include="dbo\" />
+    <Folder Include="dbo\Tables\" />
+    <Folder Include="Sources\Tables" />
+    <Folder Include="Data" />
+    <Folder Include="Interpretations" />
+    <Folder Include="Interpretations\Tables" />
+    <Folder Include="Sources\Views" />
+    <Folder Include="Interpretations\Views" />
+    <Folder Include="Tags" />
+    <Folder Include="Tags\Tables" />
+    <Folder Include="Data\One Time" />
+    <Folder Include="Sources\Programability" />
+    <Folder Include="dbo\Views" />
+    <Folder Include="Security" />
+    <Folder Include="Translations" />
+    <Folder Include="Translations\Tables" />
+    <Folder Include="Translations\Views" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Localhost.publish.xml" />
+    <None Include="HemaVideoDB.publish.xml" />
+    <None Include="Data\Weapon.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="dbo\Tables\AspNetRoles.sql" />
+    <Build Include="dbo\Tables\AspNetUserTokens.sql" />
+    <Build Include="dbo\Tables\AspNetUsers.sql" />
+    <Build Include="dbo\Tables\AspNetRoleClaims.sql" />
+    <Build Include="dbo\Tables\AspNetUserClaims.sql" />
+    <Build Include="dbo\Tables\AspNetUserLogins.sql" />
+    <Build Include="dbo\Tables\AspNetUserRoles.sql" />
+    <Build Include="Sources\Tables\Author.sql" />
+    <Build Include="Sources\Tables\Book.sql" />
+    <Build Include="Sources\Tables\Section.sql" />
+    <Build Include="Sources\Tables\BookAuthor.sql" />
+    <Build Include="Interpretations\Interpretations.sql" />
+    <Build Include="Interpretations\Tables\Video.sql" />
+    <Build Include="Sources\Views\BookAuthorDetail.sql" />
+    <Build Include="Interpretations\Views\VideoDetail.sql" />
+    <Build Include="Sources\Views\SectionDetail.sql" />
+    <Build Include="Interpretations\Tables\VideoService.sql" />
+    <Build Include="Sources\Tables\AlternateBookName.sql" />
+    <None Include="Data\Test.sql" />
+    <Build Include="Sources\Views\BookWeaponDetail.sql" />
+    <Build Include="Sources\Views\SubsectionsFor.sql" />
+    <Build Include="Sources\Views\BookWeaponDetailFlat.sql" />
+    <Build Include="Sources\Tables\SectionWeaponMap.sql" />
+    <Build Include="Sources\Sources.sql" />
+    <Build Include="Interpretations\Tables\Play.sql" />
+    <Build Include="Tags\Tags.sql" />
+    <Build Include="Tags\Tables\Weapon.sql" />
+    <None Include="Data\One Time\Meyer.sql" />
+    <None Include="Data\One Time\Díaz de Viedma.sql" />
+    <None Include="Data\One Time\Figueyredo.sql" />
+    <None Include="Data\One Time\I.33.sql" />
+    <None Include="Data\One Time\Manciolino.sql" />
+    <Build Include="Tags\Tables\Guard.sql" />
+    <Build Include="Tags\Tables\Technique.sql" />
+    <Build Include="Sources\Programability\AddWeaponsForSection.sql" />
+    <Build Include="Tags\Tables\GuardModifier.sql" />
+    <Build Include="Tags\Tables\Measure.sql" />
+    <Build Include="Tags\Tables\Target.sql" />
+    <Build Include="Interpretations\Tables\PlayStep.sql" />
+    <Build Include="Tags\Tables\Footwork.sql" />
+    <Build Include="Sources\Views\SectionWeaponMapDetail.sql" />
+    <None Include="Data\One Time\dall'Agocchie.sql" />
+    <None Include="Data\One Time\Fabris.sql" />
+    <Build Include="dbo\Tables\BookEditor.sql" />
+    <Build Include="dbo\Views\BookEditorDetail.sql" />
+    <Build Include="Interpretations\Views\PlayDetail.sql" />
+    <Build Include="Interpretations\Views\PlayStepDetail.sql" />
+    <Build Include="dbo\Views\SectionEditor.sql" />
+    <Build Include="dbo\Views\VideoEditor.sql" />
+    <Build Include="dbo\Views\PlayEditor.sql" />
+    <Build Include="Security\HemaWeb.sql" />
+    <Build Include="dbo\dbo.sql" />
+    <Build Include="Interpretations\Views\TechniquesByBook.sql" />
+    <Build Include="Interpretations\Views\TargetsByBook.sql" />
+    <Build Include="Interpretations\Views\FootworkByBook.sql" />
+    <Build Include="Interpretations\Views\GuardsByBook.sql" />
+    <None Include="Data\One Time\Marozzo.sql" />
+    <Build Include="Interpretations\Views\MeasureByBook.sql" />
+    <None Include="Data\One Time\Fiore.sql" />
+    <None Include="Data\One Time\Technique.sql" />
+    <None Include="Data\One Time\Footwork.sql" />
+    <None Include="Data\One Time\Guard.sql" />
+    <None Include="Data\One Time\GuardModifier.sql" />
+    <None Include="Data\One Time\Measure.sql" />
+    <None Include="Data\One Time\Target.sql" />
+    <Build Include="Translations\Translations.sql" />
+    <Build Include="Translations\Tables\Translator.sql" />
+    <Build Include="Translations\Tables\SectionTranslation.sql" />
+    <Build Include="Translations\Tables\Translation.sql" />
+    <Build Include="Translations\Views\SectionTranslationDetail.sql" />
+    <Build Include="Translations\Views\TranslationDetail.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <PostDeploy Include="Script.PostDeployment.sql" />
+  </ItemGroup>
+</Project>
