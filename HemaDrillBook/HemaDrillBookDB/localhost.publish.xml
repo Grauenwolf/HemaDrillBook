@@ -9,4 +9,9 @@
     <BlockOnPossibleDataLoss>True</BlockOnPossibleDataLoss>
     <DropObjectsNotInSource>True</DropObjectsNotInSource>
   </PropertyGroup>
+  <ItemGroup>
+    <SqlCmdVariable Include="OneTimeLoad">
+      <Value>1</Value>
+    </SqlCmdVariable>
+  </ItemGroup>
 </Project>

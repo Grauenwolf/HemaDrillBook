@@ -121,6 +121,9 @@
     <Folder Include="Accounts\Tables" />
     <Folder Include="Security\" />
     <Folder Include="Data" />
+    <Folder Include="Tags" />
+    <Folder Include="Tags\Tables" />
+    <Folder Include="Data\OneTime" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Accounts\Tables\AspNetRoles.sql">
@@ -154,8 +157,32 @@
     <Build Include="Security\RoleMemberships.sql" />
     <Build Include="Security\HemaWeb.sql" />
     <Build Include="Accounts\Accounts.sql" />
+    <Build Include="Tags\Tables\Footwork.sql" />
+    <Build Include="Tags\Tables\Guard.sql" />
+    <Build Include="Tags\Tables\GuardModifier.sql" />
+    <Build Include="Tags\Tables\Measure.sql" />
+    <Build Include="Tags\Tables\Target.sql" />
+    <Build Include="Tags\Tables\Technique.sql" />
+    <Build Include="Tags\Tables\Weapon.sql" />
+    <Build Include="Tags\Tags.sql" />
+    <None Include="Data\OneTime\Tags.Footwork.sql" />
+    <None Include="Data\OneTime\Tags.Guard.sql" />
+    <None Include="Data\OneTime\Tags.GuardModifier.sql" />
+    <None Include="Data\OneTime\Tags.Measure.sql" />
+    <None Include="Data\OneTime\Tags.Target.sql" />
+    <None Include="Data\OneTime\Tags.Technique.sql" />
+    <None Include="Data\OneTime\Tags.Weapon.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="localhost.publish.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <SqlCmdVariable Include="OneTimeLoad">
+      <DefaultValue>0</DefaultValue>
+      <Value>$(SqlCmdVar__1)</Value>
+    </SqlCmdVariable>
+  </ItemGroup>
+  <ItemGroup>
+    <PostDeploy Include="Script.PostDeployment.sql" />
   </ItemGroup>
 </Project>
