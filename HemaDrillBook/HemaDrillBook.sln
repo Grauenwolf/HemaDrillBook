@@ -9,13 +9,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HemaDrillBook.Tests", "Hema
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "HemaVideoDB", "HemaVideoDB\HemaVideoDB.sqlproj", "{36380D86-5E1F-49F2-AE5F-7500415BD98D}"
 EndProject
-Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "HemaDrillBookDB", "HemaDrillBookDB\HemaDrillBookDB.sqlproj", "{965582EA-6B0A-48CD-B052-4E7A74FA5C33}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HemaDrillBook", "HemaDrillBook\HemaDrillBook.csproj", "{E446BDA2-EA10-47DD-BDCA-188AC7D4D3C6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tortuga.Chain.AspNetCore.Identity", "Tortuga.Chain.AspNetCore.Identity\Tortuga.Chain.AspNetCore.Identity.csproj", "{A2FA1AB1-B663-4361-AE2D-D7D939444FED}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tortuga.Chain.AspNetCore.Identity.Tests", "Tortuga.Chain.AspNetCore.Identity.Tests\Tortuga.Chain.AspNetCore.Identity.Tests.csproj", "{3CE8532D-AD86-4AC7-A238-5F92949F8545}"
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "HemaDrillBookDB", "HemaDrillBookDB\HemaDrillBookDB.sqlproj", "{965582EA-6B0A-48CD-B052-4E7A74FA5C33}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,12 +37,6 @@ Global
 		{36380D86-5E1F-49F2-AE5F-7500415BD98D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{36380D86-5E1F-49F2-AE5F-7500415BD98D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{36380D86-5E1F-49F2-AE5F-7500415BD98D}.Release|Any CPU.Deploy.0 = Release|Any CPU
-		{965582EA-6B0A-48CD-B052-4E7A74FA5C33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{965582EA-6B0A-48CD-B052-4E7A74FA5C33}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{965582EA-6B0A-48CD-B052-4E7A74FA5C33}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{965582EA-6B0A-48CD-B052-4E7A74FA5C33}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{965582EA-6B0A-48CD-B052-4E7A74FA5C33}.Release|Any CPU.Build.0 = Release|Any CPU
-		{965582EA-6B0A-48CD-B052-4E7A74FA5C33}.Release|Any CPU.Deploy.0 = Release|Any CPU
 		{E446BDA2-EA10-47DD-BDCA-188AC7D4D3C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E446BDA2-EA10-47DD-BDCA-188AC7D4D3C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E446BDA2-EA10-47DD-BDCA-188AC7D4D3C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -55,6 +49,12 @@ Global
 		{3CE8532D-AD86-4AC7-A238-5F92949F8545}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3CE8532D-AD86-4AC7-A238-5F92949F8545}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3CE8532D-AD86-4AC7-A238-5F92949F8545}.Release|Any CPU.Build.0 = Release|Any CPU
+		{965582EA-6B0A-48CD-B052-4E7A74FA5C33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{965582EA-6B0A-48CD-B052-4E7A74FA5C33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{965582EA-6B0A-48CD-B052-4E7A74FA5C33}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{965582EA-6B0A-48CD-B052-4E7A74FA5C33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{965582EA-6B0A-48CD-B052-4E7A74FA5C33}.Release|Any CPU.Build.0 = Release|Any CPU
+		{965582EA-6B0A-48CD-B052-4E7A74FA5C33}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

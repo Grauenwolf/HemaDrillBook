@@ -1,0 +1,20 @@
+﻿CREATE TABLE Accounts.AspNetRoles
+(
+    Id NVARCHAR(450) NOT NULL,
+    Name NVARCHAR(256) NULL,
+    NormalizedName NVARCHAR(256) NULL,
+    ConcurrencyStamp NVARCHAR(MAX) NULL,
+    CONSTRAINT PK_AspNetRoles
+        PRIMARY KEY CLUSTERED (Id ASC),
+    SysStartTime DATETIME2 GENERATED ALWAYS AS ROW START NOT NULL,
+    SysEndTime DATETIME2 GENERATED ALWAYS AS ROW END NOT NULL,
+    PERIOD FOR SYSTEM_TIME(SysStartTime, SysEndTime)
+)
+WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = Accounts.AspNetRoles_History));
+
+
+GO
+CREATE UNIQUE NONCLUSTERED INDEX RoleNameIndex
+ON Accounts.AspNetRoles (NormalizedName ASC)
+WHERE (NormalizedName IS NOT NULL);
+

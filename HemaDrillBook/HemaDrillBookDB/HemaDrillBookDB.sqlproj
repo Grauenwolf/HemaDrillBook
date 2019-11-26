@@ -117,45 +117,45 @@
   <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
   <ItemGroup>
     <Folder Include="Properties" />
-    <Folder Include="dbo\" />
-    <Folder Include="dbo\Tables\" />
+    <Folder Include="Accounts" />
+    <Folder Include="Accounts\Tables" />
     <Folder Include="Security\" />
+    <Folder Include="Data" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="dbo\Tables\__EFMigrationsHistory.sql">
+    <Build Include="Accounts\Tables\AspNetRoles.sql">
       <AnsiNulls>On</AnsiNulls>
       <QuotedIdentifier>On</QuotedIdentifier>
     </Build>
-    <Build Include="dbo\Tables\AspNetRoles.sql">
+    <Build Include="Accounts\Tables\AspNetUsers.sql">
       <AnsiNulls>On</AnsiNulls>
       <QuotedIdentifier>On</QuotedIdentifier>
     </Build>
-    <Build Include="dbo\Tables\AspNetUsers.sql">
+    <Build Include="Accounts\Tables\AspNetRoleClaims.sql">
       <AnsiNulls>On</AnsiNulls>
       <QuotedIdentifier>On</QuotedIdentifier>
     </Build>
-    <Build Include="dbo\Tables\AspNetRoleClaims.sql">
+    <Build Include="Accounts\Tables\AspNetUserClaims.sql">
       <AnsiNulls>On</AnsiNulls>
       <QuotedIdentifier>On</QuotedIdentifier>
     </Build>
-    <Build Include="dbo\Tables\AspNetUserClaims.sql">
+    <Build Include="Accounts\Tables\AspNetUserLogins.sql">
       <AnsiNulls>On</AnsiNulls>
       <QuotedIdentifier>On</QuotedIdentifier>
     </Build>
-    <Build Include="dbo\Tables\AspNetUserLogins.sql">
+    <Build Include="Accounts\Tables\AspNetUserRoles.sql">
       <AnsiNulls>On</AnsiNulls>
       <QuotedIdentifier>On</QuotedIdentifier>
     </Build>
-    <Build Include="dbo\Tables\AspNetUserRoles.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
-    <Build Include="dbo\Tables\AspNetUserTokens.sql">
+    <Build Include="Accounts\Tables\AspNetUserTokens.sql">
       <AnsiNulls>On</AnsiNulls>
       <QuotedIdentifier>On</QuotedIdentifier>
     </Build>
     <Build Include="Security\RoleMemberships.sql" />
     <Build Include="Security\HemaWeb.sql" />
-    <Build Include="dbo\dbo.sql" />
+    <Build Include="Accounts\Accounts.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="localhost.publish.xml" />
   </ItemGroup>
 </Project>

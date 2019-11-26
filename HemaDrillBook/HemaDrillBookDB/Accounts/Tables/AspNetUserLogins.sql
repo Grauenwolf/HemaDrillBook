@@ -1,4 +1,4 @@
-﻿CREATE TABLE dbo.AspNetUserLogins
+﻿CREATE TABLE Accounts.AspNetUserLogins
 (
     LoginProvider NVARCHAR(128) NOT NULL,
     ProviderKey NVARCHAR(128) NOT NULL,
@@ -11,11 +11,16 @@
                               ),
     CONSTRAINT FK_AspNetUserLogins_AspNetUsers_UserId
         FOREIGN KEY (UserId)
-        REFERENCES dbo.AspNetUsers (Id) ON DELETE CASCADE
-);
+        REFERENCES Accounts.AspNetUsers (Id) ON DELETE CASCADE,
+    SysStartTime DATETIME2 GENERATED ALWAYS AS ROW START NOT NULL,
+    SysEndTime DATETIME2 GENERATED ALWAYS AS ROW END NOT NULL,
+    PERIOD FOR SYSTEM_TIME(SysStartTime, SysEndTime)
+)
+WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = Accounts.AspNetUserLogins_History));
+
 
 
 GO
 CREATE NONCLUSTERED INDEX IX_AspNetUserLogins_UserId
-ON dbo.AspNetUserLogins (UserId ASC);
+ON Accounts.AspNetUserLogins (UserId ASC);
 

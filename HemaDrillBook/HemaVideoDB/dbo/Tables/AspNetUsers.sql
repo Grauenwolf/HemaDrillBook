@@ -16,7 +16,7 @@
     SecurityStamp NVARCHAR(MAX) NULL,
     TwoFactorEnabled BIT NOT NULL,
     UserName NVARCHAR(256) NULL,
-    DisplayName NVARCHAR(50) NOT NULL,
+    DisplayName NVARCHAR(50) NULL,
     CONSTRAINT PK_AspNetUsers
         PRIMARY KEY CLUSTERED (UserKey),
     CONSTRAINT UX_AspNetUsers_Id
@@ -37,3 +37,13 @@ GO
 CREATE UNIQUE NONCLUSTERED INDEX UserNameIndex
 ON dbo.AspNetUsers (NormalizedUserName ASC);
 
+
+GO
+EXEC sp_addextendedproperty @name = N'MS_Description',
+    @value = N'If not provided, the user cannot share their content.',
+    @level0type = N'SCHEMA',
+    @level0name = N'dbo',
+    @level1type = N'TABLE',
+    @level1name = N'AspNetUsers',
+    @level2type = N'COLUMN',
+    @level2name = N'DisplayName'
