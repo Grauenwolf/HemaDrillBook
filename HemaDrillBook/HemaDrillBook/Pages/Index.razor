@@ -1,5 +1,16 @@
 ﻿@page "/"
+@inherits EngineBase
 
-<h1>Hello, world!</h1>
+@if (User != null)
+{
+    <h2>
+        Hello @(string.IsNullOrEmpty(User.DisplayName) ? User.UserName : User.DisplayName)!
+    </h2>}
+else
+{
+    <h2>Hello Fencers!</h2>
+}
 
-Welcome to your new app.
+<p>Welcome to the HEMA Drill Book.</p>
+
+<p> If you don't see the manual you're looking for, considering volunteering. Open a ticket on <a href="https://github.com/Grauenwolf/HemaDrillBook/issues" target="_blank">GitHub</a> with the name of the book you want to add.</p>

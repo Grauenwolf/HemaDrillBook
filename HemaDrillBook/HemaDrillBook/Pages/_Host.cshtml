@@ -20,3 +20,17 @@
     <script src="_framework/blazor.server.js"></script>
 </body>
 </html>
+
+<script>
+    setTitle = (title) => {
+        if (title === null)
+            document.title = "HEMA Drill Book";
+        else
+            document.title = "HEMA Drill Book - " + title;
+
+    };
+
+    isPreRendering = () => {
+        return false;
+    };
+</script>

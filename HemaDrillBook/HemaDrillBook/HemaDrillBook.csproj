@@ -16,6 +16,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="3.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.0.0" />
+    <PackageReference Include="Tortuga.Chain.SqlServer" Version="3.0.7223.40609" />
   </ItemGroup>
 
   <ItemGroup>

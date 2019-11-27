@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Tortuga.Chain;
 
 namespace HemaDrillBook
 {
@@ -40,7 +41,7 @@ namespace HemaDrillBook
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<ApplicationUser>>();
-            services.AddSingleton<WeatherForecastService>();
+            services.AddSingleton(new SqlServerDataSource(Configuration.GetConnectionString("DefaultConnection")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
