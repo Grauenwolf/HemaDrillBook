@@ -1,8 +1,11 @@
+IF $(OneTimeLoad) = 1
+BEGIN
+
 
 DECLARE @Measure TABLE
 (
 MeasureKey int PRIMARY KEY,
-MeasureName nvarchar(50),
+MeasureName nvarchar(50)  NOT NULL,
 AlternateMeasureName nvarchar(50) NULL
 
 );
@@ -57,3 +60,6 @@ AlternateMeasureName = s.AlternateMeasureName;
 
 SET IDENTITY_INSERT Tags.Measure OFF;
 
+
+END
+GO

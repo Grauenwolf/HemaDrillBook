@@ -1,8 +1,11 @@
+IF $(OneTimeLoad) = 1
+BEGIN
+
 
 DECLARE @Target TABLE
 (
 TargetKey int PRIMARY KEY,
-TargetName nvarchar(50)
+TargetName nvarchar(50) NOT NULL
 
 );
 
@@ -64,3 +67,6 @@ WHEN MATCHED THEN
 
 SET IDENTITY_INSERT Tags.Target OFF;
 
+
+END
+GO

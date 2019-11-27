@@ -1,8 +1,11 @@
+IF $(OneTimeLoad) = 1
+BEGIN
+
 
 DECLARE @GuardModifier TABLE
 (
 GuardModifierKey int PRIMARY KEY,
-GuardModifierName nvarchar(100)
+GuardModifierName nvarchar(100) NOT NULL
 
 );
 
@@ -40,3 +43,6 @@ WHEN MATCHED THEN
 
 SET IDENTITY_INSERT Tags.GuardModifier OFF;
 
+
+END
+GO

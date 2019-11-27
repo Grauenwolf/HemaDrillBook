@@ -1,16 +1,18 @@
+IF $(OneTimeLoad) = 1
+BEGIN
 
 DECLARE @Weapon TABLE
 (
-WeaponKey int PRIMARY KEY,
-WeaponName nvarchar(100)
-
+    WeaponKey INT PRIMARY KEY,
+    WeaponName NVARCHAR(100) NOT NULL
 );
 
 INSERT INTO @Weapon
-(  WeaponKey,
-WeaponName )
+(
+    WeaponKey,
+    WeaponName
+)
 VALUES
-
 (1, N'Rapier'),
 (2, N'Sidesword'),
 (3, N'Arming Sword'),
@@ -49,9 +51,7 @@ VALUES
 (37, N'Pair of Clubs'),
 (38, N'Mounted Lance'),
 (39, N'Mounted Sword'),
-(40, N'Mounted Grappling')
-
-;
+(40, N'Mounted Grappling');
 
 SET IDENTITY_INSERT Tags.Weapon ON;
 
@@ -60,13 +60,16 @@ USING @Weapon s
 ON t.WeaponKey = s.WeaponKey
 WHEN NOT MATCHED THEN
     INSERT
-(  WeaponKey,
-WeaponName )
+    (
+        WeaponKey,
+        WeaponName
+    )
     VALUES
-    (  s.WeaponKey,
-s.WeaponName )
+    (s.WeaponKey, s.WeaponName)
 WHEN MATCHED THEN
-    UPDATE SET  WeaponName = s.WeaponName;
+    UPDATE SET WeaponName = s.WeaponName;
 
 SET IDENTITY_INSERT Tags.Weapon OFF;
 
+END;
+GO

@@ -1,18 +1,20 @@
+IF $(OneTimeLoad) = 1
+BEGIN
 
 DECLARE @Technique TABLE
 (
-TechniqueKey int PRIMARY KEY,
-TechniqueName nvarchar(100),
-AlternateTechniqueName nvarchar(100) NULL
-
+    TechniqueKey INT PRIMARY KEY,
+    TechniqueName NVARCHAR(100) NOT NULL,
+    AlternateTechniqueName NVARCHAR(100) NULL
 );
 
 INSERT INTO @Technique
-(  TechniqueKey,
-TechniqueName,
-AlternateTechniqueName )
+(
+    TechniqueKey,
+    TechniqueName,
+    AlternateTechniqueName
+)
 VALUES
-
 (1, N'Feint', NULL),
 (10, N'Affondo', N'Thrust'),
 (11, N'Allongiren', N'Lunge'),
@@ -473,9 +475,7 @@ VALUES
 (524, N'Short Edge Cut', NULL),
 (525, N'Pull up for a stroke', NULL),
 (526, N'Schielhauw, Crossed Arms', N'Squinting Cut'),
-(527, N'Parry with Outside Flat', NULL)
-
-;
+(527, N'Parry with Outside Flat', NULL);
 
 SET IDENTITY_INSERT Tags.Technique ON;
 
@@ -484,16 +484,19 @@ USING @Technique s
 ON t.TechniqueKey = s.TechniqueKey
 WHEN NOT MATCHED THEN
     INSERT
-(  TechniqueKey,
-TechniqueName,
-AlternateTechniqueName )
+    (
+        TechniqueKey,
+        TechniqueName,
+        AlternateTechniqueName
+    )
     VALUES
-    (  s.TechniqueKey,
-s.TechniqueName,
-s.AlternateTechniqueName )
+    (s.TechniqueKey, s.TechniqueName, s.AlternateTechniqueName)
 WHEN MATCHED THEN
-    UPDATE SET  TechniqueName = s.TechniqueName,
-AlternateTechniqueName = s.AlternateTechniqueName;
+    UPDATE SET TechniqueName = s.TechniqueName,
+               AlternateTechniqueName = s.AlternateTechniqueName;
 
 SET IDENTITY_INSERT Tags.Technique OFF;
 
+
+END
+GO

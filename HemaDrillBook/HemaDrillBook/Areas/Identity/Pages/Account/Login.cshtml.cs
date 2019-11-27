@@ -34,30 +34,30 @@ namespace HemaDrillBook.Areas.Identity.Pages.Account
         }
 
         [BindProperty]
-        public InputModel Input { get; set; }
+        public InputModel Input { get; set; } = new InputModel();
 
-        public IList<AuthenticationScheme> ExternalLogins { get; set; }
+        public IList<AuthenticationScheme>? ExternalLogins { get; set; }
 
-        public string ReturnUrl { get; set; }
+        public string? ReturnUrl { get; set; }
 
         [TempData]
-        public string ErrorMessage { get; set; }
+        public string? ErrorMessage { get; set; }
 
         public class InputModel
         {
             [Required]
             [Display(Name = "User Name or Email Address")]
-            public string UserNameOrEmail { get; set; }
+            public string? UserNameOrEmail { get; set; }
 
             [Required]
             [DataType(DataType.Password)]
-            public string Password { get; set; }
+            public string? Password { get; set; }
 
             [Display(Name = "Remember me?")]
             public bool RememberMe { get; set; }
         }
 
-        public async Task OnGetAsync(string returnUrl = null)
+        public async Task OnGetAsync(string? returnUrl = null)
         {
             if (!string.IsNullOrEmpty(ErrorMessage))
             {
@@ -74,7 +74,7 @@ namespace HemaDrillBook.Areas.Identity.Pages.Account
             ReturnUrl = returnUrl;
         }
 
-        public async Task<IActionResult> OnPostAsync(string returnUrl = null)
+        public async Task<IActionResult> OnPostAsync(string? returnUrl = null)
         {
             returnUrl = returnUrl ?? Url.Content("~/");
 
@@ -100,7 +100,7 @@ namespace HemaDrillBook.Areas.Identity.Pages.Account
                 }
                 else //try using email address
                 {
-                    if (Input.UserNameOrEmail.Contains("@")) //maybe its their email address
+                    if (Input.UserNameOrEmail?.Contains("@") == true) //maybe its their email address
                     {
                         var user = await _userManager.FindByEmailAsync(Input.UserNameOrEmail);
                         if (user != null) //try to login again
@@ -148,6 +148,7 @@ namespace HemaDrillBook.Areas.Identity.Pages.Account
             if (user == null)
             {
                 ModelState.AddModelError(string.Empty, "Verification email sent. Please check your email.");
+                return Page();
             }
 
             var userId = await _userManager.GetUserIdAsync(user);
@@ -158,7 +159,7 @@ namespace HemaDrillBook.Areas.Identity.Pages.Account
                 values: new { userId = userId, code = code },
                 protocol: Request.Scheme);
             await _emailSender.SendEmailAsync(
-                user.Email,
+                user.Email!,
                 "Confirm your email",
                 $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 

@@ -23,7 +23,7 @@
     <IncludeCompositeObjects>True</IncludeCompositeObjects>
     <TargetDatabaseSet>True</TargetDatabaseSet>
     <DefaultCollation>SQL_Latin1_General_CP1_CI_AS</DefaultCollation>
-    <AnsiNulls>False</AnsiNulls>
+    <AnsiNulls>True</AnsiNulls>
     <QuotedIdentifier>False</QuotedIdentifier>
     <QueryStoreCaptureMode>All</QueryStoreCaptureMode>
     <QueryStoreDesiredState>Off</QueryStoreDesiredState>
@@ -64,9 +64,9 @@
     <SupplementalLoggingOn>False</SupplementalLoggingOn>
     <CompatibilityMode>140</CompatibilityMode>
     <AnsiNullDefault>False</AnsiNullDefault>
-    <AnsiPadding>False</AnsiPadding>
-    <AnsiWarnings>False</AnsiWarnings>
-    <ArithAbort>False</ArithAbort>
+    <AnsiPadding>True</AnsiPadding>
+    <AnsiWarnings>True</AnsiWarnings>
+    <ArithAbort>True</ArithAbort>
     <ConcatNullYieldsNull>False</ConcatNullYieldsNull>
     <NumericRoundAbort>False</NumericRoundAbort>
     <RecursiveTriggersEnabled>False</RecursiveTriggersEnabled>
@@ -124,6 +124,12 @@
     <Folder Include="Tags" />
     <Folder Include="Tags\Tables" />
     <Folder Include="Data\OneTime" />
+    <Folder Include="Sources" />
+    <Folder Include="Sources\Tables" />
+    <Folder Include="Interpretations" />
+    <Folder Include="Interpretations\Tables" />
+    <Folder Include="Sources\Progamability" />
+    <Folder Include="Data\OneTime\Meyer" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Accounts\Tables\AspNetRoles.sql">
@@ -172,6 +178,32 @@
     <None Include="Data\OneTime\Tags.Target.sql" />
     <None Include="Data\OneTime\Tags.Technique.sql" />
     <None Include="Data\OneTime\Tags.Weapon.sql" />
+    <None Include="Data\OneTime\Sources.Author.sql" />
+    <None Include="Data\OneTime\Sources.Book.sql" />
+    <None Include="Data\OneTime\Sources.BookAuthor.sql" />
+    <Build Include="Sources\Tables\Author.sql" />
+    <Build Include="Sources\Tables\Book.sql" />
+    <Build Include="Sources\Tables\BookAuthor.sql" />
+    <Build Include="Sources\Sources.sql" />
+    <Build Include="Sources\Tables\Section.sql" />
+    <Build Include="Sources\Tables\Section_History.sql" />
+    <Build Include="Sources\Tables\SectionWeaponMap.sql" />
+    <Build Include="Interpretations\Tables\Play.sql" />
+    <Build Include="Interpretations\Tables\PlayStep.sql" />
+    <Build Include="Interpretations\Interpretations.sql" />
+    <Build Include="Sources\Tables\Part.sql" />
+    <None Include="Data\OneTime\Meyer\Sources.Section.Part.1.sql" />
+    <None Include="Data\OneTime\Meyer\Sources.Section.Part.2.sql" />
+    <None Include="Data\OneTime\Meyer\Sources.Section.Part.3.sql" />
+    <None Include="Data\OneTime\Meyer\Sources.Section.Part.4.sql" />
+    <None Include="Data\OneTime\Meyer\Sources.Section.Part.5.sql" />
+    <None Include="Data\OneTime\Meyer\Sources.SectionWeaponMap.1.sql" />
+    <None Include="Data\OneTime\Meyer\Interpretations.Play.1.sql" />
+    <None Include="Data\OneTime\Meyer\Interpretations.PlayStep.1.sql" />
+    <None Include="Data\OneTime\Meyer\Sources.Part.sql" />
+    <None Include="Data\OneTime\Meyer\Sources.Section.Part.6.sql" />
+    <None Include="Data\OneTime\Meyer\Sources.Section.Part.7.sql" />
+    <Build Include="Interpretations\Tables\Play_History.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="localhost.publish.xml" />

@@ -1,8 +1,11 @@
+IF $(OneTimeLoad) = 1
+BEGIN
+
 
 DECLARE @Guard TABLE
 (
 GuardKey int PRIMARY KEY,
-GuardName nvarchar(100),
+GuardName nvarchar(100) NOT NULL,
 AlternateGuardName nvarchar(100) NULL
 
 );
@@ -276,3 +279,6 @@ AlternateGuardName = s.AlternateGuardName;
 
 SET IDENTITY_INSERT Tags.Guard OFF;
 
+
+END
+GO

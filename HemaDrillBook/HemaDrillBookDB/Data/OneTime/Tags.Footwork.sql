@@ -1,18 +1,20 @@
+IF $(OneTimeLoad) = 1
+BEGIN
 
 DECLARE @Footwork TABLE
 (
-FootworkKey int PRIMARY KEY,
-FootworkName nvarchar(100),
-AlternateFootworkName nvarchar(100) NULL
-
+    FootworkKey INT NOT NULL PRIMARY KEY,
+    FootworkName NVARCHAR(100) NOT NULL,
+    AlternateFootworkName NVARCHAR(100) NULL
 );
 
 INSERT INTO @Footwork
-(  FootworkKey,
-FootworkName,
-AlternateFootworkName )
+(
+    FootworkKey,
+    FootworkName,
+    AlternateFootworkName
+)
 VALUES
-
 (1, N'Pass left foot forward', NULL),
 (2, N'Pass right foot forward', NULL),
 (3, N'Accrescimento', N'Increase'),
@@ -141,9 +143,7 @@ VALUES
 (151, N'Spring to opponent''s left', NULL),
 (152, N'Withdraw', NULL),
 (153, N'Step to Opponent''s Left', NULL),
-(154, N'Step to Opponent''s Right', NULL)
-
-;
+(154, N'Step to Opponent''s Right', NULL);
 
 SET IDENTITY_INSERT Tags.Footwork ON;
 
@@ -152,16 +152,19 @@ USING @Footwork s
 ON t.FootworkKey = s.FootworkKey
 WHEN NOT MATCHED THEN
     INSERT
-(  FootworkKey,
-FootworkName,
-AlternateFootworkName )
+    (
+        FootworkKey,
+        FootworkName,
+        AlternateFootworkName
+    )
     VALUES
-    (  s.FootworkKey,
-s.FootworkName,
-s.AlternateFootworkName )
+    (s.FootworkKey, s.FootworkName, s.AlternateFootworkName)
 WHEN MATCHED THEN
-    UPDATE SET  FootworkName = s.FootworkName,
-AlternateFootworkName = s.AlternateFootworkName;
+    UPDATE SET FootworkName = s.FootworkName,
+               AlternateFootworkName = s.AlternateFootworkName;
 
 SET IDENTITY_INSERT Tags.Footwork OFF;
 
+
+END
+GO

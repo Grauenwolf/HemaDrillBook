@@ -11,7 +11,6 @@ Post-Deployment Script Template
 */
 
 
-IF $(OneTimeLoad) = 1 BEGIN
 :r .\Data\OneTime\Tags.Weapon.sql
 :r .\Data\OneTime\Tags.Guard.sql
 :r .\Data\OneTime\Tags.Footwork.sql
@@ -19,36 +18,34 @@ IF $(OneTimeLoad) = 1 BEGIN
 :r .\Data\OneTime\Tags.GuardModifier.sql
 :r .\Data\OneTime\Tags.Target.sql
 :r .\Data\OneTime\Tags.Technique.sql
-END
 
 
------ Video Services
+--Meyer
+:r .\Data\OneTime\Sources.Author.sql
+:r .\Data\OneTime\Sources.Book.sql
+:r .\Data\OneTime\Sources.BookAuthor.sql
+:r .\Data\OneTime\Meyer\Sources.Part.sql
+:r .\Data\OneTime\Meyer\Sources.Section.Part.1.sql
+:r .\Data\OneTime\Meyer\Sources.Section.Part.2.sql
+:r .\Data\OneTime\Meyer\Sources.Section.Part.3.sql
+:r .\Data\OneTime\Meyer\Sources.Section.Part.4.sql
+:r .\Data\OneTime\Meyer\Sources.Section.Part.5.sql
+:r .\Data\OneTime\Meyer\Sources.Section.Part.6.sql
+:r .\Data\OneTime\Meyer\Sources.Section.Part.7.sql
 
-IF NOT EXISTS (SELECT * FROM Interpretations.VideoService)
-    INSERT INTO Interpretations.VideoService
-    (
-        VideoServiceKey,
-        VideoServiceName,
-        VideoServiceUrlFormat,
-        VideoServiceEmbedFormat
-    )
-    VALUES
-    (   0,        -- VideoServiceKey - int
-        'Custom', -- VideoServiceName - varchar(50)
-        NULL, NULL),
-    (   1,         -- VideoServiceKey - int
-        'YouTube', -- VideoServiceName - varchar(50)
-        NULL, NULL),
-    (   2,       -- VideoServiceKey - int
-        'Vimeo', -- VideoServiceName - varchar(50)
-        NULL, NULL);
+--:r .\Data\OneTime\Meyer\Sources.SectionWeaponMap.1.sql
+:r .\Data\OneTime\Meyer\Interpretations.Play.1.sql
+:r .\Data\OneTime\Meyer\Interpretations.PlayStep.1.sql
+
+
+
 
 ---- System Users
 
-IF NOT EXISTS (SELECT * FROM dbo.AspNetUsers anu WHERE anu.UserKey = -1)
+IF NOT EXISTS (SELECT * FROM Accounts.AspNetUsers anu WHERE anu.UserKey = -1)
 BEGIN
-    SET IDENTITY_INSERT dbo.AspNetUsers ON;
-    INSERT INTO dbo.AspNetUsers
+    SET IDENTITY_INSERT Accounts.AspNetUsers ON;
+    INSERT INTO Accounts.AspNetUsers
     (
         Id,
         AccessFailedCount,
@@ -86,6 +83,6 @@ BEGIN
         N'Admin', -- UserName - nvarchar(256)
         N'Admin', -- DisplayName - nvarchar(50)
         -1);
-    SET IDENTITY_INSERT dbo.AspNetUsers OFF;
+    SET IDENTITY_INSERT Accounts.AspNetUsers OFF;
 
 END;

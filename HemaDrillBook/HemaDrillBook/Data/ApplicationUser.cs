@@ -17,7 +17,7 @@ namespace HemaDrillBook.Data
         /// </summary>
         /// <value>The display name.</value>
         /// <remarks>If this is null, the user cannot share their commentary/videos.</remarks>
-        public string DisplayName { get; set; }
+        public string? DisplayName { get; set; }
 
         /// <summary>
         /// This is the primary key for users in the database, with the exception of ASP.NET Identity tasks.
