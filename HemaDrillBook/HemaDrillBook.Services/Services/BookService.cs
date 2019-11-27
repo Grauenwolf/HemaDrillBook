@@ -1,5 +1,6 @@
 ﻿using HemaDrillBook.Models;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Tortuga.Chain;
 
@@ -13,7 +14,72 @@ namespace HemaDrillBook.Services
 
         public Task<List<BookNameMap>> GetBookNameMapAsync(IUser? currentUser)
         {
-            return DataSource(currentUser).From("Sources.BookNameMap").ToCollection<BookNameMap>(CollectionOptions.InferConstructor).ExecuteAsync();
+            return DataSource(currentUser)
+                .From("Sources.BookNameMap")
+                .WithSorting("BookName")
+                .ToCollection<BookNameMap>(CollectionOptions.InferConstructor)
+                .ExecuteAsync();
+        }
+
+        public Task<List<PartSummary>> GetBookPartsAsync(int bookKey, IUser? currentUser)
+        {
+            var ds = DataSource(currentUser);
+            ds.DatabaseMetadata.PreloadViews();
+            foreach (var item in ds.DatabaseMetadata.GetTablesAndViews())
+            {
+                Debug.WriteLine(item.Name);
+            }
+
+            return DataSource(currentUser)
+                .From("Sources.PartDetail", new { BookKey = bookKey })
+                .WithSorting("DisplayOrder")
+                .ToCollection<PartSummary>(CollectionOptions.InferConstructor)
+                .ExecuteAsync();
+        }
+
+        public Task<BookDetail> GetBookDetailAsync(string bookSlug, IUser? currentUser)
+        {
+            return DataSource(currentUser)
+                .From("Sources.BookDetail", new { BookSlug = bookSlug })
+                .ToObject<BookDetail>(RowOptions.InferConstructor)
+                //.NeverNull() //This is broken in Chain 3.0. It works in 3.1.
+                .ExecuteAsync()!;
+        }
+
+        public Task<List<string>> GetBookAlternateNamesAsync(int bookKey, IUser? currentUser)
+        {
+            return DataSource(currentUser)
+                .From("Sources.AlternateBookName", new { BookKey = bookKey })
+                .WithSorting("AlternateBookName")
+                .ToStringList("AlternateBookName")
+                .ExecuteAsync()!;
+        }
+
+        public Task<List<AuthorSummary>> GetAuthorsByBookAsync(int bookKey, IUser? currentUser)
+        {
+            return DataSource(currentUser)
+                .From("Sources.BookAuthorMapDetail", new { BookKey = bookKey })
+                .WithSorting("AuthorName")
+                .ToCollection<AuthorSummary>(CollectionOptions.InferConstructor)
+                .ExecuteAsync();
+        }
+
+        public Task<List<WeaponPairSummary>> GetBookWeaponsAsync(int bookKey, IUser? currentUser)
+        {
+            return DataSource(currentUser)
+                .From("Sources.BookWeaponDetail", new { BookKey = bookKey })
+                .WithSorting("PrimaryWeaponName", "SecondaryWeaponName")
+                .ToCollection<WeaponPairSummary>(CollectionOptions.InferConstructor)
+                .ExecuteAsync();
+        }
+
+        public Task<List<WeaponPairSummary>> GetPartWeaponsAsync(int partKey, IUser? currentUser)
+        {
+            return DataSource(currentUser)
+                .From("Sources.PartWeaponDetail", new { PartKey = partKey })
+                .WithSorting("PrimaryWeaponName", "SecondaryWeaponName")
+                .ToCollection<WeaponPairSummary>(CollectionOptions.InferConstructor)
+                .ExecuteAsync();
         }
 
         /*

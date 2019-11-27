@@ -1,10 +1,8 @@
-using HemaDrillBook.Services;
 using Microsoft.Extensions.Configuration;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
-using System.Threading.Tasks;
 using Tortuga.Chain;
+using Tortuga.Chain.SqlServer;
 
 namespace HemaDrillBook.Tests
 {
@@ -18,7 +16,8 @@ namespace HemaDrillBook.Tests
 
             var connectionString = configuration.GetSection("ConnectionStrings").GetChildren().First().Value;
 
-            DataSource = new SqlServerDataSource(connectionString);
+            DataSource = new SqlServerDataSource(connectionString)
+                .WithSettings(new SqlServerDataSourceSettings() { StrictMode = true });
         }
     }
 }

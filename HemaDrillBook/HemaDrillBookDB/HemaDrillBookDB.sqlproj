@@ -182,7 +182,7 @@
     <None Include="Data\OneTime\Tags.Weapon.sql" />
     <Build Include="Sources\Tables\Author.sql" />
     <Build Include="Sources\Tables\Book.sql" />
-    <Build Include="Sources\Tables\BookAuthor.sql" />
+    <Build Include="Sources\Tables\BookAuthorMap.sql" />
     <Build Include="Sources\Sources.sql" />
     <Build Include="Sources\Tables\Section.sql" />
     <Build Include="Sources\Tables\Section_History.sql" />
@@ -209,6 +209,11 @@
     <None Include="Data\OneTime\Scratch\Sources.BookAuthor.sql" />
     <Build Include="Sources\Tables\AlternateBookName.sql" />
     <Build Include="Sources\Views\BookNameMap.sql" />
+    <Build Include="Sources\Views\PartDetail.sql" />
+    <Build Include="Sources\Views\BookDetail.sql" />
+    <Build Include="Sources\Views\BookAuthorMapDetail.sql" />
+    <Build Include="Sources\Views\BookWeaponDetail.sql" />
+    <Build Include="Sources\Views\PartWeaponDetail.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="localhost.publish.xml" />

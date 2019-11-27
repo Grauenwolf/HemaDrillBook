@@ -34,6 +34,7 @@ Post-Deployment Script Template
 :r .\Data\OneTime\Meyer\Sources.Section.Part.5.sql
 :r .\Data\OneTime\Meyer\Sources.Section.Part.6.sql
 :r .\Data\OneTime\Meyer\Sources.Section.Part.7.sql
+:r .\Data\OneTime\Meyer\Sources.SectionWeaponMap.1.sql
 
 --:r .\Data\OneTime\Meyer\Sources.SectionWeaponMap.1.sql
 :r .\Data\OneTime\Meyer\Interpretations.Play.1.sql

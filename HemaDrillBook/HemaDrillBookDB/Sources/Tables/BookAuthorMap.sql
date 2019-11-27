@@ -1,4 +1,4 @@
-﻿CREATE TABLE Sources.BookAuthor
+﻿CREATE TABLE Sources.BookAuthorMap
 (
     BookKey INT NOT NULL 
         CONSTRAINT FK_BookAuthor_BookKey
@@ -17,5 +17,5 @@
     SysEndTime DATETIME2 GENERATED ALWAYS AS ROW END NOT NULL,
     PERIOD FOR SYSTEM_TIME(SysStartTime, SysEndTime)
 )
-WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = Sources.BookAuthor_History) );
+WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = Sources.BookAuthorMap_History) );
 

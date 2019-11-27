@@ -2,26 +2,27 @@
 
 namespace HemaDrillBook.Models
 {
-    public class BookNameMap
+    public class BookDetail
     {
-        public BookNameMap(int bookKey, string bookName, string bookSlug, string authorName)
+        public BookDetail(int bookKey, string bookName, string bookSlug, string? notes, string? wiktenauerUrl)
         {
             if (string.IsNullOrEmpty(bookName))
                 throw new ArgumentException($"{nameof(bookName)} is null or empty.", nameof(bookName));
+
             if (string.IsNullOrEmpty(bookSlug))
                 throw new ArgumentException($"{nameof(bookSlug)} is null or empty.", nameof(bookSlug));
-            if (string.IsNullOrEmpty(authorName))
-                throw new ArgumentException($"{nameof(authorName)} is null or empty.", nameof(authorName));
 
             BookKey = bookKey;
             BookName = bookName;
             BookSlug = bookSlug;
-            AuthorName = authorName;
+            Notes = notes;
+            WiktenauerUrl = wiktenauerUrl;
         }
 
         public int BookKey { get; set; }
         public string BookName { get; set; }
         public string BookSlug { get; set; }
-        public string AuthorName { get; set; }
+        public string? Notes { get; set; }
+        public string? WiktenauerUrl { get; set; }
     }
 }

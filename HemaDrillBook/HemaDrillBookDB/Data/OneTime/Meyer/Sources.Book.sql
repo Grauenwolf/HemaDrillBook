@@ -79,7 +79,7 @@ BEGIN
 
 
 
-    DECLARE @BookAuthor TABLE
+    DECLARE @BookAuthorMap TABLE
     (
         BookKey INT NOT NULL,
         AuthorKey INT NOT NULL,
@@ -89,7 +89,7 @@ BEGIN
                     )
     );
 
-    INSERT INTO @BookAuthor
+    INSERT INTO @BookAuthorMap
     (
         BookKey,
         AuthorKey
@@ -98,8 +98,8 @@ BEGIN
     (1, 1);
 
 
-    MERGE INTO Sources.BookAuthor t
-    USING @BookAuthor s
+    MERGE INTO Sources.BookAuthorMap t
+    USING @BookAuthorMap s
     ON t.BookKey = s.BookKey
        AND t.AuthorKey = s.AuthorKey
     WHEN NOT MATCHED THEN

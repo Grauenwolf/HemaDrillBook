@@ -8,7 +8,8 @@
     ParentSectionKey INT NULL
         CONSTRAINT FK_SectionKey_ParentSectionKey
         REFERENCES Sources.Section (SectionKey),
-    SectionName NVARCHAR(250) NOT NULL,
+    SectionName NVARCHAR(250) NOT NULL
+        CONSTRAINT C_Section_SectionName CHECK (LEN(SectionName) > 0),
     PageReference NVARCHAR(50) NULL,
     DisplayOrder FLOAT NOT NULL,
     SysStartTime DATETIME2 GENERATED ALWAYS AS ROW START NOT NULL,

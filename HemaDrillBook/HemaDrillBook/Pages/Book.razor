@@ -1,0 +1,58 @@
+﻿@page "/book/{BookSlug}"
+@inherits BookBase
+
+@if (Book != null)
+{
+    <h1>@(Book.BookName)</h1>
+    if (BookNames?.Count > 0)
+    {
+        foreach (var name in BookNames)
+        {
+            <div>@(name)</div>
+        }
+    }
+
+    if (AuthorList?.Count > 0)
+    {
+        <h2>Authors</h2>
+        foreach (var author in AuthorList)
+        {
+            <div><a href="/author/@(author.AuthorSlug)">@(author.AuthorName)</a></div>
+        }
+    }
+
+    if (PartList?.Count > 0)
+    {
+        <h2>Parts</h2>
+        foreach (var part in PartList)
+        {
+            <div><a href="/book/@(Book.BookSlug)/@(part.PartSlug)">@(part.PartName)</a></div>
+        }
+    }
+
+    if (WeaponList?.Count > 0)
+    {
+        <h2>Weapons</h2>
+        @foreach (var weapon in WeaponList)
+        {
+            <div>
+                @if (weapon.SecondaryWeaponKey == null)
+                {
+                    @(weapon.PrimaryWeaponName)
+                }
+                else
+                {
+                    @(weapon.PrimaryWeaponName + " vs. " + weapon.SecondaryWeaponName)
+                }
+            </div>
+        }
+    }
+}
+else if (LoadFailed)
+{
+    <h1>Error loading page.</h1>
+}
+else
+{
+    <h1>Loading</h1>
+}
