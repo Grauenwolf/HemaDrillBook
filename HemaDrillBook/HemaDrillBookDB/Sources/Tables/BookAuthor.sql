@@ -12,6 +12,7 @@
             BookKey,
             AuthorKey
         ),
+    DisplayOrder FLOAT NOT NULL CONSTRAINT D_BookAuthor_DisplayOrder DEFAULT(1),
     SysStartTime DATETIME2 GENERATED ALWAYS AS ROW START NOT NULL,
     SysEndTime DATETIME2 GENERATED ALWAYS AS ROW END NOT NULL,
     PERIOD FOR SYSTEM_TIME(SysStartTime, SysEndTime)

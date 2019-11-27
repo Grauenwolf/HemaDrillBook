@@ -26,6 +26,7 @@ namespace DevTools
             ExportTable(videoDS, "Sources.Author");
             ExportTable(videoDS, "Sources.Book");
             ExportTable(videoDS, "Sources.BookAuthor");
+            ExportTable(videoDS, "Sources.AlternateBookName");
 
             const string sectionWeaponFilter = @"EXISTS (SELECT * FROM Sources.Section s WHERE s.BookKey = @BookKey AND SectionWeaponMap.SectionKey = s.SectionKey)";
             const string sectionPlayFilter = @"EXISTS (SELECT * FROM Sources.Section s WHERE s.BookKey = @BookKey AND Play.SectionKey = s.SectionKey)";

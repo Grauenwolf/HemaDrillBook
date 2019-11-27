@@ -6,7 +6,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
 using System;
 using System.Threading.Tasks;
-using Tortuga.Chain;
 
 namespace HemaDrillBook.Pages
 {
@@ -17,9 +16,11 @@ namespace HemaDrillBook.Pages
         [Inject] protected IJSRuntime JSRuntime { get; set; }
         [Inject] protected ILogger<EngineBase> Logger { get; set; }
         [CascadingParameter] Task<AuthenticationState> AuthenticationState { get; set; }
-        [Inject] SqlServerDataSource RawDataSource { get; set; }
+
+        //[Inject] SqlServerDataSource RawDataSource { get; set; }
         [Inject] UserManager<ApplicationUser> UserManager { get; set; }
-        protected SqlServerDataSource DataSource { get; set; }
+
+        //protected SqlServerDataSource DataSource { get; set; }
 #nullable restore
 
         /// <summary>
@@ -104,13 +105,13 @@ namespace HemaDrillBook.Pages
                     if (User == null)
                     {
                         User = await UserManager.GetUserAsync(authState.User);
-                        DataSource = RawDataSource.WithUser(User);
+                        //DataSource = RawDataSource.WithUser(User);
                     }
                 }
                 else
                 {
                     User = null;
-                    DataSource = RawDataSource;
+                    //DataSource = RawDataSource;
                 }
             }
             catch (Exception ex)

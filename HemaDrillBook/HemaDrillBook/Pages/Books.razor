@@ -1,0 +1,18 @@
+﻿@page "/book"
+@inherits BooksBase
+
+@if (Books != null)
+{
+    foreach (var book in Books)
+    {
+        <h3><a href="/book/@book.BookSlug">@book.BookName</a> by @book.AuthorName</h3>
+    }
+}
+else if (LoadFailed)
+{
+    <h1>Error loading page.</h1>
+}
+else
+{
+    <h1>Loading</h1>
+}

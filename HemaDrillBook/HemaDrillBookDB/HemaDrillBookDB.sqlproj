@@ -130,6 +130,8 @@
     <Folder Include="Interpretations\Tables" />
     <Folder Include="Sources\Progamability" />
     <Folder Include="Data\OneTime\Meyer" />
+    <Folder Include="Data\OneTime\Scratch" />
+    <Folder Include="Sources\Views" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Accounts\Tables\AspNetRoles.sql">
@@ -178,9 +180,6 @@
     <None Include="Data\OneTime\Tags.Target.sql" />
     <None Include="Data\OneTime\Tags.Technique.sql" />
     <None Include="Data\OneTime\Tags.Weapon.sql" />
-    <None Include="Data\OneTime\Sources.Author.sql" />
-    <None Include="Data\OneTime\Sources.Book.sql" />
-    <None Include="Data\OneTime\Sources.BookAuthor.sql" />
     <Build Include="Sources\Tables\Author.sql" />
     <Build Include="Sources\Tables\Book.sql" />
     <Build Include="Sources\Tables\BookAuthor.sql" />
@@ -204,9 +203,16 @@
     <None Include="Data\OneTime\Meyer\Sources.Section.Part.6.sql" />
     <None Include="Data\OneTime\Meyer\Sources.Section.Part.7.sql" />
     <Build Include="Interpretations\Tables\Play_History.sql" />
+    <None Include="Data\OneTime\Meyer\Sources.Book.sql" />
+    <None Include="Data\OneTime\Scratch\Sources.Author.sql" />
+    <None Include="Data\OneTime\Scratch\Sources.Book.sql" />
+    <None Include="Data\OneTime\Scratch\Sources.BookAuthor.sql" />
+    <Build Include="Sources\Tables\AlternateBookName.sql" />
+    <Build Include="Sources\Views\BookNameMap.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="localhost.publish.xml" />
+    <None Include="Data\SystemUsers.sql" />
   </ItemGroup>
   <ItemGroup>
     <SqlCmdVariable Include="OneTimeLoad">

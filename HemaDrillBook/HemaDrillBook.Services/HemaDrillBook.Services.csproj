@@ -8,4 +8,9 @@
     <RootNamespace>HemaDrillBook</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Tortuga.Chain.SqlServer" Version="3.0.7223.40609" />
+  </ItemGroup>
+
+  
 </Project>
