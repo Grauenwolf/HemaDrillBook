@@ -1,11 +1,11 @@
-﻿@page "/book"
+﻿@page "/b"
 @inherits BookListBase
 
 @if (Books != null)
 {
     foreach (var book in Books)
     {
-        <h3><a href="/book/@book.BookSlug">@book.BookName</a> by @book.AuthorName</h3>
+        <h3><a href="/b/@book.BookSlug">@book.BookName</a> by @book.AuthorName</h3>
     }
 }
 else if (LoadFailed)

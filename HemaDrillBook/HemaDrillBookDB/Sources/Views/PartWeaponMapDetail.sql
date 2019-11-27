@@ -1,9 +1,9 @@
-﻿CREATE VIEW Sources.BookWeaponDetail
+﻿CREATE VIEW Sources.PartWeaponMapDetail
 WITH SCHEMABINDING
 AS
 SELECT DISTINCT
-       b.BookKey,
-       b.BookName,
+       p.PartKey,
+       p.PartName,
        swm.PrimaryWeaponKey,
        w1.WeaponName AS PrimaryWeaponName,
        swm.SecondaryWeaponKey,
@@ -17,7 +17,6 @@ FROM Sources.Section s
         ON w2.WeaponKey = swm.SecondaryWeaponKey
     INNER JOIN Sources.Part p
         ON s.PartKey = p.PartKey
-    INNER JOIN Sources.Book b
-        ON b.BookKey = p.BookKey;
+
 GO
-GRANT SELECT ON Sources.BookWeaponDetail TO HemaWeb;
+GRANT SELECT ON Sources.PartWeaponMapDetail TO HemaWeb;

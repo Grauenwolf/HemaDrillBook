@@ -132,6 +132,7 @@
     <Folder Include="Data\OneTime\Meyer" />
     <Folder Include="Data\OneTime\Scratch" />
     <Folder Include="Sources\Views" />
+    <Folder Include="Interpretations\Views" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Accounts\Tables\AspNetRoles.sql">
@@ -212,8 +213,11 @@
     <Build Include="Sources\Views\PartDetail.sql" />
     <Build Include="Sources\Views\BookDetail.sql" />
     <Build Include="Sources\Views\BookAuthorMapDetail.sql" />
-    <Build Include="Sources\Views\BookWeaponDetail.sql" />
-    <Build Include="Sources\Views\PartWeaponDetail.sql" />
+    <Build Include="Sources\Views\BookWeaponMapDetail.sql" />
+    <Build Include="Sources\Views\PartWeaponMapDetail.sql" />
+    <Build Include="Sources\Views\SectionWeaponMapDetail.sql" />
+    <Build Include="Sources\Views\SectionDetail.sql" />
+    <Build Include="Interpretations\Views\PlayDetail.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="localhost.publish.xml" />

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace HemaDrillBook.Pages
 {
-    public class BookBase : EngineBase<BookDetail>
+    public class PartBase : EngineBase<PartDetail>
     {
 #nullable disable
         [Inject] BookService BookService { get; set; }
@@ -19,6 +19,20 @@ namespace HemaDrillBook.Pages
             set => Set(value, true);
         }
 
+        [Parameter]
+        public string? PartSlug
+        {
+            get => Get<string?>();
+            set => Set(value, true);
+        }
+
+        [Parameter]
+        public string? Tab
+        {
+            get => Get<string?>();
+            set => Set(value, false);
+        }
+
         protected override async Task ParametersSetAsync()
         {
             if (BookSlug == null)
@@ -26,9 +40,14 @@ namespace HemaDrillBook.Pages
                 Navigation.NavigateTo("/b");
                 return;
             }
+            if (PartSlug == null)
+            {
+                Navigation.NavigateTo("/b/" + BookSlug);
+                return;
+            }
 
             if (Model == null)
-                Model = await BookService.GetBookDetailAsync(BookSlug, User);
+                Model = await BookService.GetPartDetailAsync(BookSlug, PartSlug, User);
         }
     }
 }

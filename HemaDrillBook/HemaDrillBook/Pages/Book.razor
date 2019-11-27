@@ -1,39 +1,39 @@
-﻿@page "/book/{BookSlug}"
+﻿@page "/b/{BookSlug}"
 @inherits BookBase
 
-@if (Book != null)
+@if (Model != null)
 {
-    <h1>@(Book.BookName)</h1>
-    if (BookNames?.Count > 0)
+    <h1>@(Model.BookName)</h1>
+    if (Model.AlternateNames.Count > 0)
     {
-        foreach (var name in BookNames)
+        foreach (var name in Model.AlternateNames)
         {
             <div>@(name)</div>
         }
     }
 
-    if (AuthorList?.Count > 0)
+    if (Model.Authors.Count > 0)
     {
         <h2>Authors</h2>
-        foreach (var author in AuthorList)
+        foreach (var author in Model.Authors)
         {
             <div><a href="/author/@(author.AuthorSlug)">@(author.AuthorName)</a></div>
         }
     }
 
-    if (PartList?.Count > 0)
+    if (Model.Parts.Count > 0)
     {
         <h2>Parts</h2>
-        foreach (var part in PartList)
+        foreach (var part in Model.Parts)
         {
-            <div><a href="/book/@(Book.BookSlug)/@(part.PartSlug)">@(part.PartName)</a></div>
+            <div><a href="/b/@(Model.BookSlug)/p/@(part.PartSlug)">@(part.PartName)</a></div>
         }
     }
 
-    if (WeaponList?.Count > 0)
+    if (Model.Weapons.Count > 0)
     {
         <h2>Weapons</h2>
-        @foreach (var weapon in WeaponList)
+        @foreach (var weapon in Model.Weapons)
         {
             <div>
                 @if (weapon.SecondaryWeaponKey == null)

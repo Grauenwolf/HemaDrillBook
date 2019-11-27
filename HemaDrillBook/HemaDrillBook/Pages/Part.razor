@@ -1,0 +1,113 @@
+﻿@page "/b/{BookSlug}/p/{PartSlug}"
+@page "/b/{BookSlug}/p/{PartSlug}/t"
+@page "/b/{BookSlug}/p/{PartSlug}/t/{Tab}"
+@inherits PartBase
+
+@if (Model != null)
+{
+    <h1>@(Model.PartName)</h1>
+    <div>
+        <table class="gridtable">
+            <tr>
+                <th>
+                    @if (Model.Previous != null)
+                    {
+                        <a href="/b/@(Model.BookSlug)/p/@(Model.Previous.PartSlug)/t/@(Tab)">
+                            &lt;--
+                            @Model.Previous.PartName
+                        </a>
+                    }
+                </th>
+                <th>
+                    <a href="/b/@(Model.BookSlug)">@Model.BookName</a>
+                </th>
+                <th>
+                    @if (Model.Next != null)
+                    {
+                        <a href="/b/@(Model.BookSlug)/p/@(Model.Next.PartSlug)/t/@(Tab)">
+                            @Model.Next.PartName
+                            --&gt;
+                        </a>
+                    }
+                </th>
+            </tr>
+        </table>
+    </div>
+
+    <table class="gridtable">
+        <tr>
+            <th> <NavLink class="nav-link" href=@("/b/" + Model.BookSlug + "/p/" + Model.PartSlug)>Overview</NavLink>  </th>
+            <th> <NavLink class="nav-link" href=@("/b/" + Model.BookSlug + "/p/" + Model.PartSlug + "/t/sections")>Contents</NavLink>  </th>
+            <th> <NavLink class="nav-link" href=@("/b/" + Model.BookSlug + "/p/" + Model.PartSlug + "/t/plays")>Plays</NavLink>  </th>
+        </tr>
+    </table>
+
+    @if (Tab == "sections")
+    {
+        <h2>Table of Contents</h2>
+        foreach (var section in Model.Sections)
+        {
+            <div style="margin-left: 25px">
+                <a href="/b/@(Model.BookSlug)/p/@(Model.PartSlug)/s/@(section.SectionSlug)">@(section.SectionName) @(string.IsNullOrEmpty(section.PageReference) ? "" : "(" + section.PageReference + ")")</a>
+            </div>
+            foreach (var s2 in section.Subsections)
+            {
+                <div style="margin-left: 50px">
+                    <a href="/b/@(Model.BookSlug)/p/@(Model.PartSlug)/s/@(s2.SectionSlug)">@(s2.SectionName) @(string.IsNullOrEmpty(s2.PageReference) ? "" : "(" + s2.PageReference + ")")</a>
+                </div>
+                foreach (var s3 in s2.Subsections)
+                {
+                    <div style="margin-left: 75px">
+                        <a href="/b/@(Model.BookSlug)/p/@(Model.PartSlug)/s/@(s3.SectionSlug)">@(s3.SectionName) @(string.IsNullOrEmpty(s3.PageReference) ? "" : "(" + s3.PageReference + ")")</a>
+                    </div>
+                }
+            }
+        }
+    }
+    else if (Tab == "plays")
+    {
+        <h2>Plays</h2>
+        foreach (var play in Model.Plays)
+        {
+            <div style="margin-left: 25px">
+                <a href="/b/@(Model.BookSlug)/p/@(Model.PartSlug)/s/@(play.SectionSlug)">@(play.VariantName ?? play.SectionName) @(string.IsNullOrEmpty(play.PageReference) ? "" : "(" + play.PageReference + ")")</a>
+            </div>
+        }
+    }
+    else
+    {
+        <h2>Sections</h2>
+        foreach (var section in Model.Sections)
+        {
+            <div style="margin-left: 25px">
+                <a href="/b/@(Model.BookSlug)/p/@(Model.PartSlug)/s/@(section.SectionSlug)">@(section.SectionName) </a>
+            </div>
+        }
+
+        if (Model.Weapons.Count > 0)
+        {
+            <h2>Weapons</h2>
+            @foreach (var weapon in Model.Weapons)
+            {
+                <div>
+                    @if (weapon.SecondaryWeaponKey == null)
+                    {
+                        @(weapon.PrimaryWeaponName)
+                    }
+                    else
+                    {
+                        @(weapon.PrimaryWeaponName + " vs. " + weapon.SecondaryWeaponName)
+                    }
+                </div>
+            }
+        }
+    }
+}
+else if (LoadFailed)
+{
+    <h1>Error loading page.</h1>
+}
+else
+{
+    <h1>Loading</h1>
+}
