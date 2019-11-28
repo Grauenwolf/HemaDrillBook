@@ -1,6 +1,5 @@
 ﻿using HemaDrillBook.Models;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Tortuga.Anchor;
@@ -14,24 +13,19 @@ namespace HemaDrillBook.Services
         {
         }
 
-        public Task<List<BookNameMap>> GetBookNameMapAsync(IUser? currentUser)
+        public Task<List<BookNameMap>> GetBookNameMapAsync(bool includeAlternateNames, IUser? currentUser)
         {
+            var filter = includeAlternateNames ? "" : "IsAlternateName = 0";
+
             return DataSource(currentUser)
-                .From("Sources.BookNameMap")
-                .WithSorting("BookName")
-                .ToCollection<BookNameMap>()
-                .ExecuteAsync();
+            .From("Sources.BookNameMap", filter)
+            .WithSorting("BookName")
+            .ToCollection<BookNameMap>()
+            .ExecuteAsync();
         }
 
         public Task<List<PartSummary>> GetBookPartsAsync(int bookKey, IUser? currentUser)
         {
-            var ds = DataSource(currentUser);
-            ds.DatabaseMetadata.PreloadViews();
-            foreach (var item in ds.DatabaseMetadata.GetTablesAndViews())
-            {
-                Debug.WriteLine(item.Name);
-            }
-
             return DataSource(currentUser)
                 .From("Sources.PartDetail", new { BookKey = bookKey })
                 .WithSorting("DisplayOrder")

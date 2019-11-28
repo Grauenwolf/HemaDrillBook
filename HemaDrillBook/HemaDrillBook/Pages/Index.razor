@@ -13,4 +13,20 @@ else
 
 <p>Welcome to the HEMA Drill Book.</p>
 
+@if (Model != null)
+{
+    foreach (var book in Model)
+    {
+        <h3><a href="@book.BookUrlFragment">@book.BookName</a> by @book.AuthorName</h3>
+    }
+}
+else if (LoadFailed)
+{
+    <h1>Error loading page.</h1>
+}
+else
+{
+    <h1>Loading</h1>
+}
+
 <p> If you don't see the manual you're looking for, considering volunteering. Open a ticket on <a href="https://github.com/Grauenwolf/HemaDrillBook/issues" target="_blank">GitHub</a> with the name of the book you want to add.</p>

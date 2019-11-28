@@ -9,10 +9,22 @@ namespace HemaDrillBook.Tests
     public class BookServiceTests : TestBase
     {
         [TestMethod]
-        public async Task GetBookNameMapAsync()
+        public async Task GetBookNameMapAsync_True()
         {
             var bs = new BookService(DataSource);
-            var rows = await bs.GetBookNameMapAsync(null);
+            var rows = await bs.GetBookNameMapAsync(true, null);
+            foreach (var row in rows)
+            {
+                Assert.IsFalse(string.IsNullOrWhiteSpace(row.BookSlug), "BookSlug shouldn't be null");
+                Assert.IsFalse(string.IsNullOrWhiteSpace(row.BookName), "BookName shouldn't be null");
+            }
+        }
+
+        [TestMethod]
+        public async Task GetBookNameMapAsync_False()
+        {
+            var bs = new BookService(DataSource);
+            var rows = await bs.GetBookNameMapAsync(false, null);
             foreach (var row in rows)
             {
                 Assert.IsFalse(string.IsNullOrWhiteSpace(row.BookSlug), "BookSlug shouldn't be null");

@@ -6,17 +6,16 @@ using System.Threading.Tasks;
 
 namespace HemaDrillBook.Pages
 {
-    public class BookListBase : EngineBase
+    public class BookListBase : EngineBase<List<BookNameMap>>
     {
 #nullable disable
         [Inject] BookService BookService { get; set; }
 #nullable restore
 
-        protected List<BookNameMap>? Books { get; set; }
-
         protected override async Task ParametersSetAsync()
         {
-            Books = await BookService.GetBookNameMapAsync(base.User);
+            if (Model == null)
+                Model = await BookService.GetBookNameMapAsync(true, User);
         }
     }
 }

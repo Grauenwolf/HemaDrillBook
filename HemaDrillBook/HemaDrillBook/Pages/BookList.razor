@@ -1,9 +1,9 @@
 ﻿@page "/b"
 @inherits BookListBase
 
-@if (Books != null)
+@if (Model != null)
 {
-    foreach (var book in Books)
+    foreach (var book in Model)
     {
         <h3><a href="@book.BookUrlFragment">@book.BookName</a> by @book.AuthorName</h3>
     }
