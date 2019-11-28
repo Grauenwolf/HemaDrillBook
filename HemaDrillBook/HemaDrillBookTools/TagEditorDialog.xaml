@@ -1,0 +1,28 @@
+﻿<Window x:Class="HemaDrillBookTools.TagEditorDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:HemaDrillBookTools"
+        mc:Ignorable="d"
+		x:Name="Root"
+        Title="TagEditorDialog" Height="150" Width="450">
+	<GroupBox Header="{Binding Title}">
+		<StackPanel>
+			<StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+				<Label Content="Name" />
+				<TextBox Text="{Binding Tag.Name}" Width="300" />
+			</StackPanel>
+			<StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Visibility="{Binding Tag.HasAlternateName, Converter={StaticResource TrueToVisibleConverter}}">
+				<Label Content="Alternate Name" />
+				<TextBox Text="{Binding Tag.AlternateName}" Width="300" />
+			</StackPanel>
+
+			<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+
+				<Button Content="Save" Command="{Binding SaveCommand}" CommandParameter="{Binding ElementName=Root}" Width="100" HorizontalAlignment="Center" IsDefault="True" />
+				<Button Content="Cancel" Command="{Binding CancelCommand}" CommandParameter="{Binding ElementName=Root}" Width="100" HorizontalAlignment="Center" IsCancel="True" />
+			</StackPanel>
+		</StackPanel>
+	</GroupBox>
+</Window>

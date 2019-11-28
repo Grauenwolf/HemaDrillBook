@@ -1,0 +1,136 @@
+﻿<Window
+	x:Class="HemaDrillBookTools.MainWindow"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:local="clr-namespace:HemaDrillBookTools"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:services="clr-namespace:HemaDrillBookTools.Services"
+	Width="800"
+	Height="450"
+	x:Name="Root"
+	mc:Ignorable="d"
+	Closed="Window_Closed"
+	Loaded="Window_Loaded"
+	WindowState="{Binding WindowState}"
+	Title="MainWindow">
+
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+            <Label Content="Book" />
+            <ComboBox
+				DisplayMemberPath="BookName"
+				ItemsSource="{Binding BookList}"
+				SelectedItem="{Binding Book}" />
+            <Button Content="Reload Tags" Command="{Binding LoadTagsCommand}" IsEnabled="{Binding TagsLoading, Converter={StaticResource NotConverter}}" />
+            <Button Content="Open Browser" Command="{Binding ShowInBrowserCommand}" IsEnabled="{Binding TagsLoading, Converter={StaticResource NotConverter}}" />
+        </StackPanel>
+        <TreeView  ItemsSource="{Binding BookDetail.Parts}" DockPanel.Dock="Left" SelectedItemChanged="TreeView_SelectedItemChanged" MinWidth="150">
+            <TreeView.Resources>
+                <HierarchicalDataTemplate DataType="{x:Type services:PartDetail}" ItemsSource="{Binding Sections}">
+                    <TextBlock Text="{Binding PartName}" />
+                </HierarchicalDataTemplate>
+                <HierarchicalDataTemplate DataType="{x:Type services:SectionSummary}" ItemsSource="{Binding Subsections}">
+                    <TextBlock Text="{Binding SectionName}" />
+                </HierarchicalDataTemplate>
+            </TreeView.Resources>
+        </TreeView>
+        <ScrollViewer>
+            <StackPanel>
+                <GroupBox Header="Book" Visibility="{Binding BookDetail, Converter={StaticResource NotNullToVisibleConverter}}">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="Book" VerticalAlignment="Center" />
+                            <TextBox IsReadOnly="True" Text="{Binding BookDetail.BookName}" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </StackPanel>
+                </GroupBox>
+
+                <GroupBox Header="Authors" Visibility="{Binding BookDetail, Converter={StaticResource NotNullToVisibleConverter}}">
+                    <DataGrid ItemsSource="{Binding BookDetail.Authors}" AutoGenerateColumns="True"  IsReadOnly="True" />
+                </GroupBox>
+
+                <GroupBox Header="Section" Visibility="{Binding SectionDetail, Converter={StaticResource NotNullToVisibleConverter}}">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="Section" VerticalAlignment="Center" />
+                            <TextBox IsReadOnly="True" Text="{Binding SectionDetail.SectionName}" VerticalAlignment="Center" />
+                            <Button Content="Edit" Command="{Binding EditSectionNameCommand}" IsEnabled="{Binding SectionDetail.CanEdit}" />
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="Page Number" VerticalAlignment="Center" />
+                            <TextBox IsReadOnly="True" Text="{Binding SectionDetail.PageReference}" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </StackPanel>
+                </GroupBox>
+
+                <GroupBox Header="Weapons" Visibility="{Binding SectionDetail, Converter={StaticResource NotNullToVisibleConverter}}">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" IsEnabled="{Binding SectionDetail.CanEdit}">
+                            <Button Content="Add Weapon" Command="{Binding AddSectionWeaponCommand}" />
+                        </StackPanel>
+                        <DataGrid ItemsSource="{Binding SectionDetail.Weapons}" AutoGenerateColumns="True" IsReadOnly="True">
+                            <DataGrid.Columns>
+                                <DataGridTemplateColumn>
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Button Content="Delete" Command="{Binding DataContext.DeleteSectionWeaponCommand, ElementName=Root}" CommandParameter="{Binding}" IsEnabled="{Binding DataContext.SectionDetail.CanEdit, ElementName=Root}" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                </GroupBox>
+
+                <GroupBox Header="Videos" Visibility="{Binding SectionDetail, Converter={StaticResource NotNullToVisibleConverter}}">
+                    <!-- TODO: Make the StartTime column editable and add a Save button. -->
+                    <DataGrid ItemsSource="{Binding SectionDetail.Videos}" AutoGenerateColumns="True" IsReadOnly="True">
+                        <DataGrid.Columns>
+                            <DataGridTemplateColumn>
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Button Content="Edit" Command="{Binding DataContext.EditVideoCommand, ElementName=Root}" CommandParameter="{Binding}" IsEnabled="{Binding DataContext.SectionDetail.CanEdit, ElementName=Root}" />
+                                            <Button Content="Delete" Command="{Binding DataContext.DeleteVideoCommand, ElementName=Root}" CommandParameter="{Binding}" IsEnabled="{Binding DataContext.SectionDetail.CanEdit, ElementName=Root}" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </GroupBox>
+                <GroupBox Header="Plays" Visibility="{Binding SectionDetail, Converter={StaticResource NotNullToVisibleConverter}}">
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal" IsEnabled="{Binding SectionDetail.CanEdit}">
+                            <Button Content="Add Play" Command="{Binding AddPlayCommand}" />
+                            <Button Content="Paste Copy of Marked Play" Command="{Binding CopyMarkedPlayCommand}" IsEnabled="{Binding MarkedPlay, Converter={StaticResource NotNullToTrueConverter}}" />
+                        </StackPanel>
+                        <DataGrid ItemsSource="{Binding SectionDetail.Plays}" AutoGenerateColumns="False" IsReadOnly="True">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Binding="{Binding PlayKey}" Header="PlayKey" />
+                                <DataGridTextColumn Binding="{Binding VariantName}" Header="Variant" />
+                                <DataGridTextColumn Binding="{Binding Steps.Count}" Header="Steps" />
+                                <DataGridTemplateColumn>
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Button Content="Edit" Command="{Binding DataContext.EditPlayCommand, ElementName=Root}" CommandParameter="{Binding}" IsEnabled="{Binding DataContext.SectionDetail.CanEdit, ElementName=Root}" />
+                                                <Button Content="Copy" Command="{Binding DataContext.CopyPlayCommand, ElementName=Root}" CommandParameter="{Binding}" IsEnabled="{Binding DataContext.SectionDetail.CanEdit, ElementName=Root}" />
+                                                <Button Content="Mark" Command="{Binding DataContext.MarkPlayCommand, ElementName=Root}" CommandParameter="{Binding}" />
+                                                <Button Content="Delete" Command="{Binding DataContext.DeletePlayCommand, ElementName=Root}" CommandParameter="{Binding}" IsEnabled="{Binding DataContext.SectionDetail.CanEdit, ElementName=Root}" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <!-- TODO: Add row level "Edit" and "Copy" buttons. -->
+                    </StackPanel>
+                </GroupBox>
+            </StackPanel>
+        </ScrollViewer>
+    </DockPanel>
+</Window>

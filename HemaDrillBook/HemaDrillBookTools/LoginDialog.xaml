@@ -1,0 +1,28 @@
+﻿<Window x:Class="HemaDrillBookTools.LoginDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:HemaDrillBookTools"
+        mc:Ignorable="d"
+		x:Name="Root"
+        Title="Hema Drill Book" Height="200" Width="400" Loaded="Window_Loaded">
+    <GroupBox Header="Login to Hema Drill Book">
+        <StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Label Content="Base Url" />
+                <TextBox Text="{Binding Url}" Width="250" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Label Content="User Name" />
+                <TextBox Text="{Binding UserName}" Width="150" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Label Content="Password" />
+                <PasswordBox PasswordChanged="PasswordBox_PasswordChanged" Width="150" />
+            </StackPanel>
+            <Button Content="Login" Command="{Binding LoginCommand}" CommandParameter="{Binding ElementName=Root}" Width="100" HorizontalAlignment="Center" IsDefault="True" />
+        </StackPanel>
+    </GroupBox>
+</Window>

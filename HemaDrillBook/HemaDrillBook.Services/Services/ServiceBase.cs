@@ -1,5 +1,6 @@
 ﻿using HemaDrillBook.Models;
 using System;
+using System.Threading.Tasks;
 using Tortuga.Chain;
 
 namespace HemaDrillBook.Services
@@ -60,5 +61,37 @@ namespace HemaDrillBook.Services
                 throw new UnauthorizedAccessException("Permission denied to edit this record.");
         }
         */
+
+        protected Task CheckPermissionTagEditorAsync(IUser currentUser)
+        {
+            if (currentUser == null || currentUser.UserKey == 0)
+                throw new UnauthorizedAccessException("Permission denied to edit this record.");
+
+            return Task.CompletedTask;
+        }
+
+        protected Task CheckPermissionBookAsync(int bookKey, IUser currentUser)
+        {
+            if (currentUser == null || currentUser.UserKey == 0)
+                throw new UnauthorizedAccessException("Permission denied to edit this record.");
+
+            return Task.CompletedTask;
+        }
+
+        protected Task CheckPermissionSectionAsync(int sectionKey, IUser currentUser)
+        {
+            if (currentUser == null || currentUser.UserKey == 0)
+                throw new UnauthorizedAccessException("Permission denied to edit this record.");
+
+            return Task.CompletedTask;
+        }
+
+        protected Task CheckPermissionPlayAsync(int playKey, IUser currentUser)
+        {
+            if (currentUser == null || currentUser.UserKey == 0)
+                throw new UnauthorizedAccessException("Permission denied to edit this record.");
+
+            return Task.CompletedTask;
+        }
     }
 }

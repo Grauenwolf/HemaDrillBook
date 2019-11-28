@@ -24,6 +24,11 @@ namespace HemaDrillBook.Services
             .ExecuteAsync();
         }
 
+        public Task<List<BookSummary>> GetBooksAsync(IUser currentUser)
+        {
+            return DataSource(currentUser).From("Sources.BookDetail").WithSorting("BookName").ToCollection<BookSummary>().ExecuteAsync();
+        }
+
         public Task<List<PartSummary>> GetBookPartsAsync(int bookKey, IUser? currentUser)
         {
             return DataSource(currentUser)
@@ -31,6 +36,38 @@ namespace HemaDrillBook.Services
                 .WithSorting("DisplayOrder")
                 .ToCollection<PartSummary>()
                 .ExecuteAsync();
+        }
+
+        //public Task<List<PartSummary>> GetBookPartAndSectionsAsync(int bookKey, IUser? currentUser)
+        //{
+        //    return DataSource(currentUser)
+        //        .From("Sources.PartDetail", new { BookKey = bookKey })
+        //        .WithSorting("DisplayOrder")
+        //        .ToCollection<PartSummary>()
+        //        .ExecuteAsync();
+        //}
+
+        public async Task<BookDetailWithSections> GetBookDetailWithSectionsAsync(int bookKey, IUser? currentUser)
+        {
+            var result = (await DataSource(currentUser)
+                .From("Sources.BookDetail", new { BookKey = bookKey })
+                .ToObject<BookDetailWithSections>()
+                //.NeverNull() //Hack: This is broken in Chain 3.0. It works in 3.1.
+                .ExecuteAsync())!;
+
+            result.Parts.AddRange(await GetBookPartDetailAsync(result.BookKey, currentUser));
+            result.AlternateNames.AddRange(await GetBookAlternateNamesAsync(result.BookKey, currentUser));
+            result.Authors.AddRange(await GetAuthorsByBookAsync(result.BookKey, currentUser));
+            result.Weapons.AddRange(await GetBookWeaponsAsync(result.BookKey, currentUser));
+
+            return result;
+        }
+
+        public async Task<BookSummary> GetBookSummaryAsync(int bookKey, IUser currentUser)
+        {
+            var filter = new { bookKey };
+            //Hack: This is broken in Chain 3.0. It works in 3.1.
+            return (await DataSource(currentUser).From("Sources.Book", filter).ToObject<BookSummary>().ExecuteAsync())!;
         }
 
         public async Task<BookDetail> GetBookDetailAsync(string bookSlug, IUser? currentUser)
@@ -97,22 +134,48 @@ namespace HemaDrillBook.Services
             return result;
         }
 
+        public async Task<List<PartDetail>> GetBookPartDetailAsync(int bookKey, IUser? currentUser)
+        {
+            var ds = DataSource(currentUser);
+            var result = (await ds.From("Sources.PartDetail", new { bookKey }).ToCollection<PartDetail>().ExecuteAsync());
+
+            foreach (var part in result)
+            {
+                await GetPartDetailCore(currentUser, part);
+            }
+
+            return result;
+        }
+
+        public async Task<PartDetail> GetPartDetailAsync(int partKey, IUser? currentUser)
+        {
+            var ds = DataSource(currentUser);
+            var part = (await ds.From("Sources.PartDetail", new { partKey }).ToObject<PartDetail>().ExecuteAsync())!; //Hack, NeverNull in Chain 3.1
+
+            await GetPartDetailCore(currentUser, part);
+
+            return part;
+        }
+
         public async Task<PartDetail> GetPartDetailAsync(string bookSlug, string partSlug, IUser? currentUser)
         {
             var ds = DataSource(currentUser);
             var part = (await ds.From("Sources.PartDetail", new { bookSlug, partSlug }).ToObject<PartDetail>().ExecuteAsync())!; //Hack, NeverNull in Chain 3.1
 
+            await GetPartDetailCore(currentUser, part);
+
+            return part;
+        }
+
+        private async Task GetPartDetailCore(IUser? currentUser, PartDetail part)
+        {
             var flatList = await GetBookPartsAsync(part.BookKey, currentUser);
             var index = flatList.FindIndex(x => x.PartKey == part.PartKey);
             part.Previous = (index > 0) ? flatList[index - 1] : null;
             part.Next = (index < flatList.Count - 1) ? flatList[index + 1] : null;
             part.Weapons.AddRange(await GetPartWeaponsAsync(part.PartKey, currentUser));
-
             part.Sections.AddRange(await GetPartSectionsAsync(part.PartKey, currentUser));
-
             part.Plays.AddRange(await GetPartPlaysAsync(part.PartKey, currentUser));
-
-            return part;
         }
 
         public Task<List<WeaponPairSummary>> GetSectionWeaponsAsync(int sectionKey, IUser? currentUser)
@@ -130,6 +193,23 @@ namespace HemaDrillBook.Services
             //var filter = new { sectionKey };
             var section = (await ds.From("Sources.SectionDetail", new { bookSlug, partSlug, sectionSlug }).ToObject<SectionDetail>().ExecuteAsync())!; //Hack, NeverNull in Chain 3.1
 
+            await GetSectionDetailCore(section, currentUser);
+
+            return section;
+        }
+
+        public async Task<SectionDetail> GetSectionDetailAsync(int sectionKey, IUser? currentUser)
+        {
+            var ds = DataSource(currentUser);
+            var section = (await ds.From("Sources.SectionDetail", new { sectionKey }).ToObject<SectionDetail>().ExecuteAsync())!; //Hack, NeverNull in Chain 3.1
+
+            await GetSectionDetailCore(section, currentUser);
+
+            return section;
+        }
+
+        private async Task GetSectionDetailCore(SectionDetail section, IUser? currentUser)
+        {
             var (subsections, previous, next, up) = await GetSubsectionsAsync(section.PartKey, section.SectionKey, /*includeSubsectionWeapons, includeSubsectionPlays,*/ currentUser);
             section.Subsections.AddRange(subsections);
             section.Previous = previous;
@@ -144,8 +224,6 @@ namespace HemaDrillBook.Services
             //section.Translations.AddRange(await ds.From("Translations.SectionTranslationDetail", filter).ToCollection<SectionTranslationDetail>().ExecuteAsync());
 
             //section.CanEdit = await CanEditBookAsync(section.BookKey, currentUser);
-
-            return section;
         }
 
         public async Task<List<PlayDetail>> GetPlayDetailsForSectionAsync(int sectionKey, IUser? currentUser)
