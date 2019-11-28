@@ -218,6 +218,7 @@
     <Build Include="Sources\Views\SectionWeaponMapDetail.sql" />
     <Build Include="Sources\Views\SectionDetail.sql" />
     <Build Include="Interpretations\Views\PlayDetail.sql" />
+    <Build Include="Interpretations\Views\PlayStepDetail.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="localhost.publish.xml" />

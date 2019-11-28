@@ -102,8 +102,6 @@ VALUES
 (1071, 1, 1069, N'Example Device 2', N'1.26v.1', 2, 'Example-Device-2'),
 (1072, 1, NULL, N'Chapter 10', NULL, 6, 'Chapter-10'),
 (1073, 1, 1072, N'Pattern 1', N'1.27v.1', 1, 'Pattern-1'),
-(1074, 1, 1072, N'Pattern 1 with the Short Edge', NULL, 2, 'Pattern-1-Short-Edge'),
-(1075, 1, 1072, N'Pattern 1 with the Flats', NULL, 3, 'Pattern-1-Flats'),
 (1076, 1, 1072, N'Pattern 2', N'1.28v.1', 4, 'Pattern-2'),
 (1077, 1, 1072, N'Pattern 3', N'1.28v.2', 5, 'Pattern-3'),
 (1078, 1, 1072, N'Pattern 4', N'1.29r.1', 6, 'Pattern-4'),

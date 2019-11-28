@@ -6,39 +6,37 @@
 @if (Model != null)
 {
     <h1>@(Model.PartName)</h1>
-    <div>
-        <table class="gridtable">
-            <tr>
-                <th>
-                    @if (Model.Previous != null)
-                    {
-                        <a href="/b/@(Model.BookSlug)/p/@(Model.Previous.PartSlug)/t/@(Tab)">
-                            &lt;--
-                            @Model.Previous.PartName
-                        </a>
-                    }
-                </th>
-                <th>
-                    <a href="/b/@(Model.BookSlug)">@Model.BookName</a>
-                </th>
-                <th>
-                    @if (Model.Next != null)
-                    {
-                        <a href="/b/@(Model.BookSlug)/p/@(Model.Next.PartSlug)/t/@(Tab)">
-                            @Model.Next.PartName
-                            --&gt;
-                        </a>
-                    }
-                </th>
-            </tr>
-        </table>
-    </div>
+    <table class="gridtable">
+        <tr>
+            <th>
+                @if (Model.Previous != null)
+                {
+                    <a href="@(Model.Previous.PartUrlFragment)/t/@(Tab)">
+                        &lt;--
+                        @Model.Previous.PartName
+                    </a>
+                }
+            </th>
+            <th>
+                <a href="/b/@(Model.BookSlug)">@Model.BookName</a>
+            </th>
+            <th>
+                @if (Model.Next != null)
+                {
+                    <a href="@(Model.Next.PartUrlFragment)/t/@(Tab)">
+                        @Model.Next.PartName
+                        --&gt;
+                    </a>
+                }
+            </th>
+        </tr>
+    </table>
 
     <table class="gridtable">
         <tr>
-            <th> <NavLink class="nav-link" href=@("/b/" + Model.BookSlug + "/p/" + Model.PartSlug)>Overview</NavLink>  </th>
-            <th> <NavLink class="nav-link" href=@("/b/" + Model.BookSlug + "/p/" + Model.PartSlug + "/t/sections")>Contents</NavLink>  </th>
-            <th> <NavLink class="nav-link" href=@("/b/" + Model.BookSlug + "/p/" + Model.PartSlug + "/t/plays")>Plays</NavLink>  </th>
+            <th> <NavLink class="nav-link" href=@(Model.PartUrlFragment )>Overview</NavLink>  </th>
+            <th> <NavLink class="nav-link" href=@(Model.PartUrlFragment + "/t/sections")>Contents</NavLink>  </th>
+            <th> <NavLink class="nav-link" href=@(Model.PartUrlFragment + "/t/plays")>Plays</NavLink>  </th>
         </tr>
     </table>
 
@@ -48,17 +46,17 @@
         foreach (var section in Model.Sections)
         {
             <div style="margin-left: 25px">
-                <a href="/b/@(Model.BookSlug)/p/@(Model.PartSlug)/s/@(section.SectionSlug)">@(section.SectionName) @(string.IsNullOrEmpty(section.PageReference) ? "" : "(" + section.PageReference + ")")</a>
+                <a href="@(section.SectionUrlFragment)">@(section.SectionNameFull) </a>
             </div>
             foreach (var s2 in section.Subsections)
             {
                 <div style="margin-left: 50px">
-                    <a href="/b/@(Model.BookSlug)/p/@(Model.PartSlug)/s/@(s2.SectionSlug)">@(s2.SectionName) @(string.IsNullOrEmpty(s2.PageReference) ? "" : "(" + s2.PageReference + ")")</a>
+                    <a href="@(s2.SectionUrlFragment)">@(s2.SectionNameFull) </a>
                 </div>
                 foreach (var s3 in s2.Subsections)
                 {
                     <div style="margin-left: 75px">
-                        <a href="/b/@(Model.BookSlug)/p/@(Model.PartSlug)/s/@(s3.SectionSlug)">@(s3.SectionName) @(string.IsNullOrEmpty(s3.PageReference) ? "" : "(" + s3.PageReference + ")")</a>
+                        <a href="@(s3.SectionUrlFragment)">@(s3.SectionNameFull) </a>
                     </div>
                 }
             }
@@ -70,17 +68,31 @@
         foreach (var play in Model.Plays)
         {
             <div style="margin-left: 25px">
-                <a href="/b/@(Model.BookSlug)/p/@(Model.PartSlug)/s/@(play.SectionSlug)">@(play.VariantName ?? play.SectionName) @(string.IsNullOrEmpty(play.PageReference) ? "" : "(" + play.PageReference + ")")</a>
+                <a href="@(play.SectionUrlFragment)/t/plays">@(play.PlayNameFull) @(string.IsNullOrEmpty(play.PageReference) ? "" : "(" + play.PageReference + ")")</a>
             </div>
         }
     }
     else
     {
+        <h2>Overview</h2>
+        @if (Model.Sections.ChildSections().Count() > 0)
+        {
+            <div>Sections: @(Model.Sections.ChildSections().Count())</div>
+        }
+        @if (Model.Plays.Count > 0)
+        {
+            <div>Plays: @(Model.Plays.Count)</div>
+        }
+        @if (Model.Weapons.Count > 0)
+        {
+            <div>Weapon Combinations: @(Model.Weapons.Count)</div>
+        }
+
         <h2>Sections</h2>
         foreach (var section in Model.Sections)
         {
             <div style="margin-left: 25px">
-                <a href="/b/@(Model.BookSlug)/p/@(Model.PartSlug)/s/@(section.SectionSlug)">@(section.SectionName) </a>
+                <a href="@(section.SectionUrlFragment)">@(section.SectionNameFull) </a>
             </div>
         }
 
@@ -90,14 +102,7 @@
             @foreach (var weapon in Model.Weapons)
             {
                 <div>
-                    @if (weapon.SecondaryWeaponKey == null)
-                    {
-                        @(weapon.PrimaryWeaponName)
-                    }
-                    else
-                    {
-                        @(weapon.PrimaryWeaponName + " vs. " + weapon.SecondaryWeaponName)
-                    }
+                    @(weapon.WeaponNameFull)
                 </div>
             }
         }

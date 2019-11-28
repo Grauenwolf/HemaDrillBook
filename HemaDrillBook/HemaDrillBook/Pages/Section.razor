@@ -1,0 +1,227 @@
+﻿@page "/b/{BookSlug}/p/{PartSlug}/s/{SectionSlug}"
+@page "/b/{BookSlug}/p/{PartSlug}/s/{SectionSlug}/t"
+@page "/b/{BookSlug}/p/{PartSlug}/s/{SectionSlug}/t/{Tab}"
+@inherits SectionBase
+
+@if (Model != null)
+{
+    <h1>@(Model.SectionName)</h1>
+    <div>
+        <table class="gridtable">
+            <tr>
+                <th>
+                    @if (Model.Previous != null)
+                    {
+                        <a href="@(Model.Previous.SectionUrlFragment)/t/@(Tab)">
+                            &lt;-- @Model.Previous.SectionNameFull
+                        </a>
+                    }
+                </th>
+                <th>
+                    @if (Model.Up != null)
+                    {
+                        <a href="@(Model.Up.SectionUrlFragment)/t/@(Tab)">
+                            Up @Model.Up.SectionNameFull
+                        </a>
+
+                    }
+                    else
+                    {
+                        <a href="@(Model.PartUrlFragment)/t/@(Tab)">@Model.PartName</a>
+                    }
+                </th>
+                <th>
+                    @if (Model.Next != null)
+                    {
+                        <a href="@(Model.Next.SectionUrlFragment)/t/@(Tab)">
+                            @Model.Next.SectionNameFull --&gt;
+                        </a>
+                    }
+                </th>
+            </tr>
+        </table>
+    </div>
+
+    <table class="gridtable">
+        <tr>
+            <th> <NavLink class="nav-link" href=@(Model.SectionUrlFragment)>Overview</NavLink>  </th>
+            <th> <NavLink class="nav-link" href=@(Model.SectionUrlFragment + "/t/sections")>Contents</NavLink>  </th>
+            <th> <NavLink class="nav-link" href=@(Model.SectionUrlFragment + "/t/plays")>Plays</NavLink>  </th>
+        </tr>
+    </table>
+
+    @if (Tab == "sections" && Model.Subsections.Count > 0)
+    {
+        <h2>Table of Contents</h2>
+        foreach (var section in Model.Subsections)
+        {
+            <div style="margin-left: 25px">
+                <a href="@(section.SectionUrlFragment)">@(section.SectionNameFull)</a>
+            </div>
+            foreach (var s2 in section.Subsections)
+            {
+                <div style="margin-left: 50px">
+                    <a href="@(s2.SectionUrlFragment)">@(s2.SectionNameFull)</a>
+                </div>
+                foreach (var s3 in s2.Subsections)
+                {
+                    <div style="margin-left: 75px">
+                        <a href="@(s3.SectionUrlFragment)">@(s3.SectionNameFull)</a>
+                    </div>
+                }
+            }
+        }
+    }
+    else if (Tab == "plays" && Model.TotalPlayCount > 0)
+    {
+
+        {
+            var agentStyle = "background-color:mistyrose";
+            var patientStyle = "background-color:khaki";
+
+            <h2>Plays</h2>
+
+            @foreach (var play in Model.Plays)
+            {
+
+                <h3 id="@("Play" + play.PlayKey)">@(play.VariantName ?? "Basic Play")</h3>
+
+                <table class="gridtable">
+                    <tr><th>Agent</th><th>Patient</th><th>Measure</th></tr>
+                    <tr><td style="@agentStyle">@play.AGuardFullName</td><td style="@patientStyle">@play.PGuardFullName</td><td>@play.MeasureName</td></tr>
+                </table>
+                <div />
+                <table class="gridtable">
+                    <tr>
+                        <th>Tempo</th>
+                        <th>Footwork</th>
+                        <th>Technique</th>
+                        <th>Target</th>
+                        <th>Guard</th>
+                    </tr>
+                    @foreach (var step in play.Steps)
+                    {
+                        var rowStyle = agentStyle;
+
+                        @if (step.Actor == 'P')
+                        {
+                            rowStyle = patientStyle;
+                        }
+                        <tr>
+                            <td style=@rowStyle>@step.ActorName @step.TempoNumber</td>
+                            <td style=@rowStyle>@step.FootworkName</td>
+                            <td style=@rowStyle>@step.TechniqueFullName</td>
+                            @if (step.TargetKey1.HasValue)
+                            {
+                                <td style=@rowStyle>at @step.TargetFull</td>
+                            }
+                            else
+                            {
+                                <td style=@rowStyle></td>
+                            }
+                            @if (step.IntermediateGuardKey.HasValue || step.IntermediateGuardModifierKey.HasValue)
+                            {
+                                <td style=@rowStyle>thru @step.IntermediateGuardFullName into @step.GuardFullName</td>
+                            }
+                            else if (step.GuardKey.HasValue || step.GuardModifierKey.HasValue)
+                            {
+                                <td style=@rowStyle>into @step.GuardFullName</td>
+                            }
+                            else
+                            {
+                                <td style=@rowStyle></td>
+                            }
+                        </tr>
+                        @if (!string.IsNullOrEmpty(step.Notes))
+                        {
+                            <tr>
+                                <td colspan="5" style=@rowStyle>
+                                    @step.Notes
+                                </td>
+                            </tr>
+
+                        }
+                    }
+                </table>
+            }
+            @if (Model.Plays.Count > 0)
+            {
+                <h5>Warning: This is just a summary of each play. See the original text or translation for details.</h5>
+            }
+
+            @foreach (var play in Model.Subsections.ChildPlays())
+            {
+                <div>
+                    <a href="~/demo/book/@Model.BookKey/section/@(play.SectionKey)#Play@(play.PlayKey)">
+                        @play.SectionName
+                        @if (!string.IsNullOrEmpty(play.VariantName))
+                        {
+                            @(" (" + play.VariantName + ")")
+                        }
+                    </a>
+                </div>
+            }
+
+        }
+    }
+    else
+    {
+        <h2>Overview</h2>
+        @if (Model.Subsections.ChildSections().Count() > 0)
+        {
+            <div>Subsections: @(Model.Subsections.ChildSections().Count())</div>
+        }
+        @if (Model.Plays.Count > 0)
+        {
+            <div>Plays in this section: @(Model.Plays.Count)</div>
+        }
+        @if (Model.Subsections.ChildPlays().Count() > 0)
+        {
+            <div>Plays in subsections: @(Model.Subsections.ChildPlays().Count())</div>
+        }
+        @if (Model.Weapons.Count > 0)
+        {
+            <div>Weapon Combinations: @(Model.Weapons.Count)</div>
+        }
+        @*if (Model.TotalPlayCount > 0)
+            {
+                <h2>Plays</h2>
+                foreach (var play in Model.Plays)
+                {
+                    <div style="margin-left: 25px">
+                        <a href="@(play.SectionUrlFragment)/t/plays">@(play.PlayNameFull) @(string.IsNullOrEmpty(play.PageReference) ? "" : "(" + play.PageReference + ")")</a>
+                    </div>
+                }
+            }*@
+
+        if (Model.Subsections.Count > 0)
+        {
+            <h2>Sections</h2>
+            foreach (var section in Model.Subsections)
+            {
+                <div style="margin-left: 25px">
+                    <a href="@(section.SectionUrlFragment)">@(section.SectionNameFull) </a>
+                </div>
+            }
+        }
+
+        if (Model.Weapons.Count > 0)
+        {
+            <h2>Weapons</h2>
+            @foreach (var weapon in Model.Weapons)
+            {
+                <div>
+                    @(weapon.WeaponNameFull)
+                </div>
+            }
+        }
+    }
+}
+else if (LoadFailed)
+{
+    <h1>Error loading page.</h1>
+}
+else
+{
+    <h1>Loading</h1>
+}

@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Tortuga.Chain;
+using Tortuga.Chain.SqlServer;
 
 namespace HemaDrillBook
 {
@@ -42,7 +43,9 @@ namespace HemaDrillBook
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<ApplicationUser>>();
-            services.AddSingleton(new SqlServerDataSource(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddSingleton(
+                new SqlServerDataSource(Configuration.GetConnectionString("DefaultConnection"))
+                .WithSettings(new SqlServerDataSourceSettings() { StrictMode = true }));
             services.AddSingleton<BookService>();
         }
 

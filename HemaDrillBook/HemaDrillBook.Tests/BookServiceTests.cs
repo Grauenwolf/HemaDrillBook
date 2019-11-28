@@ -92,6 +92,57 @@ namespace HemaDrillBook.Tests
         }
 
         [TestMethod]
+        public async Task GetPartPlaysAsync()
+        {
+            var bs = new BookService(DataSource);
+            var parts = await DataSource.From("Sources.Part").ToInt32List("PartKey").ExecuteAsync();
+            foreach (var partKey in parts)
+            {
+                var rows = await bs.GetPartPlaysAsync(partKey, null);
+                foreach (var row in rows)
+                {
+                    Assert.IsFalse(string.IsNullOrWhiteSpace(row.PlayNameFull), "PlayNameFull shouldn't be null");
+                    Assert.IsFalse(string.IsNullOrWhiteSpace(row.SectionUrlFragment), "SectionUrlFragment shouldn't be null");
+                }
+            }
+        }
+
+        [TestMethod]
+        public async Task GetPartDetailAsync()
+        {
+            var bs = new BookService(DataSource);
+            var books = await DataSource.From("Sources.Book").ToStringList("BookSlug").ExecuteAsync();
+            foreach (var bookSlug in books)
+            {
+                var parts = await DataSource.From("Sources.PartDetail", new { bookSlug }).ToStringList("PartSlug").ExecuteAsync();
+                foreach (var partSlug in parts)
+                {
+                    var row = await bs.GetPartDetailAsync(bookSlug, partSlug, null);
+                }
+            }
+        }
+
+        [TestMethod]
+        public async Task GetSectionDetailAsync()
+        {
+            var bs = new BookService(DataSource);
+            var books = await DataSource.From("Sources.Book").ToStringList("BookSlug").ExecuteAsync();
+            foreach (var bookSlug in books)
+            {
+                var parts = await DataSource.From("Sources.PartDetail", new { bookSlug }).ToStringList("PartSlug").ExecuteAsync();
+                foreach (var partSlug in parts)
+                {
+                    var sections = await DataSource.From("Sources.SectionDetail", new { bookSlug, partSlug }).ToStringList("SectionSlug").ExecuteAsync();
+
+                    foreach (var sectionSlug in sections)
+                    {
+                        var row = await bs.GetSectionDetailAsync(bookSlug, partSlug, sectionSlug, null);
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
         public async Task GetBookPartsAsync()
         {
             var bs = new BookService(DataSource);

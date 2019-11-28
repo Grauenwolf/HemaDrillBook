@@ -20,19 +20,26 @@ namespace HemaDrillBook.Models
             }
         }
 
+        public string? SectionNameFull => string.IsNullOrEmpty(PageReference) ? SectionName : $"{SectionName} ({PageReference})";
+        public string SectionUrlFragment => $"/b/{BookSlug}/p/{PartSlug}/s/{SectionSlug}";
+        public string PartUrlFragment => $"/b/{BookSlug}/p/{PartSlug}";
+        public string BookUrlFragment => $"/b/{BookSlug}";
+
         public string? PageReference { get; set; }
         public int? ParentSectionKey { get; set; }
         public int SectionKey { get; set; }
         public string? SectionSlug { get; set; }
+        public string? PartSlug { get; set; }
+        public string? BookSlug { get; set; }
         public string? SectionName { get; set; }
-        public List<SectionSummary> Subsections { get; } = new List<SectionSummary>();
+        public SectionSummaryCollection Subsections { get; } = new SectionSummaryCollection();
         //public int TotalVideoCount => VideoCount + Subsections.Sum(x => x.TotalVideoCount);
         //public int TotalPlayCount => PlayCount + Subsections.Sum(x => x.TotalPlayCount);
         //public int VideoCount { get; set; }
         //public int PlayCount { get; set; }
 
         public List<WeaponPairSummary> Weapons { get; } = new List<WeaponPairSummary>();
-        //public List<PlaySummary> Plays { get; } = new List<PlaySummary>();
+        public List<PlaySummary> Plays { get; } = new List<PlaySummary>();
 
         ///// <summary>
         ///// Determines whether this section contains the specified weapon.
