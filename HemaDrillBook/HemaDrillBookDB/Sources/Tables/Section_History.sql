@@ -14,8 +14,8 @@
 
 GO
 
-CREATE CLUSTERED COLUMNSTORE INDEX IX_Section_History
-    ON Sources.Section_History;
+--CREATE CLUSTERED COLUMNSTORE INDEX IX_Section_History
+--    ON Sources.Section_History;
 GO
 
 CREATE NONCLUSTERED INDEX IX_Section_History_SysColumns
