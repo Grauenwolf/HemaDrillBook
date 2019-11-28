@@ -4,6 +4,7 @@ using HemaDrillBook.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -38,7 +39,12 @@ namespace HemaDrillBook
                 options.Password.RequireLowercase = false;
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = false;
+
+                options.SignIn.RequireConfirmedEmail = true;
             }).AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.Configure<AuthMessageSenderOptions>(Configuration);
+            services.AddTransient<IEmailSender, EmailSender>();
 
             services.AddRazorPages();
             services.AddServerSideBlazor();
@@ -46,6 +52,7 @@ namespace HemaDrillBook
             services.AddSingleton(
                 new SqlServerDataSource(Configuration.GetConnectionString("DefaultConnection"))
                 .WithSettings(new SqlServerDataSourceSettings() { StrictMode = true }));
+
             services.AddSingleton<BookService>();
         }
 

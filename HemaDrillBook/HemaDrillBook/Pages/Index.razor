@@ -3,9 +3,9 @@
 
 @if (User != null)
 {
-    <h2>
+    <h3>
         Hello @(string.IsNullOrEmpty(User.DisplayName) ? User.UserName : User.DisplayName)!
-    </h2>}
+    </h3>}
 else
 {
     <h2>Hello Fencers!</h2>
