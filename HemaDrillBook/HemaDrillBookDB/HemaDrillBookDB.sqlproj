@@ -133,6 +133,7 @@
     <Folder Include="Data\OneTime\Scratch" />
     <Folder Include="Sources\Views" />
     <Folder Include="Interpretations\Views" />
+    <Folder Include="Data\OneTime\Manciolino" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Accounts\Tables\AspNetRoles.sql">
@@ -219,6 +220,18 @@
     <Build Include="Sources\Views\SectionDetail.sql" />
     <Build Include="Interpretations\Views\PlayDetail.sql" />
     <Build Include="Interpretations\Views\PlayStepDetail.sql" />
+    <None Include="Data\OneTime\Manciolino\Sources.Book.sql" />
+    <None Include="Data\OneTime\Manciolino\Sources.Part.sql" />
+    <None Include="Data\OneTime\Manciolino\Interpretations.Play.5.sql" />
+    <None Include="Data\OneTime\Manciolino\Interpretations.PlaySTep.5.sql" />
+    <None Include="Data\OneTime\Manciolino\Sources.Section.5.sql" />
+    <None Include="Data\OneTime\Manciolino\Sources.SectionWeaponMap.5.sql" />
+    <None Include="Data\OneTime\Manciolino\Sources.Section.Part.8.sql" />
+    <None Include="Data\OneTime\Manciolino\Sources.Section.Part.9.sql" />
+    <None Include="Data\OneTime\Manciolino\Sources.Section.Part.10.sql" />
+    <None Include="Data\OneTime\Manciolino\Sources.Section.Part.11.sql" />
+    <None Include="Data\OneTime\Manciolino\Sources.Section.Part.12.sql" />
+    <None Include="Data\OneTime\Manciolino\Sources.Section.Part.13.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="localhost.publish.xml" />

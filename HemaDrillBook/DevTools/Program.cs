@@ -23,26 +23,26 @@ namespace DevTools
 
             //ExportTable(videoDS, "Tags.Footwork");
 
-            ExportTable(videoDS, "Sources.Author");
-            ExportTable(videoDS, "Sources.Book");
-            ExportTable(videoDS, "Sources.BookAuthor");
-            ExportTable(videoDS, "Sources.AlternateBookName");
+            //ExportTable(videoDS, "Sources.Author");
+            //ExportTable(videoDS, "Sources.Book");
+            //ExportTable(videoDS, "Sources.BookAuthor");
+            //ExportTable(videoDS, "Sources.AlternateBookName");
 
-            const string sectionWeaponFilter = @"EXISTS (SELECT * FROM Sources.Section s WHERE s.BookKey = @BookKey AND SectionWeaponMap.SectionKey = s.SectionKey)";
-            const string sectionPlayFilter = @"EXISTS (SELECT * FROM Sources.Section s WHERE s.BookKey = @BookKey AND Play.SectionKey = s.SectionKey)";
-            const string playStepFilter = @"EXISTS (SELECT * FROM Interpretations.Play p INNER JOIN Sources.Section s ON p.SectionKey = s.SectionKey WHERE PlayStep.PlayKey = p.PlayKey AND s.BookKey = @BookKey)";
+            //const string sectionWeaponFilter = @"EXISTS (SELECT * FROM Sources.Section s WHERE s.BookKey = @BookKey AND SectionWeaponMap.SectionKey = s.SectionKey)";
+            //const string sectionPlayFilter = @"EXISTS (SELECT * FROM Sources.Section s WHERE s.BookKey = @BookKey AND Play.SectionKey = s.SectionKey)";
+            //const string playStepFilter = @"EXISTS (SELECT * FROM Interpretations.Play p INNER JOIN Sources.Section s ON p.SectionKey = s.SectionKey WHERE PlayStep.PlayKey = p.PlayKey AND s.BookKey = @BookKey)";
 
-            foreach (var bookKey in videoDS.From("Sources.Book").ToInt32List("BookKey").Execute())
-            {
-                ExportTable(videoDS, "Sources.Section", null, new { BookKey = bookKey }, $"Sources.Section.{bookKey}.sql");
-                ExportTable(videoDS, "Sources.SectionWeaponMap", sectionWeaponFilter, new { BookKey = bookKey }, $"Sources.SectionWeaponMap.{bookKey}.sql");
-                ExportTable(videoDS, "Interpretations.Play", sectionPlayFilter, new { BookKey = bookKey }, $"Interpretations.Play.{bookKey}.sql");
-                ExportTable(videoDS, "Interpretations.PlayStep", playStepFilter, new { BookKey = bookKey }, $"Interpretations.PlayStep.{bookKey}.sql");
-            }
+            //foreach (var bookKey in videoDS.From("Sources.Book").ToInt32List("BookKey").Execute())
+            //{
+            //    ExportTable(videoDS, "Sources.Section", null, new { BookKey = bookKey }, $"Sources.Section.{bookKey}.sql");
+            //    ExportTable(videoDS, "Sources.SectionWeaponMap", sectionWeaponFilter, new { BookKey = bookKey }, $"Sources.SectionWeaponMap.{bookKey}.sql");
+            //    ExportTable(videoDS, "Interpretations.Play", sectionPlayFilter, new { BookKey = bookKey }, $"Interpretations.Play.{bookKey}.sql");
+            //    ExportTable(videoDS, "Interpretations.PlayStep", playStepFilter, new { BookKey = bookKey }, $"Interpretations.PlayStep.{bookKey}.sql");
+            //}
 
-            ExportTable(drillBookDS, "Sources.Part");
+            //ExportTable(drillBookDS, "Sources.Part");
 
-            for (var i = 1; i <= 5; i++)
+            for (var i = 8; i <= 13; i++)
             {
                 ExportTable_Sections(drillBookDS, new { PartKey = i }, $"Sources.Section.Part.{i}.sql");
             }
@@ -250,7 +250,7 @@ WHEN MATCHED THEN
                 output.AppendLine($@"SET IDENTITY_INSERT {table.Name} OFF;");
 
             output.AppendLine("END;");
-            output.AppendLine("GO;");
+            output.AppendLine("GO");
 
             File.WriteAllText(filename ?? (tableName + ".sql"), output.ToString());
         }
