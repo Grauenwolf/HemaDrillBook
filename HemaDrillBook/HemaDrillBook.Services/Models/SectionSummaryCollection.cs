@@ -39,13 +39,13 @@ namespace HemaDrillBook.Models
         //    IsFilteredByWeapon = true;
         //}
 
-        public IEnumerable<SectionSummary> ChildSections()
+        public IEnumerable<SectionSummary> WalkSections()
         {
             foreach (var section in this)
             {
                 yield return section;
 
-                foreach (var subsection in section.Subsections.ChildSections())
+                foreach (var subsection in section.Subsections.WalkSections())
                     yield return subsection;
             }
         }

@@ -14,10 +14,10 @@ namespace HemaDrillBook.Models
         public string? BookSlug { get; set; }
 
         [NotMapped]
-        public PartSummary? Next { get; set; }
+        public PartSummary? NextPart { get; set; }
 
         [NotMapped]
-        public PartSummary? Previous { get; set; }
+        public PartSummary? PreviousPart { get; set; }
 
         public int PartKey { get; set; }
         public string? PartName { get; set; }

@@ -6,37 +6,59 @@
 @if (Model != null)
 {
     <h1>@(Model.PartName)</h1>
-    <table class="gridtable">
+
+    <div style="font-size:small">
+        <a href="/b/@(Model.BookSlug)" title="@Model.BookName">@Model.BookName</a>
+    </div>
+
+    <table class="gridtableCentered" width="100%" style="max-width:400px">
         <tr>
-            <th>
-                @if (Model.Previous != null)
-                {
-                    <a href="@(Model.Previous.PartUrlFragment)/t/@(Tab)">
-                        &lt;--
-                        @Model.Previous.PartName
-                    </a>
-                }
+            <td width="20%">&nbsp;</td>
+
+            @if (Model.PreviousPart != null)
+            {
+                <th width="20%">
+                    <a href="@(Model.PreviousPart.PartUrlFragment)/t/@(Tab)" title="@Model.PreviousPart.PartName">&lt;&mdash; Back</a>
+                </th>
+            }
+            else
+            {
+                <td width="20%">&lt;&mdash; Back</td>
+            }
+
+            <th width="20%">
+                <a href="/b/@(Model.BookSlug)" title="@Model.BookName">Up</a>
             </th>
-            <th>
-                <a href="/b/@(Model.BookSlug)">@Model.BookName</a>
-            </th>
-            <th>
-                @if (Model.Next != null)
-                {
-                    <a href="@(Model.Next.PartUrlFragment)/t/@(Tab)">
-                        @Model.Next.PartName
-                        --&gt;
-                    </a>
-                }
-            </th>
+
+            @if (Model.NextPart != null)
+            {
+                <th width="20%">
+                    <a href="@(Model.NextPart.PartUrlFragment)/t/@(Tab)" title="@Model.NextPart.PartName">Next &mdash;&gt;</a>
+                </th>
+            }
+            else
+            {
+                <td width="20%">Next &mdash;&gt;</td>
+            }
+
+            <td width="20%">&nbsp;</td>
         </tr>
     </table>
 
-    <table class="gridtable">
+    <table class="gridtableCentered" width="100%" style="max-width:400px">
         <tr>
-            <th> <NavLink class="nav-link" href=@(Model.PartUrlFragment )>Overview</NavLink>  </th>
-            <th> <NavLink class="nav-link" href=@(Model.PartUrlFragment + "/t/sections")>Contents</NavLink>  </th>
-            <th> <NavLink class="nav-link" href=@(Model.PartUrlFragment + "/t/plays")>Plays</NavLink>  </th>
+            <th> <a href=@(Model.PartUrlFragment )>Overview</a>  </th>
+
+            <th> <a href=@(Model.PartUrlFragment + "/t/sections")>Contents</a>  </th>
+
+            @if (Model.Plays.Any())
+            {
+                <th> <a href=@(Model.PartUrlFragment + "/t/plays")>Plays</a>  </th>
+            }
+            else
+            {
+                <td>Plays</td>
+            }
         </tr>
     </table>
 
@@ -68,18 +90,18 @@
         foreach (var play in Model.Plays)
         {
             <div style="margin-left: 25px">
-                <a href="@(play.SectionUrlFragment)/t/plays">@(play.PlayNameFull) @(string.IsNullOrEmpty(play.PageReference) ? "" : "(" + play.PageReference + ")")</a>
+                <a href="@(play.SectionUrlFragment)/t/plays">@(play.PlayNameFull)</a>
             </div>
         }
     }
     else
     {
         <h2>Overview</h2>
-        @if (Model.Sections.ChildSections().Count() > 0)
+        @if (Model.Sections.WalkSections().Any())
         {
-            <div>Sections: @(Model.Sections.ChildSections().Count())</div>
+            <div>Sections: @(Model.Sections.WalkSections().Count())</div>
         }
-        @if (Model.Plays.Count > 0)
+        @if (Model.Plays.Any())
         {
             <div>Plays: @(Model.Plays.Count)</div>
         }

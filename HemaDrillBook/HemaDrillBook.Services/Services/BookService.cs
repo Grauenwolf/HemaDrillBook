@@ -171,8 +171,8 @@ namespace HemaDrillBook.Services
         {
             var flatList = await GetBookPartsAsync(part.BookKey, currentUser);
             var index = flatList.FindIndex(x => x.PartKey == part.PartKey);
-            part.Previous = (index > 0) ? flatList[index - 1] : null;
-            part.Next = (index < flatList.Count - 1) ? flatList[index + 1] : null;
+            part.PreviousPart = (index > 0) ? flatList[index - 1] : null;
+            part.NextPart = (index < flatList.Count - 1) ? flatList[index + 1] : null;
             part.Weapons.AddRange(await GetPartWeaponsAsync(part.PartKey, currentUser));
             part.Sections.AddRange(await GetPartSectionsAsync(part.PartKey, currentUser));
             part.Plays.AddRange(await GetPartPlaysAsync(part.PartKey, currentUser));
@@ -210,11 +210,18 @@ namespace HemaDrillBook.Services
 
         private async Task GetSectionDetailCore(SectionDetail section, IUser? currentUser)
         {
-            var (subsections, previous, next, up) = await GetSubsectionsAsync(section.PartKey, section.SectionKey, /*includeSubsectionWeapons, includeSubsectionPlays,*/ currentUser);
+            var (subsections, previousPage, nextPage, up, previousSection, nextSection, breadCrumb) = await GetSubsectionsAsync(section.PartKey, section.SectionKey, /*includeSubsectionWeapons, includeSubsectionPlays,*/ currentUser);
+
+            breadCrumb.Insert(0, new AppLink() { Name = section.PartName, UrlFragment = section.PartUrlFragment });
+            breadCrumb.Insert(0, new AppLink() { Name = section.BookName, UrlFragment = section.BookUrlFragment });
+
             section.Subsections.AddRange(subsections);
-            section.Previous = previous;
-            section.Next = next;
+            section.PreviousPage = previousPage;
+            section.NextPage = nextPage;
             section.Up = up;
+            section.PreviousSection = previousSection;
+            section.NextSection = nextSection;
+            section.BreadCrumb = breadCrumb;
 
             //section.Videos.AddRange(await ds.From("Interpretations.Video", filter).ToCollection<Video>().ExecuteAsync());
             section.Weapons.AddRange(await GetSectionWeaponsAsync(section.SectionKey, currentUser));
@@ -256,7 +263,7 @@ namespace HemaDrillBook.Services
             return result;
         }
 
-        async Task<(IList<SectionSummary> List, SectionSummary? Next, SectionSummary? Previous, SectionSummary? Up)> GetSubsectionsAsync(int partKey, int sectionKey, /*bool includeWeapons, bool includePlays,*/ IUser? currentUser)
+        async Task<(IList<SectionSummary> List, SectionSummary? PreviousPage, SectionSummary? NextPage, SectionSummary? Up, SectionSummary? NextSection, SectionSummary? PreviousSection, List<AppLink> BreadCrumb)> GetSubsectionsAsync(int partKey, int sectionKey, /*bool includeWeapons, bool includePlays,*/ IUser? currentUser)
         {
             //This could be more efficient using a recursive CTE
 
@@ -282,17 +289,39 @@ namespace HemaDrillBook.Services
             //}
 
             var flatList = Flatten(sections);
-
             var result = flatList.Single(x => x.SectionKey == sectionKey);
             var index = flatList.IndexOf(result);
 
             foreach (var section in result.Subsections)
                 section.Depth = 1;
 
-            var previous = (index > 0) ? flatList[index - 1] : null;
-            var next = (index < flatList.Count - 2) ? flatList[index + 1] : null;
+            //Previous/Next page, regardless of depth
+            var previousPage = (index > 0) ? flatList[index - 1] : null;
+            var nextPage = (index < flatList.Count - 2) ? flatList[index + 1] : null;
             var up = (result.ParentSectionKey != null) ? flatList.Single(x => x.SectionKey == result.ParentSectionKey) : null;
-            return (result.Subsections, previous, next, up);
+
+            //Previous/Next at the same depth (e.g. chapters)
+            IEnumerable<SectionSummary> mySiblings;
+            if (up == null) //we're at the top
+                mySiblings = sections.Where(s => s.ParentSectionKey == null).ToList();
+            else
+                mySiblings = up.Subsections;
+
+            var previousSection = mySiblings.Where(s => s.DisplayOrder < result.DisplayOrder).OrderByDescending(s => s.DisplayOrder).FirstOrDefault();
+            var nextSection = mySiblings.Where(s => s.DisplayOrder > result.DisplayOrder).OrderBy(s => s.DisplayOrder).FirstOrDefault();
+
+            //Bread crumb
+            var breadCrumb = new List<AppLink>();
+            SectionSummary? current = up;
+
+            while (current != null)
+            {
+                breadCrumb.Add(new AppLink() { Name = current.SectionName, UrlFragment = current.SectionUrlFragment });
+                current = (current.ParentSectionKey != null) ? flatList.Single(x => x.SectionKey == current.ParentSectionKey) : null;
+            }
+            breadCrumb.Reverse();
+
+            return (result.Subsections, previousPage, nextPage, up, previousSection, nextSection, breadCrumb);
         }
 
         /// <summary>

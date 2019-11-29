@@ -6,47 +6,100 @@
 @if (Model != null)
 {
     <h1>@(Model.SectionName)</h1>
-    <div>
-        <table class="gridtable">
-            <tr>
-                <th>
-                    @if (Model.Previous != null)
-                    {
-                        <a href="@(Model.Previous.SectionUrlFragment)/t/@(Tab)">
-                            &lt;-- @Model.Previous.SectionNameFull
-                        </a>
-                    }
-                </th>
-                <th>
-                    @if (Model.Up != null)
-                    {
-                        <a href="@(Model.Up.SectionUrlFragment)/t/@(Tab)">
-                            Up @Model.Up.SectionNameFull
-                        </a>
-
-                    }
-                    else
-                    {
-                        <a href="@(Model.PartUrlFragment)/t/@(Tab)">@Model.PartName</a>
-                    }
-                </th>
-                <th>
-                    @if (Model.Next != null)
-                    {
-                        <a href="@(Model.Next.SectionUrlFragment)/t/@(Tab)">
-                            @Model.Next.SectionNameFull --&gt;
-                        </a>
-                    }
-                </th>
-            </tr>
-        </table>
+    <div style="font-size:small">
+        @foreach (var item in Model.BreadCrumb)
+        {
+            if (item != Model.BreadCrumb[0])
+            {
+                <span>&star;</span>
+            }
+            <a href="@item.UrlFragment" title="@item.Name">@(item.ShortName(25) + " ")</a>
+        }
     </div>
 
-    <table class="gridtable">
+    <table class="gridtableCentered" width="100%" style="max-width:400px">
         <tr>
-            <th> <NavLink class="nav-link" href=@(Model.SectionUrlFragment)>Overview</NavLink>  </th>
-            <th> <NavLink class="nav-link" href=@(Model.SectionUrlFragment + "/t/sections")>Contents</NavLink>  </th>
-            <th> <NavLink class="nav-link" href=@(Model.SectionUrlFragment + "/t/plays")>Plays</NavLink>  </th>
+            @if (Model.PreviousSection != null)
+            {
+                <th width="20%">
+                    <a href="@(Model.PreviousSection.SectionUrlFragment)/t/@(Tab)" title="@Model.PreviousSection.SectionNameFull">
+                        &lt;&lt;&mdash; Skip
+                    </a>
+                </th>
+            }
+            else
+            {
+                <td width="20%">&lt;&lt;&mdash; Skip</td>
+            }
+            @if (Model.PreviousPage != null)
+            {
+                <th width="20%">
+                    <a href="@(Model.PreviousPage.SectionUrlFragment)/t/@(Tab)" title="@Model.PreviousPage.SectionNameFull">&lt;&mdash; Back</a>
+                </th>
+            }
+            else
+            {
+                <td width="20%">&lt;&mdash; Back</td>
+            }
+
+            <th width="20%">
+                @if (Model.Up != null)
+                {
+                    <a href="@(Model.Up.SectionUrlFragment)/t/@(Tab)" title="@Model.Up.SectionNameFull">Up </a>
+
+                }
+                else
+                {
+                    <a href="@(Model.PartUrlFragment)/t/@(Tab)" title="@Model.PartName">Up</a>
+                }
+            </th>
+
+            @if (Model.NextPage != null)
+            {
+                <th width="20%">
+                    <a href="@(Model.NextPage.SectionUrlFragment)/t/@(Tab)" title="@Model.NextPage.SectionNameFull">Next &mdash;&gt;</a>
+                </th>
+            }
+            else
+            {
+                <td width="20%">Next &mdash;&gt;</td>
+            }
+
+            @if (Model.NextSection != null)
+            {
+                <th width="20%">
+                    <a href="@(Model.NextSection.SectionUrlFragment)/t/@(Tab)" title="@Model.NextSection.SectionNameFull">
+                        Skip &mdash;&gt;&gt;
+                    </a>
+                </th>
+            }
+            else
+            {
+                <td width="20%">Skip &mdash;&gt;&gt;</td>
+            }
+        </tr>
+    </table>
+    <table class="gridtableCentered" width="100%" style="max-width:400px">
+        <tr>
+            <th> <a href=@(Model.SectionUrlFragment )>Overview</a>  </th>
+
+            @if (Model.Subsections.Count > 0)
+            {
+                <th> <a href=@(Model.SectionUrlFragment + "/t/sections")>Contents</a>  </th>
+            }
+            else
+            {
+                <td> Contents </td>
+            }
+
+            @if (Model.TotalPlayCount > 0)
+            {
+                <th> <a href=@(Model.SectionUrlFragment + "/t/plays")>Plays</a>  </th>
+            }
+            else
+            {
+                <td>Plays</td>
+            }
         </tr>
     </table>
 
@@ -152,13 +205,7 @@
             @foreach (var play in Model.Subsections.ChildPlays())
             {
                 <div>
-                    <a href="~/demo/book/@Model.BookKey/section/@(play.SectionKey)#Play@(play.PlayKey)">
-                        @play.SectionName
-                        @if (!string.IsNullOrEmpty(play.VariantName))
-                        {
-                            @(" (" + play.VariantName + ")")
-                        }
-                    </a>
+                    <a href="@(play.SectionUrlFragment)/t/plays">@(play.PlayNameFull)</a>
                 </div>
             }
 
@@ -167,9 +214,9 @@
     else
     {
         <h2>Overview</h2>
-        @if (Model.Subsections.ChildSections().Count() > 0)
+        @if (Model.Subsections.WalkSections().Count() > 0)
         {
-            <div>Subsections: @(Model.Subsections.ChildSections().Count())</div>
+            <div>Subsections: @(Model.Subsections.WalkSections().Count())</div>
         }
         @if (Model.Plays.Count > 0)
         {

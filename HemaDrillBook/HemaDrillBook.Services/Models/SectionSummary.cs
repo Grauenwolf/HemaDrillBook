@@ -41,6 +41,8 @@ namespace HemaDrillBook.Models
         public List<WeaponPairSummary> Weapons { get; } = new List<WeaponPairSummary>();
         public List<PlaySummary> Plays { get; } = new List<PlaySummary>();
 
+        public float DisplayOrder { get; set; }
+
         ///// <summary>
         ///// Determines whether this section contains the specified weapon.
         ///// </summary>

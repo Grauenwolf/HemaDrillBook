@@ -14,8 +14,20 @@ namespace HemaDrillBook.Models
         public string? BookName { get; set; }
 
         //public bool CanEdit { get; set; }
+
+        /// <summary>
+        /// Gets or sets the next section, which may be at any depth.
+        /// </summary>
+        /// <value>The next page.</value>
         [NotMapped]
-        public SectionSummary? Next { get; set; }
+        public SectionSummary? NextPage { get; set; }
+
+        /// <summary>
+        /// Gets or sets the next section at the same depth.
+        /// </summary>
+        /// <value>The next section.</value>
+        [NotMapped]
+        public SectionSummary? NextSection { get; set; }
 
         public string? PageReference { get; set; }
         public int? ParentSectionKey { get; set; }
@@ -27,8 +39,19 @@ namespace HemaDrillBook.Models
 
         public List<PlayDetail> Plays { get; } = new List<PlayDetail>();
 
+        /// <summary>
+        /// Gets or sets the previous section, which may be at any depth.
+        /// </summary>
+        /// <value>The previous page.</value>
         [NotMapped]
-        public SectionSummary? Previous { get; set; }
+        public SectionSummary? PreviousPage { get; set; }
+
+        /// <summary>
+        /// Gets or sets the previous section at the same depth.
+        /// </summary>
+        /// <value>The previous section.</value>
+        [NotMapped]
+        public SectionSummary? PreviousSection { get; set; }
 
         public int SectionKey { get; set; }
         public string? SectionName { get; set; }
@@ -43,5 +66,8 @@ namespace HemaDrillBook.Models
         //public int VideoCount { get; set; }
         //public List<Video> Videos { get; } = new List<Video>();
         public List<WeaponPairSummary> Weapons { get; } = new List<WeaponPairSummary>();
+
+        [NotMapped]
+        public List<AppLink> BreadCrumb { get; set; } = new List<AppLink>();
     }
 }
