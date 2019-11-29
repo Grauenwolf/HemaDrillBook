@@ -11,3 +11,7 @@
     PERIOD FOR SYSTEM_TIME(SysStartTime, SysEndTime)
 )
 WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = Sources.SectionWeaponMap_History) );
+GO
+CREATE UNIQUE INDEX UX_SectionWeaponMap_Single ON Sources.SectionWeaponMap (SectionKey, PrimaryWeaponKey) WHERE SecondaryWeaponKey IS NULL
+GO
+CREATE UNIQUE INDEX UX_SectionWeaponMap_Double ON Sources.SectionWeaponMap (SectionKey, PrimaryWeaponKey, SecondaryWeaponKey) WHERE SecondaryWeaponKey IS NOT NULL

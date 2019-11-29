@@ -13,7 +13,6 @@
 
     <table class="gridtableCentered" width="100%" style="max-width:400px">
         <tr>
-            <td width="20%">&nbsp;</td>
 
             @if (Model.PreviousPart != null)
             {
@@ -26,9 +25,20 @@
                 <td width="20%">&lt;&mdash; Back</td>
             }
 
+            <td width="20%">&nbsp;</td>
+
             <th width="20%">
                 <a href="/b/@(Model.BookSlug)" title="@Model.BookName">Up</a>
             </th>
+
+            @if (Model.Sections.Any())
+            {
+                <th width="20%"><a href="@(Model.Sections[0].SectionUrlFragment)" title="@Model.Sections[0].SectionName">First Page</a></th>
+            }
+            else
+            {
+                <td width="20%">First Page</td>
+            }
 
             @if (Model.NextPart != null)
             {
@@ -40,8 +50,6 @@
             {
                 <td width="20%">Next &mdash;&gt;</td>
             }
-
-            <td width="20%">&nbsp;</td>
         </tr>
     </table>
 

@@ -14,84 +14,66 @@ namespace HemaDrillBook.Services
             m_DataSource = dataSource ?? throw new ArgumentNullException(nameof(dataSource));
         }
 
-        //Disabled null check because of bug in Chain. See https://github.com/docevaad/Chain/issues/317 in Chain 3.1
-        protected SqlServerDataSource DataSource(IUser? currentUser) => m_DataSource.WithUser(currentUser!);
-
-        /*
-        protected async Task<bool> CanEditBookAsync(int bookKey, IUser currentUser)
-        {
-            if (currentUser == null)
-                return false;
-            var result = await m_DataSource.From("dbo.BookEditor", new { bookKey, currentUser.UserKey }).AsCount().ExecuteAsync();
-            return (result > 0);
-        }
-
-        protected async Task CheckPermissionTagEditorAsync(IUser currentUser)
-        {
-            var result = await m_DataSource.From("dbo.BookEditor", new { currentUser.UserKey }).AsCount().ExecuteAsync();
-            if (result == 0)
-                throw new UnauthorizedAccessException("Permission denied to edit this record.");
-        }
-
         protected async Task CheckPermissionBookAsync(int bookKey, IUser currentUser)
         {
-            var result = await m_DataSource.From("dbo.BookEditor", new { bookKey, currentUser.UserKey }).AsCount().ExecuteAsync();
+            if (currentUser == null || currentUser.UserKey == 0)
+                throw new UnauthorizedAccessException("Please login.");
+
+            var result = await DataSource(currentUser).From("Accounts.BookEditorDetail", new { bookKey, currentUser.UserKey }).AsCount().ExecuteAsync();
+
             if (result == 0)
                 throw new UnauthorizedAccessException("Permission denied to edit this record.");
         }
 
-        protected async Task CheckPermissionSectionAsyc(int sectionKey, IUser currentUser)
+        protected async Task CheckPermissionPartAsync(int partKey, IUser currentUser)
         {
-            var result = await m_DataSource.From("dbo.SectionEditor", new { sectionKey, currentUser.UserKey }).AsCount().ExecuteAsync();
-            if (result == 0)
-                throw new UnauthorizedAccessException("Permission denied to edit this record.");
-        }
+            if (currentUser == null || currentUser.UserKey == 0)
+                throw new UnauthorizedAccessException("Please login.");
 
-        protected async Task CheckPermissionVideoAsync(int videoKey, IUser currentUser)
-        {
-            var result = await m_DataSource.From("dbo.VideoEditor", new { videoKey, currentUser.UserKey }).AsCount().ExecuteAsync();
+            var result = await DataSource(currentUser).From("Accounts.PartEditorDetail", new { partKey, currentUser.UserKey }).AsCount().ExecuteAsync();
+
             if (result == 0)
                 throw new UnauthorizedAccessException("Permission denied to edit this record.");
         }
 
         protected async Task CheckPermissionPlayAsync(int playKey, IUser currentUser)
         {
-            var result = await m_DataSource.From("dbo.PlayEditor", new { playKey, currentUser.UserKey }).AsCount().ExecuteAsync();
+            if (currentUser == null || currentUser.UserKey == 0)
+                throw new UnauthorizedAccessException("Please login.");
+
+            var partKey = await DataSource(currentUser).From("Interpretations.PlayDetail", new { playKey }).ToInt32("PartKey").ExecuteAsync();
+            await CheckPermissionPartAsync(partKey, currentUser);
+        }
+
+        protected async Task CheckPermissionSectionAsync(int sectionKey, IUser currentUser)
+        {
+            if (currentUser == null || currentUser.UserKey == 0)
+                throw new UnauthorizedAccessException("Please login.");
+
+            var partKey = await DataSource(currentUser).From("Sources.SectionDetail", new { sectionKey }).ToInt32("PartKey").ExecuteAsync();
+            await CheckPermissionPartAsync(partKey, currentUser);
+        }
+
+        protected async Task CheckPermissionTagEditorAsync(IUser currentUser)
+        {
+            if (currentUser == null || currentUser.UserKey == 0)
+                throw new UnauthorizedAccessException("Please login.");
+
+            var result = await m_DataSource.From("dbo.BookEditorDetail", new { currentUser.UserKey }).AsCount().ExecuteAsync();
+            if (result == 0)
+                throw new UnauthorizedAccessException("Permission denied to edit this record.");
+        }
+
+        //Disabled null check because of bug in Chain. See https://github.com/docevaad/Chain/issues/317 in Chain 3.1
+        protected SqlServerDataSource DataSource(IUser? currentUser) => m_DataSource.WithUser(currentUser!);
+
+        /*
+        protected async Task CheckPermissionVideoAsync(int videoKey, IUser currentUser)
+        {
+            var result = await m_DataSource.From("dbo.VideoEditor", new { videoKey, currentUser.UserKey }).AsCount().ExecuteAsync();
             if (result == 0)
                 throw new UnauthorizedAccessException("Permission denied to edit this record.");
         }
         */
-
-        protected Task CheckPermissionTagEditorAsync(IUser currentUser)
-        {
-            if (currentUser == null || currentUser.UserKey == 0)
-                throw new UnauthorizedAccessException("Permission denied to edit this record.");
-
-            return Task.CompletedTask;
-        }
-
-        protected Task CheckPermissionBookAsync(int bookKey, IUser currentUser)
-        {
-            if (currentUser == null || currentUser.UserKey == 0)
-                throw new UnauthorizedAccessException("Permission denied to edit this record.");
-
-            return Task.CompletedTask;
-        }
-
-        protected Task CheckPermissionSectionAsync(int sectionKey, IUser currentUser)
-        {
-            if (currentUser == null || currentUser.UserKey == 0)
-                throw new UnauthorizedAccessException("Permission denied to edit this record.");
-
-            return Task.CompletedTask;
-        }
-
-        protected Task CheckPermissionPlayAsync(int playKey, IUser currentUser)
-        {
-            if (currentUser == null || currentUser.UserKey == 0)
-                throw new UnauthorizedAccessException("Permission denied to edit this record.");
-
-            return Task.CompletedTask;
-        }
     }
 }

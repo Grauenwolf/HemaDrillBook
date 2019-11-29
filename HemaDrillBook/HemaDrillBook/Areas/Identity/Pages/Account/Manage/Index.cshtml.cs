@@ -33,7 +33,7 @@ namespace HemaDrillBook.Areas.Identity.Pages.Account.Manage
         {
             [Required]
             [StringLength(50, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 1)]
-            [Display(Name = "Name (people will see this). If blank, your commentary/videos cannot be shared.")]
+            [Display(Name = "Display Name (people will see this).")]
             public string? DisplayName { get; set; }
 
             [Required]

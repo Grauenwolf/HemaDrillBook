@@ -134,6 +134,8 @@
     <Folder Include="Sources\Views" />
     <Folder Include="Interpretations\Views" />
     <Folder Include="Data\OneTime\Manciolino" />
+    <Folder Include="Accounts\Progamability" />
+    <Folder Include="Accounts\Views" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Accounts\Tables\AspNetRoles.sql">
@@ -232,6 +234,10 @@
     <None Include="Data\OneTime\Manciolino\Sources.Section.Part.11.sql" />
     <None Include="Data\OneTime\Manciolino\Sources.Section.Part.12.sql" />
     <None Include="Data\OneTime\Manciolino\Sources.Section.Part.13.sql" />
+    <Build Include="Accounts\Tables\BookEditor.sql" />
+    <Build Include="Accounts\Tables\PartEditor.sql" />
+    <Build Include="Accounts\Views\BookEditorDetail.sql" />
+    <Build Include="Accounts\Views\PartEditorDetail.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="localhost.publish.xml" />

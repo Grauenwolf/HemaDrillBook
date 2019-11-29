@@ -1,5 +1,4 @@
 ﻿using HemaDrillBook.Models;
-using System.Linq;
 using System.Threading.Tasks;
 using Tortuga.Chain;
 
@@ -15,7 +14,6 @@ namespace HemaDrillBook.Services
         {
             if (string.IsNullOrEmpty(play.VariantName))
                 play.VariantName = null;
-
 
             if (play.PlayKey.HasValue)
                 await CheckPermissionPlayAsync(play.PlayKey.Value, currentUser);
@@ -45,6 +43,5 @@ namespace HemaDrillBook.Services
             }
             return play.PlayKey.Value;
         }
-
     }
 }

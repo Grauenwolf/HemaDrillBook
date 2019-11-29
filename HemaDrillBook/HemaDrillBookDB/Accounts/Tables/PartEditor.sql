@@ -1,0 +1,10 @@
+﻿CREATE TABLE Accounts.PartEditor
+(
+    UserKey INT NOT NULL CONSTRAINT FK_PartEditor_UserKey REFERENCES Accounts.AspNetUsers(UserKey),
+	PartKey INT NOT NULL CONSTRAINT FK_PartEditor_PartKey REFERENCES Sources.Part(PartKey),
+	CONSTRAINT PK_PartEditor PRIMARY KEY(UserKey, PartKey),
+    SysStartTime DATETIME2 GENERATED ALWAYS AS ROW START NOT NULL,
+    SysEndTime DATETIME2 GENERATED ALWAYS AS ROW END NOT NULL,
+    PERIOD FOR SYSTEM_TIME(SysStartTime, SysEndTime)
+)
+WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = Accounts.PartEditor_History));
