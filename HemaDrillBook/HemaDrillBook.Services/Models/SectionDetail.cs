@@ -61,10 +61,12 @@ namespace HemaDrillBook.Models
         public SectionSummary? Up { get; set; }
 
         public int TotalPlayCount => Plays.Count + Subsections.ChildPlays().Count();
+        public int TotalVideoCount => Videos.Count + Subsections.ChildVideos().Count();
 
         //public List<SectionTranslationDetail> Translations { get; } = new List<SectionTranslationDetail>();
         //public int VideoCount { get; set; }
-        //public List<Video> Videos { get; } = new List<Video>();
+        public List<VideoDetail> Videos { get; } = new List<VideoDetail>();
+
         public List<WeaponPairSummary> Weapons { get; } = new List<WeaponPairSummary>();
 
         [NotMapped]

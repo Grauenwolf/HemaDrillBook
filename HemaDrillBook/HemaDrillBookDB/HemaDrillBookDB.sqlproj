@@ -243,6 +243,7 @@
     <None Include="Data\VideoService.sql" />
     <None Include="Data\OneTime\Meyer\Interpretations.Video.1.sql" />
     <None Include="Data\OneTime\Manciolino\Interpretations.Video.5.sql" />
+    <Build Include="Interpretations\Views\VideoDetail.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="localhost.publish.xml" />

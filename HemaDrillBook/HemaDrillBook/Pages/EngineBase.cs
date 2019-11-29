@@ -59,18 +59,6 @@ namespace HemaDrillBook.Pages
         {
             await JSRuntime.InvokeVoidAsync("setTitle", PageTitle);
             await base.OnAfterRenderAsync(firstRender);
-
-            //try
-            //{
-            //    UserKey = await AuthenticationStateProvider.GetUserKeyAsync();
-            //    Debug.WriteLine("User Key is " + UserKey);
-            //}
-            //catch (Exception ex)
-            //{
-            //    LoadFailed = true;
-            //    Logger.LogError(ex, $"Internal error, cannot load user information during {nameof(InitializedAsync)}");
-            //}
-
             try
             {
                 await AfterRenderAsync(firstRender);

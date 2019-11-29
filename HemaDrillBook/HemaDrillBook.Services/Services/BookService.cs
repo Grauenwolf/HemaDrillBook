@@ -134,6 +134,16 @@ namespace HemaDrillBook.Services
             return result;
         }
 
+        public async Task<List<VideoSummary>> GetPartVideosAsync(int partKey, IUser? currentUser)
+        {
+            var result = await DataSource(currentUser)
+                .From("Interpretations.VideoDetail", new { PartKey = partKey })
+                .ToCollection<VideoSummary>()
+                .ExecuteAsync();
+
+            return result;
+        }
+
         public async Task<List<PartDetail>> GetBookPartDetailAsync(int bookKey, IUser? currentUser)
         {
             var ds = DataSource(currentUser);
@@ -176,6 +186,15 @@ namespace HemaDrillBook.Services
             part.Weapons.AddRange(await GetPartWeaponsAsync(part.PartKey, currentUser));
             part.Sections.AddRange(await GetPartSectionsAsync(part.PartKey, currentUser));
             part.Plays.AddRange(await GetPartPlaysAsync(part.PartKey, currentUser));
+            part.Videos.AddRange(await GetPartVideosAsync(part.PartKey, currentUser));
+        }
+
+        public Task<List<VideoDetail>> GetSectionVideosAsync(int sectionKey, IUser? currentUser)
+        {
+            return DataSource(currentUser)
+                .From("Interpretations.VideoDetail", new { SectionKey = sectionKey })
+                .ToCollection<VideoDetail>()
+                .ExecuteAsync();
         }
 
         public Task<List<WeaponPairSummary>> GetSectionWeaponsAsync(int sectionKey, IUser? currentUser)
@@ -223,7 +242,7 @@ namespace HemaDrillBook.Services
             section.NextSection = nextSection;
             section.BreadCrumb = breadCrumb;
 
-            //section.Videos.AddRange(await ds.From("Interpretations.Video", filter).ToCollection<Video>().ExecuteAsync());
+            section.Videos.AddRange(await GetSectionVideosAsync(section.SectionKey, currentUser));
             section.Weapons.AddRange(await GetSectionWeaponsAsync(section.SectionKey, currentUser));
 
             section.Plays.AddRange(await GetPlayDetailsForSectionAsync(section.SectionKey, currentUser));
@@ -287,6 +306,10 @@ namespace HemaDrillBook.Services
             foreach (var section in sections)
                 section.Plays.AddRange(plays.Where(x => x.SectionKey == section.SectionKey));
             //}
+
+            var videos = await ds.From("Interpretations.VideoDetail", filter).ToCollection<VideoSummary>().ExecuteAsync();
+            foreach (var section in sections)
+                section.Videos.AddRange(videos.Where(x => x.SectionKey == section.SectionKey));
 
             var flatList = Flatten(sections);
             var result = flatList.Single(x => x.SectionKey == sectionKey);

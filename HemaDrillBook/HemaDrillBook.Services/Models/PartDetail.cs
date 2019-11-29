@@ -25,6 +25,7 @@ namespace HemaDrillBook.Models
 
         public SectionSummaryCollection Sections { get; } = new SectionSummaryCollection();
         public List<PlaySummary> Plays { get; } = new List<PlaySummary>();
+        public List<VideoSummary> Videos { get; } = new List<VideoSummary>();
         public List<WeaponPairSummary> Weapons { get; } = new List<WeaponPairSummary>();
     }
 }

@@ -67,6 +67,15 @@
             {
                 <td>Plays</td>
             }
+
+            @if (Model.Videos.Any())
+            {
+                <th> <a href=@(Model.PartUrlFragment + "/t/videos")>Videos</a>  </th>
+            }
+            else
+            {
+                <td>Videos</td>
+            }
         </tr>
     </table>
 
@@ -102,6 +111,16 @@
             </div>
         }
     }
+    else if (Tab == "videos")
+    {
+        <h2>Videos</h2>
+        foreach (var video in Model.Videos.Select(v => new { v.SectionUrlFragment, Name = v.Description ?? v.SectionName }).Distinct())
+        {
+            <div style="margin-left: 25px">
+                <a href="@(video.SectionUrlFragment)/t/videos">@(video.Name)</a>
+            </div>
+        }
+    }
     else
     {
         <h2>Overview</h2>
@@ -112,6 +131,10 @@
         @if (Model.Plays.Any())
         {
             <div>Plays: @(Model.Plays.Count)</div>
+        }
+        @if (Model.Videos.Any())
+        {
+            <div>Videos: @(Model.Videos.Count)</div>
         }
         @if (Model.Weapons.Count > 0)
         {

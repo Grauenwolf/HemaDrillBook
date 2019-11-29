@@ -20,9 +20,6 @@
     ModifiedByUserKey INT NULL
 		CONSTRAINT FK_Video_ModifiedByUserKey
         REFERENCES Accounts.AspNetUsers (UserKey),
-    ModifiedDate DATETIME2(7) NOT NULL
-        CONSTRAINT D_Video_ModifiedDate
-            DEFAULT (GETUTCDATE()),
     Author NVARCHAR(250) NULL
         CONSTRAINT C_Video_Author CHECK (LEN(Author) > 0),
     Description NVARCHAR(250) NULL
@@ -65,4 +62,4 @@ ON Interpretations.Video
 );
 
 GO
-GRANT SELECT, INSERT, UPDATE ON Interpretations.Video TO HemaWeb;
+GRANT SELECT, INSERT, UPDATE, DELETE ON Interpretations.Video TO HemaWeb;

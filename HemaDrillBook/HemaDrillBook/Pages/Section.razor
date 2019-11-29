@@ -100,6 +100,15 @@
             {
                 <td>Plays</td>
             }
+
+            @if (Model.TotalVideoCount > 0)
+            {
+                <th> <a href=@(Model.SectionUrlFragment + "/t/videos")>Videos</a>  </th>
+            }
+            else
+            {
+                <td>Videos</td>
+            }
         </tr>
     </table>
 
@@ -211,6 +220,38 @@
 
         }
     }
+    else if (Tab == "videos" && Model.TotalVideoCount > 0)
+    {
+        <h2>Videos</h2>
+
+        @foreach (var video in Model.Videos)
+        {
+            if (video.VideoServiceKey == 1)
+            {
+                if (video.StartTime.HasValue)
+                {
+                    <iframe width="560" height="315" src="//www.youtube.com/embed/@(video.VideoServiceVideoId)?start=@(video.StartTime.Value.TotalSeconds)" frameborder="0" allowfullscreen></iframe>
+                    <br />
+                }
+                else
+                {
+                    <iframe width="560" height="315" src="//www.youtube.com/embed/@(video.VideoServiceVideoId)" frameborder="0" allowfullscreen></iframe>
+                    <br />
+                }
+            }
+            else
+            {
+                <div>  <a href="@(video.Url)">@(video.Description ?? video.Url)</a></div>
+            }
+        }
+
+        @foreach (var video in Model.Subsections.ChildVideos().Select(v => new { v.SectionUrlFragment, Name = v.Description ?? v.SectionName }).Distinct())
+        {
+            <div style="margin-left: 25px">
+                <a href="@(video.SectionUrlFragment)/t/videos">@(video.Name)</a>
+            </div>
+        }
+    }
     else
     {
         <h2>Overview</h2>
@@ -225,6 +266,15 @@
         @if (Model.Subsections.ChildPlays().Count() > 0)
         {
             <div>Plays in subsections: @(Model.Subsections.ChildPlays().Count())</div>
+        }
+
+        @if (Model.Videos.Count > 0)
+        {
+            <div>Videos in this section: @(Model.Videos.Count)</div>
+        }
+        @if (Model.Subsections.ChildVideos().Count() > 0)
+        {
+            <div>Videos in subsections: @(Model.Subsections.ChildVideos().Count())</div>
         }
         @if (Model.Weapons.Count > 0)
         {

@@ -50,6 +50,18 @@ namespace HemaDrillBook.Models
             }
         }
 
+        public IEnumerable<VideoSummary> ChildVideos()
+        {
+            foreach (var section in this)
+            {
+                foreach (var video in section.Videos)
+                    yield return video;
+
+                foreach (var video in section.Subsections.ChildVideos())
+                    yield return video;
+            }
+        }
+
         public IEnumerable<PlaySummary> ChildPlays()
         {
             foreach (var section in this)

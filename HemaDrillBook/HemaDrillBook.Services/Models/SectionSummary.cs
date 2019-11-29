@@ -40,6 +40,7 @@ namespace HemaDrillBook.Models
 
         public List<WeaponPairSummary> Weapons { get; } = new List<WeaponPairSummary>();
         public List<PlaySummary> Plays { get; } = new List<PlaySummary>();
+        public List<VideoSummary> Videos { get; } = new List<VideoSummary>();
 
         public float DisplayOrder { get; set; }
 
