@@ -12,7 +12,7 @@ Post-Deployment Script Template
 
 -- System Users
 :r .\Data\SystemUsers.SQL
-
+:r .\Data\VideoService.sql
 
 --Tags
 :r .\Data\OneTime\Tags.Weapon.sql
@@ -35,10 +35,10 @@ Post-Deployment Script Template
 :r .\Data\OneTime\Meyer\Sources.Section.Part.6.sql
 :r .\Data\OneTime\Meyer\Sources.Section.Part.7.sql
 :r .\Data\OneTime\Meyer\Sources.SectionWeaponMap.1.sql
-
 --:r .\Data\OneTime\Meyer\Sources.SectionWeaponMap.1.sql
 :r .\Data\OneTime\Meyer\Interpretations.Play.1.sql
 :r .\Data\OneTime\Meyer\Interpretations.PlayStep.1.sql
+:r .\Data\OneTime\Meyer\Interpretations.Video.1.sql
 
 
 

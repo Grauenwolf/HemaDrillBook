@@ -15,7 +15,9 @@ namespace HemaDrillBookTools
 
             LoginViewModel loginViewModel = new LoginViewModel()
             {
-                Url = "https://localhost:44333/",
+                //Url = "https://localhost:44333/",
+                Url = "https://hemadrillbook.azurewebsites.net/",
+
                 UserName = Settings.Default.UserName,
                 Password = Settings.Default.Password
             };

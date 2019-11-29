@@ -3,15 +3,18 @@
     PlayKey INT NOT NULL IDENTITY
         CONSTRAINT PK_Play PRIMARY KEY,
     SectionKey INT NOT NULL
+        CONSTRAINT FK_Play_SectionKey
         REFERENCES Sources.Section (SectionKey),
     VariantName NVARCHAR(200) NULL
         CONSTRAINT C_Play_VariantName CHECK (LEN(VariantName) > 0),
     CreatedByUserKey INT NOT NULL
+        CONSTRAINT FK_Play_CreatedByUserKey
         REFERENCES Accounts.AspNetUsers (UserKey),
     CreatedDate DATETIME2(7) NOT NULL
         CONSTRAINT D_Play_CreatedDate
             DEFAULT (GETUTCDATE()),
     ModifiedByUserKey INT NOT NULL
+        CONSTRAINT FK_Play_ModifiedByUserKey
         REFERENCES Accounts.AspNetUsers (UserKey),
     AGuardKey INT NULL
         CONSTRAINT FK_Play_AGuard

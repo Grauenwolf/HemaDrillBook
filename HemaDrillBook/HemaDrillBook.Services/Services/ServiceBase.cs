@@ -59,7 +59,7 @@ namespace HemaDrillBook.Services
             if (currentUser == null || currentUser.UserKey == 0)
                 throw new UnauthorizedAccessException("Please login.");
 
-            var result = await m_DataSource.From("dbo.BookEditorDetail", new { currentUser.UserKey }).AsCount().ExecuteAsync();
+            var result = await m_DataSource.From("Accounts.BookEditorDetail", new { currentUser.UserKey }).AsCount().ExecuteAsync();
             if (result == 0)
                 throw new UnauthorizedAccessException("Permission denied to edit this record.");
         }

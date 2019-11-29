@@ -238,6 +238,11 @@
     <Build Include="Accounts\Tables\PartEditor.sql" />
     <Build Include="Accounts\Views\BookEditorDetail.sql" />
     <Build Include="Accounts\Views\PartEditorDetail.sql" />
+    <Build Include="Interpretations\Tables\Video.sql" />
+    <Build Include="Interpretations\Tables\VideoService.sql" />
+    <None Include="Data\VideoService.sql" />
+    <None Include="Data\OneTime\Meyer\Interpretations.Video.1.sql" />
+    <None Include="Data\OneTime\Manciolino\Interpretations.Video.5.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="localhost.publish.xml" />
