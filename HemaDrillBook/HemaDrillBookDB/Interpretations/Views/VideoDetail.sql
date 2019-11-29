@@ -18,7 +18,8 @@ SELECT v.VideoKey,
        p.PartName,
        p.PartSlug,
        b.BookName,
-       b.BookSlug
+       b.BookSlug,
+	   b.BookKey
 FROM Interpretations.Video v
     INNER JOIN Sources.Section s
         ON v.SectionKey = s.SectionKey

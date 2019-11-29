@@ -6,111 +6,132 @@
 @if (Model != null)
 {
     <h1>@(Model.SectionName)</h1>
-    <div style="font-size:small">
-        @foreach (var item in Model.BreadCrumb)
-        {
-            if (item != Model.BreadCrumb[0])
-            {
-                <span>&star;</span>
-            }
-            <a href="@item.UrlFragment" title="@item.Name">@(item.ShortName(25) + " ")</a>
-        }
-    </div>
 
-    <table class="gridtableCentered" width="100%" style="max-width:400px">
-        <tr>
-            @if (Model.PreviousSection != null)
+    <div id="navigationGrid">
+        <div style="font-size:small">
+            @foreach (var item in Model.BreadCrumb)
             {
-                <th width="20%">
-                    <a href="@(Model.PreviousSection.SectionUrlFragment)/t/@(Tab)" title="@Model.PreviousSection.SectionNameFull">
-                        &lt;&lt;&mdash; Skip
-                    </a>
-                </th>
-            }
-            else
-            {
-                <td width="20%">&lt;&lt;&mdash; Skip</td>
-            }
-            @if (Model.PreviousPage != null)
-            {
-                <th width="20%">
-                    <a href="@(Model.PreviousPage.SectionUrlFragment)/t/@(Tab)" title="@Model.PreviousPage.SectionNameFull">&lt;&mdash; Back</a>
-                </th>
-            }
-            else
-            {
-                <td width="20%">&lt;&mdash; Back</td>
-            }
-
-            <th width="20%">
-                @if (Model.Up != null)
+                if (item != Model.BreadCrumb[0])
                 {
-                    <a href="@(Model.Up.SectionUrlFragment)/t/@(Tab)" title="@Model.Up.SectionNameFull">Up </a>
+                    <span>&star;</span>
+                }
+                <a href="@item.UrlFragment" title="@item.Name">@(item.ShortName(25) + " ")</a>
+            }
+        </div>
 
+        <table class="gridtableCentered" width="100%" style="max-width:400px">
+            <tr>
+                @if (Model.PreviousSection != null)
+                {
+                    <th width="20%">
+                        <a href="@(Model.PreviousSection.SectionUrlFragment)/t/@(Tab)" title="@Model.PreviousSection.SectionNameFull">
+                            &lt;&lt;&mdash; Skip
+                        </a>
+                    </th>
                 }
                 else
                 {
-                    <a href="@(Model.PartUrlFragment)/t/@(Tab)" title="@Model.PartName">Up</a>
+                    <td width="20%">&lt;&lt;&mdash; Skip</td>
                 }
-            </th>
+                @if (Model.PreviousPage != null)
+                {
+                    <th width="20%">
+                        <a href="@(Model.PreviousPage.SectionUrlFragment)/t/@(Tab)" title="@Model.PreviousPage.SectionNameFull">&lt;&mdash; Back</a>
+                    </th>
+                }
+                else
+                {
+                    <td width="20%">&lt;&mdash; Back</td>
+                }
 
-            @if (Model.NextPage != null)
-            {
                 <th width="20%">
-                    <a href="@(Model.NextPage.SectionUrlFragment)/t/@(Tab)" title="@Model.NextPage.SectionNameFull">Next &mdash;&gt;</a>
+                    @if (Model.Up != null)
+                    {
+                        <a href="@(Model.Up.SectionUrlFragment)/t/@(Tab)" title="@Model.Up.SectionNameFull">Up </a>
+
+                    }
+                    else
+                    {
+                        <a href="@(Model.PartUrlFragment)/t/@(Tab)" title="@Model.PartName">Up</a>
+                    }
                 </th>
-            }
-            else
-            {
-                <td width="20%">Next &mdash;&gt;</td>
-            }
 
-            @if (Model.NextSection != null)
-            {
-                <th width="20%">
-                    <a href="@(Model.NextSection.SectionUrlFragment)/t/@(Tab)" title="@Model.NextSection.SectionNameFull">
-                        Skip &mdash;&gt;&gt;
-                    </a>
-                </th>
-            }
-            else
-            {
-                <td width="20%">Skip &mdash;&gt;&gt;</td>
-            }
-        </tr>
-    </table>
-    <table class="gridtableCentered" width="100%" style="max-width:400px">
-        <tr>
-            <th> <a href=@(Model.SectionUrlFragment )>Overview</a>  </th>
+                @if (Model.NextPage != null)
+                {
+                    <th width="20%">
+                        <a href="@(Model.NextPage.SectionUrlFragment)/t/@(Tab)" title="@Model.NextPage.SectionNameFull">Next &mdash;&gt;</a>
+                    </th>
+                }
+                else
+                {
+                    <td width="20%">Next &mdash;&gt;</td>
+                }
 
-            @if (Model.Subsections.Count > 0)
-            {
-                <th> <a href=@(Model.SectionUrlFragment + "/t/sections")>Contents</a>  </th>
-            }
-            else
-            {
-                <td> Contents </td>
-            }
+                @if (Model.NextSection != null)
+                {
+                    <th width="20%">
+                        <a href="@(Model.NextSection.SectionUrlFragment)/t/@(Tab)" title="@Model.NextSection.SectionNameFull">
+                            Skip &mdash;&gt;&gt;
+                        </a>
+                    </th>
+                }
+                else
+                {
+                    <td width="20%">Skip &mdash;&gt;&gt;</td>
+                }
+            </tr>
+        </table>
+        <table class="gridtableCentered" width="100%" style="max-width:400px">
+            <tr>
+                <th> <a href=@(Model.SectionUrlFragment )>Overview</a>  </th>
 
-            @if (Model.TotalPlayCount > 0)
-            {
-                <th> <a href=@(Model.SectionUrlFragment + "/t/plays")>Plays</a>  </th>
-            }
-            else
-            {
-                <td>Plays</td>
-            }
+                @if (Model.Subsections.Count > 0)
+                {
+                    <th> <a href=@(Model.SectionUrlFragment + "/t/sections")>Contents</a>  </th>
+                }
+                else
+                {
+                    <td> Contents </td>
+                }
 
-            @if (Model.TotalVideoCount > 0)
+                @if (Model.TotalPlayCount > 0)
+                {
+                    <th> <a href=@(Model.SectionUrlFragment + "/t/plays")>Plays</a>  </th>
+                }
+                else
+                {
+                    <td>Plays</td>
+                }
+
+                @if (Model.TotalVideoCount > 0)
+                {
+                    <th> <a href=@(Model.SectionUrlFragment + "/t/videos")>Videos</a>  </th>
+                }
+                else
+                {
+                    <td>Videos</td>
+                }
+            </tr>
+        </table>
+        <table class="gridtableCentered" width="100%" style="max-width:400px">
+            @if (IsAuthenticated)
             {
-                <th> <a href=@(Model.SectionUrlFragment + "/t/videos")>Videos</a>  </th>
+                <tr>
+                    <td>Contribute</td>
+                    <th>
+                        <a href=@(Model.SectionUrlFragment + "/t/addVideo")>Add Video</a>
+                    </th>
+
+                    @*<a href=@(Model.SectionUrlFragment + "/t/addCommentary")>Add Commentary</a>*@
+                    <td>Add Commentary (future)</td>
+                </tr>
             }
             else
             {
-                <td>Videos</td>
+                <tr><td>Login to contribute</td></tr>
             }
-        </tr>
-    </table>
+        </table>
+    </div>
 
     @if (Tab == "sections" && Model.Subsections.Count > 0)
     {
@@ -252,6 +273,36 @@
             </div>
         }
     }
+    else if (IsAuthenticated && Tab == "addVideo")
+    {
+        <h2>Contribute</h2>
+
+        <h3>Add Video</h3>
+
+        <EditForm Model="@VideoInput" OnValidSubmit="@SubmitVideo">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <p>
+                <label for="url">URL: </label>
+                <InputText id="url" @bind-Value="VideoInput.Url" />
+                <br />
+                <label for="description">Description: </label>
+                <InputText id="description" @bind-Value="VideoInput.Description" />
+                <br />
+                <label for="description">Author: </label>
+                <InputText id="author" @bind-Value="VideoInput.Author" />
+            </p>
+
+            @if (!string.IsNullOrEmpty(VideoInput.ErrorDisplay))
+            {
+                <p style="color:red">@VideoInput.ErrorDisplay</p>
+            }
+
+            <button type="submit">Submit</button>
+        </EditForm>
+
+    }
     else
     {
         <h2>Overview</h2>
@@ -279,47 +330,6 @@
         @if (Model.Weapons.Count > 0)
         {
             <div>Weapon Combinations: @(Model.Weapons.Count)</div>
-        }
-        @*if (Model.TotalPlayCount > 0)
-            {
-                <h2>Plays</h2>
-                foreach (var play in Model.Plays)
-                {
-                    <div style="margin-left: 25px">
-                        <a href="@(play.SectionUrlFragment)/t/plays">@(play.PlayNameFull) @(string.IsNullOrEmpty(play.PageReference) ? "" : "(" + play.PageReference + ")")</a>
-                    </div>
-                }
-            }*@
-
-        if (IsAuthenticated)
-        {
-            <h2>Contribute</h2>
-
-            <h3>Add Video</h3>
-
-            <EditForm Model="@VideoInput" OnValidSubmit="@SubmitVideo">
-                <DataAnnotationsValidator />
-                <ValidationSummary />
-
-                <p>
-                    <label for="url">URL: </label>
-                    <InputText id="url" @bind-Value="VideoInput.Url" />
-                    <br />
-                    <label for="description">Description: </label>
-                    <InputText id="description" @bind-Value="VideoInput.Description" />
-                    <br />
-                    <label for="description">Author: </label>
-                    <InputText id="author" @bind-Value="VideoInput.Author" />
-                </p>
-
-                @if (!string.IsNullOrEmpty(VideoInput.ErrorDisplay))
-                {
-                    <p style="color:red">@VideoInput.ErrorDisplay</p>
-                }
-
-                <button type="submit">Submit</button>
-            </EditForm>
-
         }
 
         if (Model.Subsections.Count > 0)
