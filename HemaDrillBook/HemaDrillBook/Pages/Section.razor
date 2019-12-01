@@ -5,152 +5,152 @@
 
 @if (Model != null)
 {
-<h1>@(Model.SectionName)</h1>
+    <h1>@(Model.SectionName)</h1>
 
-<div id="navigationGrid">
-    <div style="font-size:small">
-        @foreach (var item in Model.BreadCrumb)
+    <div id="navigationGrid">
+        <div style="font-size:small">
+            @foreach (var item in Model.BreadCrumb)
             {
                 if (item != Model.BreadCrumb[0])
                 {
-        <span>&star;</span>
+                    <span>&star;</span>
                 }
-        <a href="@item.UrlFragment" title="@item.Name">@(item.ShortName(25) + " ")</a>
+                <a href="@item.UrlFragment" title="@item.Name">@(item.ShortName(25) + " ")</a>
             }
-    </div>
+        </div>
 
-    <table class="gridtableCentered" width="100%" style="max-width:400px">
-        <tr>
-            @if (Model.PreviousSection != null)
+        <table class="gridtableCentered" width="100%" style="max-width:400px">
+            <tr>
+                @if (Model.PreviousSection != null)
                 {
-            <th width="20%">
-                <a href="@(Model.PreviousSection.SectionUrlFragment)/t/@(Tab)" title="@Model.PreviousSection.SectionNameFull">
-                    &lt;&lt;&mdash; Skip
-                </a>
-            </th>
+                    <th width="20%">
+                        <a href="@(Model.PreviousSection.SectionUrlFragment)/t/@(Tab)" title="@Model.PreviousSection.SectionNameFull">
+                            &lt;&lt;&mdash; Skip
+                        </a>
+                    </th>
                 }
                 else
                 {
-            <td width="20%">&lt;&lt;&mdash; Skip</td>
+                    <td width="20%">&lt;&lt;&mdash; Skip</td>
                 }
-            @if (Model.PreviousPage != null)
+                @if (Model.PreviousPage != null)
                 {
-            <th width="20%">
-                <a href="@(Model.PreviousPage.SectionUrlFragment)/t/@(Tab)" title="@Model.PreviousPage.SectionNameFull">&lt;&mdash; Back</a>
-            </th>
+                    <th width="20%">
+                        <a href="@(Model.PreviousPage.SectionUrlFragment)/t/@(Tab)" title="@Model.PreviousPage.SectionNameFull">&lt;&mdash; Back</a>
+                    </th>
                 }
                 else
                 {
-            <td width="20%">&lt;&mdash; Back</td>
+                    <td width="20%">&lt;&mdash; Back</td>
                 }
 
-            <th width="20%">
-                @if (Model.Up != null)
+                <th width="20%">
+                    @if (Model.Up != null)
                     {
-                <a href="@(Model.Up.SectionUrlFragment)/t/@(Tab)" title="@Model.Up.SectionNameFull">Up </a>
+                        <a href="@(Model.Up.SectionUrlFragment)/t/@(Tab)" title="@Model.Up.SectionNameFull">Up </a>
 
                     }
                     else
                     {
-                <a href="@(Model.PartUrlFragment)/t/@(Tab)" title="@Model.PartName">Up</a>
+                        <a href="@(Model.PartUrlFragment)/t/@(Tab)" title="@Model.PartName">Up</a>
                     }
-            </th>
+                </th>
 
-            @if (Model.NextPage != null)
+                @if (Model.NextPage != null)
                 {
-            <th width="20%">
-                <a href="@(Model.NextPage.SectionUrlFragment)/t/@(Tab)" title="@Model.NextPage.SectionNameFull">Next &mdash;&gt;</a>
-            </th>
+                    <th width="20%">
+                        <a href="@(Model.NextPage.SectionUrlFragment)/t/@(Tab)" title="@Model.NextPage.SectionNameFull">Next &mdash;&gt;</a>
+                    </th>
                 }
                 else
                 {
-            <td width="20%">Next &mdash;&gt;</td>
+                    <td width="20%">Next &mdash;&gt;</td>
                 }
 
-            @if (Model.NextSection != null)
+                @if (Model.NextSection != null)
                 {
-            <th width="20%">
-                <a href="@(Model.NextSection.SectionUrlFragment)/t/@(Tab)" title="@Model.NextSection.SectionNameFull">
-                    Skip &mdash;&gt;&gt;
-                </a>
-            </th>
+                    <th width="20%">
+                        <a href="@(Model.NextSection.SectionUrlFragment)/t/@(Tab)" title="@Model.NextSection.SectionNameFull">
+                            Skip &mdash;&gt;&gt;
+                        </a>
+                    </th>
                 }
                 else
                 {
-            <td width="20%">Skip &mdash;&gt;&gt;</td>
+                    <td width="20%">Skip &mdash;&gt;&gt;</td>
                 }
-        </tr>
-    </table>
-    <table class="gridtableCentered" width="100%" style="max-width:400px">
-        <tr>
-            <th> <a href=@(Model.SectionUrlFragment )>Overview</a>  </th>
+            </tr>
+        </table>
+        <table class="gridtableCentered" width="100%" style="max-width:400px">
+            <tr>
+                <th> <a href=@(Model.SectionUrlFragment )>Overview</a>  </th>
 
-            @if (Model.Subsections.Count > 0)
+                @if (Model.Subsections.Count > 0)
                 {
-            <th> <a href=@(Model.SectionUrlFragment + "/t/sections")>Contents</a>  </th>
+                    <th> <a href=@(Model.SectionUrlFragment + "/t/sections")>Contents</a>  </th>
                 }
                 else
                 {
-            <td> Contents </td>
+                    <td> Contents </td>
                 }
 
-            @if (Model.TotalPlayCount > 0)
+                @if (Model.TotalPlayCount > 0)
                 {
-            <th> <a href=@(Model.SectionUrlFragment + "/t/plays")>Plays</a>  </th>
+                    <th> <a href=@(Model.SectionUrlFragment + "/t/plays")>Plays</a>  </th>
                 }
                 else
                 {
-            <td>Plays</td>
+                    <td>Plays</td>
                 }
 
-            @if (Model.TotalVideoCount > 0)
+                @if (Model.TotalVideoCount > 0)
                 {
-            <th> <a href=@(Model.SectionUrlFragment + "/t/videos")>Videos</a>  </th>
+                    <th> <a href=@(Model.SectionUrlFragment + "/t/videos")>Videos</a>  </th>
                 }
                 else
                 {
-            <td>Videos</td>
+                    <td>Videos</td>
                 }
-        </tr>
-    </table>
-    <table class="gridtableCentered" width="100%" style="max-width:400px">
-        @if (IsAuthenticated)
+            </tr>
+        </table>
+        <table class="gridtableCentered" width="100%" style="max-width:400px">
+            @if (IsAuthenticated)
             {
-        <tr>
-            <td>Contribute</td>
-            <th>
-                <a href=@(Model.SectionUrlFragment + "/t/addVideo")>Add Video</a>
-            </th>
+                <tr>
+                    <td>Contribute</td>
+                    <th>
+                        <a href=@(Model.SectionUrlFragment + "/t/addVideo")>Add Video</a>
+                    </th>
 
-            @*<a href=@(Model.SectionUrlFragment + "/t/addCommentary")>Add Commentary</a>*@
-            <td>Add Commentary (future)</td>
-        </tr>
+                    @*<a href=@(Model.SectionUrlFragment + "/t/addCommentary")>Add Commentary</a>*@
+                    <td>Add Commentary (future)</td>
+                </tr>
             }
             else
             {
-        <tr><td>Login to contribute</td></tr>
+                <tr><td>Login to contribute</td></tr>
             }
-    </table>
-</div>
+        </table>
+    </div>
 
-@if (Tab == "sections" && Model.Subsections.Count > 0)
+    @if (Tab == "sections" && Model.Subsections.Count > 0)
     {
-<h2>Table of Contents</h2>
+        <h2>Table of Contents</h2>
         foreach (var section in Model.Subsections)
         {
-<div style="margin-left: 25px">
-    <a href="@(section.SectionUrlFragment)">@(section.SectionNameFull)</a>
-</div>
+            <div style="margin-left: 25px">
+                <a href="@(section.SectionUrlFragment)">@(section.SectionNameFull)</a>
+            </div>
             foreach (var s2 in section.Subsections)
             {
-<div style="margin-left: 50px">
-    <a href="@(s2.SectionUrlFragment)">@(s2.SectionNameFull)</a>
-</div>
+                <div style="margin-left: 50px">
+                    <a href="@(s2.SectionUrlFragment)">@(s2.SectionNameFull)</a>
+                </div>
                 foreach (var s3 in s2.Subsections)
                 {
-<div style="margin-left: 75px">
-    <a href="@(s3.SectionUrlFragment)">@(s3.SectionNameFull)</a>
-</div>
+                    <div style="margin-left: 75px">
+                        <a href="@(s3.SectionUrlFragment)">@(s3.SectionNameFull)</a>
+                    </div>
                 }
             }
         }
@@ -162,204 +162,204 @@
             var agentStyle = "background-color:mistyrose";
             var patientStyle = "background-color:khaki";
 
-<h2>Plays</h2>
+            <h2>Plays</h2>
 
-@foreach (var play in Model.Plays)
+            @foreach (var play in Model.Plays)
             {
 
-<h3 id="@("Play" + play.PlayKey)">@(play.VariantName ?? "Basic Play")</h3>
+                <h3 id="@("Play" + play.PlayKey)">@(play.VariantName ?? "Basic Play")</h3>
 
-<table class="gridtable">
-    <tr><th>Agent</th><th>Patient</th><th>Measure</th></tr>
-    <tr><td style="@agentStyle">@play.AGuardFullName</td><td style="@patientStyle">@play.PGuardFullName</td><td>@play.MeasureName</td></tr>
-</table>
-<div />
-<table class="gridtable">
-    <tr>
-        <th>Tempo</th>
-        <th>Footwork</th>
-        <th>Technique</th>
-        <th>Target</th>
-        <th>Guard</th>
-    </tr>
-    @foreach (var step in play.Steps)
+                <table class="gridtable">
+                    <tr><th>Agent</th><th>Patient</th><th>Measure</th></tr>
+                    <tr><td style="@agentStyle">@play.AGuardFullName</td><td style="@patientStyle">@play.PGuardFullName</td><td>@play.MeasureName</td></tr>
+                </table>
+                <div />
+                <table class="gridtable">
+                    <tr>
+                        <th>Tempo</th>
+                        <th>Footwork</th>
+                        <th>Technique</th>
+                        <th>Target</th>
+                        <th>Guard</th>
+                    </tr>
+                    @foreach (var step in play.Steps)
                     {
                         var rowStyle = agentStyle;
 
-    @if (step.Actor == 'P')
+                        @if (step.Actor == 'P')
                         {
                             rowStyle = patientStyle;
                         }
-    <tr>
-        <td style=@rowStyle>@step.ActorName @step.TempoNumber</td>
-        <td style=@rowStyle>@step.FootworkName</td>
-        <td style=@rowStyle>@step.TechniqueFullName</td>
-        @if (step.TargetKey1.HasValue)
+                        <tr>
+                            <td style=@rowStyle>@step.ActorName @step.TempoNumber</td>
+                            <td style=@rowStyle>@step.FootworkName</td>
+                            <td style=@rowStyle>@step.TechniqueFullName</td>
+                            @if (step.TargetFull != null)
                             {
-        <td style=@rowStyle>at @step.TargetFull</td>
+                                <td style=@rowStyle>at @step.TargetFull</td>
                             }
                             else
                             {
-        <td style=@rowStyle></td>
+                                <td style=@rowStyle></td>
                             }
-        @if (step.IntermediateGuardKey.HasValue || step.IntermediateGuardModifierKey.HasValue)
+                            @if (step.IntermediateGuardKey.HasValue || step.IntermediateGuardModifierKey.HasValue)
                             {
-        <td style=@rowStyle>thru @step.IntermediateGuardFullName into @step.GuardFullName</td>
+                                <td style=@rowStyle>thru @step.IntermediateGuardFullName into @step.GuardFullName</td>
                             }
                             else if (step.GuardKey.HasValue || step.GuardModifierKey.HasValue)
                             {
-        <td style=@rowStyle>into @step.GuardFullName</td>
+                                <td style=@rowStyle>into @step.GuardFullName</td>
                             }
                             else
                             {
-        <td style=@rowStyle></td>
+                                <td style=@rowStyle></td>
                             }
-    </tr>
-    @if (!string.IsNullOrEmpty(step.Notes))
+                        </tr>
+                        @if (!string.IsNullOrEmpty(step.Notes))
                         {
-    <tr>
-        <td colspan="5" style=@rowStyle>
-            @step.Notes
-        </td>
-    </tr>
+                            <tr>
+                                <td colspan="5" style=@rowStyle>
+                                    @step.Notes
+                                </td>
+                            </tr>
 
                         }
                     }
-</table>
+                </table>
             }
-@if (Model.Plays.Count > 0)
+            @if (Model.Plays.Count > 0)
             {
-<h5>Warning: This is just a summary of each play. See the original text or translation for details.</h5>
+                <h5>Warning: This is just a summary of each play. See the original text or translation for details.</h5>
             }
 
-@foreach (var play in Model.Subsections.ChildPlays().OrderBy(p => p.PlayNameFull))
-{
-<div>
-    <a href="@(play.SectionUrlFragment)/t/plays">@(play.PlayNameFull)</a>
-</div>
+            @foreach (var play in Model.Subsections.ChildPlays().OrderBy(p => p.PlayNameFull))
+            {
+                <div>
+                    <a href="@(play.SectionUrlFragment)/t/plays">@(play.PlayNameFull)</a>
+                </div>
             }
 
         }
     }
     else if (Tab == "videos" && Model.TotalVideoCount > 0)
     {
-<h2>Videos</h2>
+        <h2>Videos</h2>
 
-@foreach (var video in Model.Videos)
+        @foreach (var video in Model.Videos)
         {
             if (video.VideoServiceKey == 1)
             {
                 if (video.StartTime.HasValue)
                 {
-<iframe width="560" height="315" src="//www.youtube.com/embed/@(video.VideoServiceVideoId)?start=@(video.StartTime.Value.TotalSeconds)" frameborder="0" allowfullscreen></iframe>
-<br />
+                    <iframe width="560" height="315" src="//www.youtube.com/embed/@(video.VideoServiceVideoId)?start=@(video.StartTime.Value.TotalSeconds)" frameborder="0" allowfullscreen></iframe>
+                    <br />
                 }
                 else
                 {
-<iframe width="560" height="315" src="//www.youtube.com/embed/@(video.VideoServiceVideoId)" frameborder="0" allowfullscreen></iframe>
-<br />
+                    <iframe width="560" height="315" src="//www.youtube.com/embed/@(video.VideoServiceVideoId)" frameborder="0" allowfullscreen></iframe>
+                    <br />
                 }
             }
             else
             {
-<div>  <a href="@(video.Url)">@(video.Description ?? video.Url)</a></div>
+                <div>  <a href="@(video.Url)">@(video.Description ?? video.Url)</a></div>
             }
         }
 
-@foreach (var video in Model.Subsections.ChildVideos().Select(v => new { v.SectionUrlFragment, Name = v.Description ?? v.SectionName }).Distinct())
+        @foreach (var video in Model.Subsections.ChildVideos().Select(v => new { v.SectionUrlFragment, Name = v.Description ?? v.SectionName }).Distinct())
         {
-<div style="margin-left: 25px">
-    <a href="@(video.SectionUrlFragment)/t/videos">@(video.Name)</a>
-</div>
+            <div style="margin-left: 25px">
+                <a href="@(video.SectionUrlFragment)/t/videos">@(video.Name)</a>
+            </div>
         }
     }
     else if (IsAuthenticated && Tab == "addVideo")
     {
-<h2>Contribute</h2>
+        <h2>Contribute</h2>
 
-<h3>Add Video</h3>
+        <h3>Add Video</h3>
 
-<EditForm Model="@VideoInput" OnValidSubmit="@SubmitVideo">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
+        <EditForm Model="@VideoInput" OnValidSubmit="@SubmitVideo">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
 
-    <p>
-        <label for="url">URL: </label>
-        <InputText id="url" @bind-Value="VideoInput.Url" />
-        <br />
-        <label for="description">Description: </label>
-        <InputText id="description" @bind-Value="VideoInput.Description" />
-        <br />
-        <label for="description">Author: </label>
-        <InputText id="author" @bind-Value="VideoInput.Author" />
-    </p>
+            <p>
+                <label for="url">URL: </label>
+                <InputText id="url" @bind-Value="VideoInput.Url" />
+                <br />
+                <label for="description">Description: </label>
+                <InputText id="description" @bind-Value="VideoInput.Description" />
+                <br />
+                <label for="description">Author: </label>
+                <InputText id="author" @bind-Value="VideoInput.Author" />
+            </p>
 
-    @if (!string.IsNullOrEmpty(VideoInput.ErrorDisplay))
+            @if (!string.IsNullOrEmpty(VideoInput.ErrorDisplay))
             {
-    <p style="color:red">@VideoInput.ErrorDisplay</p>
+                <p style="color:red">@VideoInput.ErrorDisplay</p>
             }
 
-    <button type="submit">Submit</button>
-</EditForm>
+            <button type="submit">Submit</button>
+        </EditForm>
 
     }
     else
     {
-<h2>Overview</h2>
-@if (Model.Subsections.WalkSections().Count() > 0)
+        <h2>Overview</h2>
+        @if (Model.Subsections.WalkSections().Count() > 0)
         {
-<div>Subsections: @(Model.Subsections.WalkSections().Count())</div>
+            <div>Subsections: @(Model.Subsections.WalkSections().Count())</div>
         }
-@if (Model.Plays.Count > 0)
+        @if (Model.Plays.Count > 0)
         {
-<div>Plays in this section: @(Model.Plays.Count)</div>
+            <div>Plays in this section: @(Model.Plays.Count)</div>
         }
-@if (Model.Subsections.ChildPlays().Count() > 0)
+        @if (Model.Subsections.ChildPlays().Count() > 0)
         {
-<div>Plays in subsections: @(Model.Subsections.ChildPlays().Count())</div>
+            <div>Plays in subsections: @(Model.Subsections.ChildPlays().Count())</div>
         }
 
-@if (Model.Videos.Count > 0)
+        @if (Model.Videos.Count > 0)
         {
-<div>Videos in this section: @(Model.Videos.Count)</div>
+            <div>Videos in this section: @(Model.Videos.Count)</div>
         }
-@if (Model.Subsections.ChildVideos().Count() > 0)
+        @if (Model.Subsections.ChildVideos().Count() > 0)
         {
-<div>Videos in subsections: @(Model.Subsections.ChildVideos().Count())</div>
+            <div>Videos in subsections: @(Model.Subsections.ChildVideos().Count())</div>
         }
-@if (Model.Weapons.Count > 0)
+        @if (Model.Weapons.Count > 0)
         {
-<div>Weapon Combinations: @(Model.Weapons.Count)</div>
+            <div>Weapon Combinations: @(Model.Weapons.Count)</div>
         }
 
         if (Model.Subsections.Count > 0)
         {
-<h2>Sections</h2>
+            <h2>Sections</h2>
             foreach (var section in Model.Subsections)
             {
-<div style="margin-left: 25px">
-    <a href="@(section.SectionUrlFragment)">@(section.SectionNameFull) </a>
-</div>
+                <div style="margin-left: 25px">
+                    <a href="@(section.SectionUrlFragment)">@(section.SectionNameFull) </a>
+                </div>
             }
         }
 
         if (Model.Weapons.Count > 0)
         {
-<h2>Weapons</h2>
-@foreach (var weapon in Model.Weapons)
+            <h2>Weapons</h2>
+            @foreach (var weapon in Model.Weapons)
             {
-<div>
-    @(weapon.WeaponNameFull)
-</div>
+                <div>
+                    @(weapon.WeaponNameFull)
+                </div>
             }
         }
     }
 }
 else if (LoadFailed)
 {
-<h1>Error loading page.</h1>
+    <h1>Error loading page.</h1>
 }
 else
 {
-<h1>Loading</h1>
+    <h1>Loading</h1>
 }

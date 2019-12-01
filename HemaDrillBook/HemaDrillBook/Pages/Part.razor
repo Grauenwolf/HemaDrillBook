@@ -5,167 +5,167 @@
 
 @if (Model != null)
 {
-<h1>@(Model.PartName)</h1>
+    <h1>@(Model.PartName)</h1>
 
-<div style="font-size:small">
-    <a href="/b/@(Model.BookSlug)" title="@Model.BookName">@Model.BookName</a>
-</div>
+    <div style="font-size:small">
+        <a href="/b/@(Model.BookSlug)" title="@Model.BookName">@Model.BookName</a>
+    </div>
 
-<table class="gridtableCentered" width="100%" style="max-width:400px">
-    <tr>
+    <table class="gridtableCentered" width="100%" style="max-width:400px">
+        <tr>
 
-        @if (Model.PreviousPart != null)
+            @if (Model.PreviousPart != null)
             {
-        <th width="20%">
-            <a href="@(Model.PreviousPart.PartUrlFragment)/t/@(Tab)" title="@Model.PreviousPart.PartName">&lt;&mdash; Back</a>
-        </th>
+                <th width="20%">
+                    <a href="@(Model.PreviousPart.PartUrlFragment)/t/@(Tab)" title="@Model.PreviousPart.PartName">&lt;&mdash; Back</a>
+                </th>
             }
             else
             {
-        <td width="20%">&lt;&mdash; Back</td>
+                <td width="20%">&lt;&mdash; Back</td>
             }
 
-        <td width="20%">&nbsp;</td>
+            <td width="20%">&nbsp;</td>
 
-        <th width="20%">
-            <a href="/b/@(Model.BookSlug)" title="@Model.BookName">Up</a>
-        </th>
+            <th width="20%">
+                <a href="@(Model.BookUrlFragment)" title="@Model.BookName">Up</a>
+            </th>
 
-        @if (Model.Sections.Any())
+            @if (Model.Sections.Any())
             {
-        <th width="20%"><a href="@(Model.Sections[0].SectionUrlFragment)" title="@Model.Sections[0].SectionName">First Page</a></th>
+                <th width="20%"><a href="@(Model.Sections[0].SectionUrlFragment)" title="@Model.Sections[0].SectionName">First Page</a></th>
             }
             else
             {
-        <td width="20%">First Page</td>
+                <td width="20%">First Page</td>
             }
 
-        @if (Model.NextPart != null)
+            @if (Model.NextPart != null)
             {
-        <th width="20%">
-            <a href="@(Model.NextPart.PartUrlFragment)/t/@(Tab)" title="@Model.NextPart.PartName">Next &mdash;&gt;</a>
-        </th>
+                <th width="20%">
+                    <a href="@(Model.NextPart.PartUrlFragment)/t/@(Tab)" title="@Model.NextPart.PartName">Next &mdash;&gt;</a>
+                </th>
             }
             else
             {
-        <td width="20%">Next &mdash;&gt;</td>
+                <td width="20%">Next &mdash;&gt;</td>
             }
-    </tr>
-</table>
+        </tr>
+    </table>
 
-<table class="gridtableCentered" width="100%" style="max-width:400px">
-    <tr>
-        <th> <a href=@(Model.PartUrlFragment )>Overview</a>  </th>
+    <table class="gridtableCentered" width="100%" style="max-width:400px">
+        <tr>
+            <th> <a href=@(Model.PartUrlFragment )>Overview</a>  </th>
 
-        <th> <a href=@(Model.PartUrlFragment + "/t/sections")>Contents</a>  </th>
+            <th> <a href=@(Model.PartUrlFragment + "/t/sections")>Contents</a>  </th>
 
-        @if (Model.Plays.Any())
+            @if (Model.Plays.Any())
             {
-        <th> <a href=@(Model.PartUrlFragment + "/t/plays")>Plays</a>  </th>
+                <th> <a href=@(Model.PartUrlFragment + "/t/plays")>Plays</a>  </th>
             }
             else
             {
-        <td>Plays</td>
+                <td>Plays</td>
             }
 
-        @if (Model.Videos.Any())
+            @if (Model.Videos.Any())
             {
-        <th> <a href=@(Model.PartUrlFragment + "/t/videos")>Videos</a>  </th>
+                <th> <a href=@(Model.PartUrlFragment + "/t/videos")>Videos</a>  </th>
             }
             else
             {
-        <td>Videos</td>
+                <td>Videos</td>
             }
-    </tr>
-</table>
+        </tr>
+    </table>
 
-@if (Tab == "sections")
+    @if (Tab == "sections")
     {
-<h2>Table of Contents</h2>
+        <h2>Table of Contents</h2>
         foreach (var section in Model.Sections)
         {
-<div style="margin-left: 25px">
-    <a href="@(section.SectionUrlFragment)">@(section.SectionNameFull) </a>
-</div>
+            <div style="margin-left: 25px">
+                <a href="@(section.SectionUrlFragment)">@(section.SectionNameFull) </a>
+            </div>
             foreach (var s2 in section.Subsections)
             {
-<div style="margin-left: 50px">
-    <a href="@(s2.SectionUrlFragment)">@(s2.SectionNameFull) </a>
-</div>
+                <div style="margin-left: 50px">
+                    <a href="@(s2.SectionUrlFragment)">@(s2.SectionNameFull) </a>
+                </div>
                 foreach (var s3 in s2.Subsections)
                 {
-<div style="margin-left: 75px">
-    <a href="@(s3.SectionUrlFragment)">@(s3.SectionNameFull) </a>
-</div>
+                    <div style="margin-left: 75px">
+                        <a href="@(s3.SectionUrlFragment)">@(s3.SectionNameFull) </a>
+                    </div>
                 }
             }
         }
     }
     else if (Tab == "plays")
     {
-<h2>Plays</h2>
+        <h2>Plays</h2>
         foreach (var play in Model.Plays.OrderBy(p => p.PlayNameFull))
         {
-<div style="margin-left: 25px">
-    <a href="@(play.SectionUrlFragment)/t/plays">@(play.PlayNameFull)</a>
-</div>
+            <div style="margin-left: 25px">
+                <a href="@(play.SectionUrlFragment)/t/plays">@(play.PlayNameFull)</a>
+            </div>
         }
     }
     else if (Tab == "videos")
     {
-<h2>Videos</h2>
+        <h2>Videos</h2>
         foreach (var video in Model.Videos.Select(v => new { v.SectionUrlFragment, Name = v.Description ?? v.SectionName }).Distinct())
         {
-<div style="margin-left: 25px">
-    <a href="@(video.SectionUrlFragment)/t/videos">@(video.Name)</a>
-</div>
+            <div style="margin-left: 25px">
+                <a href="@(video.SectionUrlFragment)/t/videos">@(video.Name)</a>
+            </div>
         }
     }
     else
     {
-<h2>Overview</h2>
-@if (Model.Sections.WalkSections().Any())
+        <h2>Overview</h2>
+        @if (Model.Sections.WalkSections().Any())
         {
-<div>Sections: @(Model.Sections.WalkSections().Count())</div>
+            <div>Sections: @(Model.Sections.WalkSections().Count())</div>
         }
-@if (Model.Plays.Any())
+        @if (Model.Plays.Any())
         {
-<div>Plays: @(Model.Plays.Count)</div>
+            <div>Plays: @(Model.Plays.Count)</div>
         }
-@if (Model.Videos.Any())
+        @if (Model.Videos.Any())
         {
-<div>Videos: @(Model.Videos.Count)</div>
+            <div>Videos: @(Model.Videos.Count)</div>
         }
-@if (Model.Weapons.Count > 0)
+        @if (Model.Weapons.Count > 0)
         {
-<div>Weapon Combinations: @(Model.Weapons.Count)</div>
+            <div>Weapon Combinations: @(Model.Weapons.Count)</div>
         }
 
-<h2>Sections</h2>
+        <h2>Sections</h2>
         foreach (var section in Model.Sections)
         {
-<div style="margin-left: 25px">
-    <a href="@(section.SectionUrlFragment)">@(section.SectionNameFull) </a>
-</div>
+            <div style="margin-left: 25px">
+                <a href="@(section.SectionUrlFragment)">@(section.SectionNameFull) </a>
+            </div>
         }
 
         if (Model.Weapons.Count > 0)
         {
-<h2>Weapons</h2>
-@foreach (var weapon in Model.Weapons)
+            <h2>Weapons</h2>
+            @foreach (var weapon in Model.Weapons)
             {
-<div>
-    @(weapon.WeaponNameFull)
-</div>
+                <div>
+                    @(weapon.WeaponNameFull)
+                </div>
             }
         }
     }
 }
 else if (LoadFailed)
 {
-<h1>Error loading page.</h1>
+    <h1>Error loading page.</h1>
 }
 else
 {
-<h1>Loading</h1>
+    <h1>Loading</h1>
 }

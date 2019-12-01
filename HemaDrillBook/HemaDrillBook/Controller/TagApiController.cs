@@ -1,6 +1,6 @@
-﻿using HemaDrillBook.Data;
-using HemaDrillBook.Models;
-using HemaDrillBook.Services;
+﻿using HemaDrillBook.Api.Models;
+using HemaDrillBook.Api.Services;
+using HemaDrillBook.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -13,9 +13,9 @@ namespace HemaDrillBook.Controllers
     [Route("api/tag")]
     public class TagApiController : SecureController
     {
-        private readonly TagsService m_TagsService;
+        private readonly TagsApiService m_TagsService;
 
-        public TagApiController(TagsService tagsService, UserManager<ApplicationUser> userManager) : base(userManager)
+        public TagApiController(TagsApiService tagsService, UserManager<ApplicationUser> userManager) : base(userManager)
         {
             m_TagsService = tagsService ?? throw new ArgumentNullException(nameof(tagsService));
         }

@@ -1,5 +1,5 @@
-﻿using HemaDrillBook.Models;
-using HemaDrillBook.Services;
+﻿using HemaDrillBook.UI.Models;
+using HemaDrillBook.UI.Services;
 using Microsoft.AspNetCore.Components;
 using System;
 using System.Threading.Tasks;

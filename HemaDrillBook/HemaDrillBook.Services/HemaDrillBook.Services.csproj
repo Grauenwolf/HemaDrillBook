@@ -9,11 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Models\Play.cs" />
-    <Compile Remove="Models\PlayStep.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Tortuga.Chain.SqlServer" Version="3.0.7223.40609" />
   </ItemGroup>
 

@@ -1,6 +1,7 @@
+using HemaDrillBook.Api.Services;
 using HemaDrillBook.Areas.Identity;
 using HemaDrillBook.Data;
-using HemaDrillBook.Services;
+using HemaDrillBook.UI.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -61,9 +62,15 @@ namespace HemaDrillBook
                         new UserDataRule("ModifiedByUserKey", "UserKey", OperationTypes.InsertOrUpdate)
                     ));
 
+            //Blazor Dependencies
             services.AddSingleton<BookService>();
             services.AddSingleton<PlayService>();
-            services.AddSingleton<TagsService>();
+            //services.AddSingleton<TagsService>();
+
+            //REST API Dependencies
+            services.AddSingleton<BookApiService>();
+            services.AddSingleton<PlayApiService>();
+            services.AddSingleton<TagsApiService>();
 
             services.AddMvc();
 

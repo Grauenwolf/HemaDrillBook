@@ -11,6 +11,10 @@
             <div>@(name)</div>
         }
     }
+    @if (Model.WiktenauerUrl != null)
+    {
+        <div><a href="@Model.WiktenauerUrl">Wiktenauer Entry</a></div>
+    }
 
     if (Model.Authors.Count > 0)
     {
@@ -20,13 +24,18 @@
             <div><a href="/author/@(author.AuthorSlug)">@(author.AuthorName)</a></div>
         }
     }
+    if (Model.Notes != null)
+    {
+        <h2>Notes</h2>
+        <div>@Model.Notes</div>
+    }
 
     if (Model.Parts.Count > 0)
     {
         <h2>Parts</h2>
         foreach (var part in Model.Parts)
         {
-            <div><a href="/b/@(Model.BookSlug)/p/@(part.PartSlug)">@(part.PartName)</a></div>
+            <div><a href="@part.PartUrlFragment">@(part.PartName)</a></div>
         }
     }
 
@@ -36,14 +45,7 @@
         @foreach (var weapon in Model.Weapons)
         {
             <div>
-                @if (weapon.SecondaryWeaponKey == null)
-                {
-                    @(weapon.PrimaryWeaponName)
-                }
-                else
-                {
-                    @(weapon.PrimaryWeaponName + " vs. " + weapon.SecondaryWeaponName)
-                }
+                @(weapon.WeaponNameFull)
             </div>
         }
     }
