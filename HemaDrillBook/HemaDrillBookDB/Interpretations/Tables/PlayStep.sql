@@ -1,6 +1,7 @@
 ﻿CREATE TABLE Interpretations.PlayStep
 (
-    PlayKey INT NOT NULL,
+    PlayKey INT NOT NULL
+	CONSTRAINT FK_PlayStep_PlayKey REFERENCES Interpretations.Play(PlayKey),
     TempoNumber INT NOT NULL,
     Actor CHAR(1) NOT NULL
         CONSTRAINT C_PlayStep_Actor CHECK (Actor IN ( 'A', 'P' )),

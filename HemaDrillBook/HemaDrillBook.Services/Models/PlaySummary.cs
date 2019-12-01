@@ -13,8 +13,25 @@
         public string? VariantName { get; set; }
         public string? PageReference { get; set; }
 
-        string? PlayName => VariantName ?? SectionName;
+        public string? PlayNameFull
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(PageReference))
+                {
+                    if (!string.IsNullOrEmpty(VariantName))
+                        return $"{$"{SectionName} ({PageReference})"}: {VariantName}";
 
-        public string? PlayNameFull => string.IsNullOrEmpty(PageReference) ? PlayName : $"{PlayName} ({PageReference})";
+                    return $"{SectionName} ({PageReference})";
+                }
+                else
+                {
+                    if (!string.IsNullOrEmpty(VariantName))
+                        return $"{SectionName}: {VariantName}";
+
+                    return SectionName;
+                }
+            }
+        }
     }
 }
