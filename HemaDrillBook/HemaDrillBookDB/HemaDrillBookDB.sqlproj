@@ -136,6 +136,7 @@
     <Folder Include="Data\OneTime\Manciolino" />
     <Folder Include="Accounts\Progamability" />
     <Folder Include="Accounts\Views" />
+    <Folder Include="Interpretations\Programability" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Accounts\Tables\AspNetRoles.sql">
@@ -244,6 +245,9 @@
     <None Include="Data\OneTime\Meyer\Interpretations.Video.1.sql" />
     <None Include="Data\OneTime\Manciolino\Interpretations.Video.5.sql" />
     <Build Include="Interpretations\Views\VideoDetail.sql" />
+    <Build Include="Interpretations\Tables\Commentary.sql" />
+    <Build Include="Interpretations\Views\CommentaryDetail.sql" />
+    <Build Include="Interpretations\Programability\CommentaryDetailFiltered.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="localhost.publish.xml" />

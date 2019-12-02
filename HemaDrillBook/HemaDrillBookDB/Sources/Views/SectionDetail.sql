@@ -12,7 +12,23 @@ SELECT s.SectionKey,
        b.BookName,
        b.BookSlug,
        p.PartName,
-       p.PartSlug
+       p.PartSlug,
+       (
+           SELECT COUNT(*)
+           FROM Interpretations.Commentary c
+           WHERE c.SectionKey = s.SectionKey
+                 AND c.PublicNotes IS NOT NULL
+       ) AS CommentaryCount,
+       (
+           SELECT COUNT(*)
+           FROM Interpretations.Play p2
+           WHERE p2.SectionKey = s.SectionKey
+       ) AS PlayCount,
+       (
+           SELECT COUNT(*)
+           FROM Interpretations.Video v
+           WHERE v.SectionKey = s.SectionKey
+       ) AS VideoCount
 FROM Sources.Section s
     INNER JOIN Sources.Part p
         ON s.PartKey = p.PartKey

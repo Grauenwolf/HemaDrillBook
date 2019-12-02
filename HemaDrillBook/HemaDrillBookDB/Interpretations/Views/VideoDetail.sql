@@ -19,7 +19,8 @@ SELECT v.VideoKey,
        p.PartSlug,
        b.BookName,
        b.BookSlug,
-	   b.BookKey
+	   b.BookKey,
+	   v.SysStartTime AS ModifiedDate
 FROM Interpretations.Video v
     INNER JOIN Sources.Section s
         ON v.SectionKey = s.SectionKey

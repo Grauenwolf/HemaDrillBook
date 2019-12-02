@@ -1,3 +1,4 @@
+using Ganss.XSS;
 using HemaDrillBook.Api.Services;
 using HemaDrillBook.Areas.Identity;
 using HemaDrillBook.Data;
@@ -61,6 +62,15 @@ namespace HemaDrillBook
                         new UserDataRule("CreatedByUserKey", "UserKey", OperationTypes.Insert),
                         new UserDataRule("ModifiedByUserKey", "UserKey", OperationTypes.InsertOrUpdate)
                     ));
+
+            services.AddScoped<IHtmlSanitizer, HtmlSanitizer>(x =>
+            {
+                // Configure sanitizer rules as needed here.
+                // For now, just use default rules + allow class attributes
+                var sanitizer = new Ganss.XSS.HtmlSanitizer();
+                sanitizer.AllowedAttributes.Add("class");
+                return sanitizer;
+            });
 
             //Blazor Dependencies
             services.AddSingleton<BookService>();

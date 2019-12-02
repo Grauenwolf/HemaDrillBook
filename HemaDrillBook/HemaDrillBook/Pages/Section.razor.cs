@@ -43,6 +43,54 @@ namespace HemaDrillBook.Pages
         }
 
         protected VideoInput VideoInput { get; set; } = new VideoInput();
+        protected CommentaryInput CommentaryInput { get; set; } = new CommentaryInput();
+
+        protected override void OnModelChanged()
+        {
+            if (Model?.MyCommentary != null)
+            {
+                CommentaryInput = new CommentaryInput()
+                {
+                    SectionKey = Model.MyCommentary.SectionKey,
+                    PrivateNotes = Model.MyCommentary.PrivateNotes,
+                    PublicNotes = Model.MyCommentary.PublicNotes
+                };
+            }
+            else
+            {
+                CommentaryInput = new CommentaryInput();
+            }
+        }
+
+        protected async void SubmitCommentary()
+        {
+            //These should never happen.
+            if (Model == null)
+            {
+                CommentaryInput.ErrorDisplay = "Section not loaded.";
+                return;
+            }
+            if (User == null)
+            {
+                CommentaryInput.ErrorDisplay = "User not logged in.";
+                return;
+            }
+
+            try
+            {
+                //Save goes here
+                await PlayService.UpdateCommentaryAsync(CommentaryInput, User);
+
+                //Reset the page
+                StateHasChanged();
+                Navigation.NavigateTo(Model.SectionUrlFragment + "/t/commentary");
+                Model = null; //need to refresh data
+            }
+            catch (Exception ex)
+            {
+                CommentaryInput.ErrorDisplay = "Unable to save: " + ex.Message;
+            }
+        }
 
         protected async void SubmitVideo()
         {

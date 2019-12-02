@@ -76,6 +76,15 @@
             {
                 <td>Videos</td>
             }
+
+            @if (Model.Sections.WalkSections().Any(s => s.CommentaryCount > 0))
+            {
+                <th> <a href=@(Model.PartUrlFragment + "/t/commentary")>Commentary</a>  </th>
+            }
+            else
+            {
+                <td>Videos</td>
+            }
         </tr>
     </table>
 
@@ -121,6 +130,20 @@
             </div>
         }
     }
+    else if (Tab == "commentary")
+    {
+        <h2>Commentary</h2>
+
+        @foreach (var section in Model.Sections.WalkSections().Where(s => s.CommentaryCount > 0))
+        {
+            {
+                <div style="margin-left: 25px">
+                    <a href="@(section.SectionUrlFragment)/t/commentary">@(section.SectionName)</a>
+                </div>
+            }
+        }
+
+    }
     else
     {
         <h2>Overview</h2>
@@ -135,6 +158,10 @@
         @if (Model.Videos.Any())
         {
             <div>Videos: @(Model.Videos.Count)</div>
+        }
+        @if (Model.Sections.WalkSections().Any(s => s.CommentaryCount > 0))
+        {
+            <div>Commentary: @(Model.Sections.WalkSections().Sum(s => s.CommentaryCount))</div>
         }
         @if (Model.Weapons.Count > 0)
         {

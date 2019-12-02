@@ -90,5 +90,18 @@ namespace HemaDrillBook.UI.Services
 
             return await DataSource(currentUser).Insert("Interpretations.Video", video).ToInt32().ExecuteAsync();
         }
+
+        public async Task UpdateCommentaryAsync(CommentaryInput commentaryInput, IUser currentUser)
+        {
+            commentaryInput.UserKey = currentUser.UserKey!.Value;
+            //Hack: Why is UserKey nullable?
+            //Hack: Chain fails to Upsert when there are multiple PKs and one of them comes from the current user instead of the model
+
+            //Null out empty string.
+            if (commentaryInput.PublicNotes == "") commentaryInput.PublicNotes = null;
+            if (commentaryInput.PrivateNotes == "") commentaryInput.PrivateNotes = null;
+
+            await DataSource(currentUser).Upsert("Interpretations.Commentary", commentaryInput).ExecuteAsync();
+        }
     }
 }

@@ -39,6 +39,12 @@ namespace HemaDrillBook.UI.Models
         public string? SectionSlug { get; set; }
 
         public List<PlayDetail> Plays { get; } = new List<PlayDetail>();
+        public List<CommentarySummary> Commentary { get; } = new List<CommentarySummary>();
+
+        public int CommentaryCount => Commentary.Count + ((MyCommentary?.PublicNotes != null) ? 1 : 0);
+
+        [NotMapped]
+        public CommentarySummary? MyCommentary { get; set; }
 
         /// <summary>
         /// Gets or sets the previous section, which may be at any depth.

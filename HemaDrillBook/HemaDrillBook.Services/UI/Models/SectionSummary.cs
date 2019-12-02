@@ -27,6 +27,7 @@ namespace HemaDrillBook.UI.Models
         public string? PageReference { get; set; }
         public int? ParentSectionKey { get; set; }
         public int SectionKey { get; set; }
+        public int CommentaryCount { get; set; }
         public string? SectionSlug { get; set; }
         public string? PartSlug { get; set; }
         public string? BookSlug { get; set; }

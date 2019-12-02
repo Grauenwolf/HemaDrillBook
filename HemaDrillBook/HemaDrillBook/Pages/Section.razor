@@ -1,6 +1,7 @@
 ﻿@page "/b/{BookSlug}/p/{PartSlug}/s/{SectionSlug}"
 @page "/b/{BookSlug}/p/{PartSlug}/s/{SectionSlug}/t"
 @page "/b/{BookSlug}/p/{PartSlug}/s/{SectionSlug}/t/{Tab}"
+@using HemaDrillBook.Shared
 @inherits SectionBase
 
 @if (Model != null)
@@ -111,6 +112,16 @@
                 {
                     <td>Videos</td>
                 }
+
+                @if (Model.CommentaryCount > 0 || Model.MyCommentary?.PrivateNotes != null || Model.Subsections.WalkSections().Any(s => s.CommentaryCount > 0))
+                {
+                    <th> <a href=@(Model.SectionUrlFragment + "/t/commentary")>Commentary</a>  </th>
+                }
+                else
+                {
+                    <td>Commentary</td>
+                }
+                @*<th> <a href=@(Model.SectionUrlFragment + "/t/all")>All</a>  </th>*@
             </tr>
         </table>
         <table class="gridtableCentered" width="100%" style="max-width:400px">
@@ -122,8 +133,9 @@
                         <a href=@(Model.SectionUrlFragment + "/t/addVideo")>Add Video</a>
                     </th>
 
-                    @*<a href=@(Model.SectionUrlFragment + "/t/addCommentary")>Add Commentary</a>*@
-                    <td>Add Commentary (future)</td>
+                    <th>
+                        <a href=@(Model.SectionUrlFragment + "/t/addCommentary")>Add Commentary</a>
+                    </th>
                 </tr>
             }
             else
@@ -232,11 +244,16 @@
                 <h5>Warning: This is just a summary of each play. See the original text or translation for details.</h5>
             }
 
-            @foreach (var play in Model.Subsections.ChildPlays().OrderBy(p => p.PlayNameFull))
+            if (Model.Subsections.ChildPlays().Any())
             {
-                <div>
-                    <a href="@(play.SectionUrlFragment)/t/plays">@(play.PlayNameFull)</a>
-                </div>
+                <h3>Plays in subsections</h3>
+
+                @foreach (var play in Model.Subsections.ChildPlays().OrderBy(p => p.PlayNameFull))
+                {
+                    <div>
+                        <a href="@(play.SectionUrlFragment)/t/plays">@(play.PlayNameFull)</a>
+                    </div>
+                }
             }
 
         }
@@ -247,6 +264,10 @@
 
         @foreach (var video in Model.Videos)
         {
+            if (video.Description != null)
+            {
+                <h3>@(video.Description)</h3>
+            }
             if (video.VideoServiceKey == 1)
             {
                 if (video.StartTime.HasValue)
@@ -266,11 +287,15 @@
             }
         }
 
-        @foreach (var video in Model.Subsections.ChildVideos().Select(v => new { v.SectionUrlFragment, Name = v.Description ?? v.SectionName }).Distinct())
+        if (Model.Subsections.ChildVideos().Any())
         {
-            <div style="margin-left: 25px">
-                <a href="@(video.SectionUrlFragment)/t/videos">@(video.Name)</a>
-            </div>
+            <h3>Videos in subsections</h3>
+            @foreach (var video in Model.Subsections.ChildVideos().Select(v => new { v.SectionUrlFragment, Name = v.Description ?? v.SectionName }).Distinct())
+            {
+                <div style="margin-left: 25px">
+                    <a href="@(video.SectionUrlFragment)/t/videos">@(video.Name)</a>
+                </div>
+            }
         }
     }
     else if (IsAuthenticated && Tab == "addVideo")
@@ -303,6 +328,87 @@
         </EditForm>
 
     }
+    else if (Tab == "commentary")
+    {
+        <h2>Commentary</h2>
+        @if (IsAuthenticated && Model.MyCommentary != null)
+        {
+            @if (Model.MyCommentary.PrivateNotes != null)
+            {
+                <h3>Your Notes (<a href=@(Model.SectionUrlFragment + "/t/addCommentary")>Edit</a>)</h3>
+                <MarkdownView Content="@Model.MyCommentary.PrivateNotes" />
+            }
+            else
+            {
+                <h3>Your Notes</h3>
+                <div><a href=@(Model.SectionUrlFragment + "/t/addCommentary")>Add you notes</a></div>
+            }
+            if (Model.MyCommentary.PublicNotes != null)
+            {
+                <h3>Your Commentary (<a href=@(Model.SectionUrlFragment + "/t/addCommentary")>Edit</a>)</h3>
+                <MarkdownView Content="@Model.MyCommentary.PublicNotes" />
+            }
+            else
+            {
+                <h3>Your Commentary</h3>
+                <div><a href=@(Model.SectionUrlFragment + "/t/addCommentary")>Share you comments</a></div>
+            }
+        }
+        @foreach (var comment in Model.Commentary)
+        {
+            <h3>@comment.DisplayName</h3>
+            <MarkdownView Content="@comment.PublicNotes" />
+        }
+
+        if (Model.Subsections.WalkSections().Any(s => s.CommentaryCount > 0))
+        {
+            <h3>Commentary in subsections</h3>
+
+            @foreach (var section in Model.Subsections.WalkSections().Where(s => s.CommentaryCount > 0))
+            {
+                {
+                    <div style="margin-left: 25px">
+                        <a href="@(section.SectionUrlFragment)/t/commentary">@(section.SectionName)</a>
+                    </div>
+                }
+            }
+        }
+
+    }
+    else if (IsAuthenticated && Tab == "addCommentary")
+    {
+        <h2>Contribute</h2>
+
+        <EditForm Model="@CommentaryInput" OnValidSubmit="@SubmitCommentary">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <h3>Add Private Notes (Only you can see this)</h3>
+            <p><InputTextArea id="privateNotes" @bind-Value="CommentaryInput.PrivateNotes" style="min-height:250px;max-width:600px;width:100%" /></p>
+            <h3>Add Commentary (Everyone can see this)</h3>
+            <p>
+                <InputTextArea id="publicNotes" @bind-Value="CommentaryInput.PublicNotes" style="min-height:250px;max-width:600px;width:100%" />
+            </p>
+            @if (!string.IsNullOrEmpty(CommentaryInput.ErrorDisplay))
+            {
+                <p style="color:red">@CommentaryInput.ErrorDisplay</p>
+            }
+
+            <p><button type="submit">Submit</button></p>
+        </EditForm>
+
+    }
+    else if (Tab == "all" && Model.Weapons.Count > 0)
+    {
+        <h2>Weapons</h2>
+        @foreach (var weapon in Model.Weapons)
+        {
+            <div>
+                @(weapon.WeaponNameFull)
+            </div>
+        }
+    }
+
     else
     {
         <h2>Overview</h2>
@@ -327,6 +433,15 @@
         {
             <div>Videos in subsections: @(Model.Subsections.ChildVideos().Count())</div>
         }
+        @if (Model.CommentaryCount > 0)
+        {
+            <div>Commentary in this section: @(Model.CommentaryCount)</div>
+        }
+        @if (Model.Subsections.WalkSections().Any(s => s.CommentaryCount > 0))
+        {
+            <div>Commentary in subsections: @(Model.Subsections.WalkSections().Sum(s => s.CommentaryCount))</div>
+        }
+
         @if (Model.Weapons.Count > 0)
         {
             <div>Weapon Combinations: @(Model.Weapons.Count)</div>

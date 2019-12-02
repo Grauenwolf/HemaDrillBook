@@ -21,9 +21,14 @@ namespace HemaDrillBook.Pages
                 if (m_Model != value)
                 {
                     m_Model = value;
+                    OnModelChanged();
                     StateHasChanged();
                 }
             }
+        }
+
+        protected virtual void OnModelChanged()
+        {
         }
 
         /// <summary>

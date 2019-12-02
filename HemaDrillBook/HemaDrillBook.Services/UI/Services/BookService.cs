@@ -135,6 +135,7 @@ namespace HemaDrillBook.UI.Services
         {
             return DataSource(currentUser)
                 .From("Interpretations.VideoDetail", new { SectionKey = sectionKey })
+                .WithSorting(new SortExpression("ModifiedDate", SortDirection.Descending))
                 .ToCollection<VideoDetail>()
                 .ExecuteAsync();
         }
@@ -179,9 +180,12 @@ namespace HemaDrillBook.UI.Services
 
             section.Plays.AddRange(await GetPlayDetailsForSectionAsync(section.SectionKey, currentUser));
 
-            //section.Translations.AddRange(await ds.From("Translations.SectionTranslationDetail", filter).ToCollection<SectionTranslationDetail>().ExecuteAsync());
+            var (commentaries, note) = await GetCommentaryDetailsForSectionAsync(section.SectionKey, currentUser);
+            section.Commentary.AddRange(commentaries);
+            section.MyCommentary = note;
 
-            //section.CanEdit = await CanEditBookAsync(section.BookKey, currentUser);
+            if (section.MyCommentary == null && currentUser?.UserKey != null)
+                section.MyCommentary = new CommentarySummary() { SectionKey = section.SectionKey, UserKey = currentUser.UserKey.Value };
         }
 
         public async Task<List<PlayDetail>> GetPlayDetailsForSectionAsync(int sectionKey, IUser? currentUser)
@@ -196,6 +200,19 @@ namespace HemaDrillBook.UI.Services
                 play.Steps.AddRange(steps.Where(x => x.PlayKey == play.PlayKey));
 
             return plays;
+        }
+
+        public async Task<(IEnumerable<CommentarySummary> commentaries, CommentarySummary? note)> GetCommentaryDetailsForSectionAsync(int sectionKey, IUser? currentUser)
+        {
+            //if user is null, only public notes will be returned
+            var dataSource = DataSource(currentUser);
+            var commentary = await dataSource.TableFunction("Interpretations.CommentaryDetailFiltered", new { currentUser?.UserKey })
+                .WithFilter(new { sectionKey })
+                .WithSorting(new SortExpression("ModifiedDate", SortDirection.Descending))
+                .ToCollection<CommentarySummary>()
+                .ExecuteAsync();
+
+            return (commentary.Where(c => c.UserKey != currentUser?.UserKey), commentary.SingleOrDefault(c => c.UserKey == currentUser?.UserKey));
         }
 
         async Task<List<SectionSummary>> GetPartSectionsAsync(int partKey, /*bool includeWeapons, bool includePlays,*/ IUser? currentUser)
