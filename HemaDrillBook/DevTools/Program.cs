@@ -27,28 +27,35 @@ namespace DevTools
             //ExportTable(videoDS, "Sources.Book");
             //ExportTable(videoDS, "Sources.BookAuthor");
             //ExportTable(videoDS, "Sources.AlternateBookName");
-            ExportTable(videoDS, "Interpretations.VideoService");
+            //ExportTable(videoDS, "Interpretations.VideoService");
 
             //const string sectionWeaponFilter = @"EXISTS (SELECT * FROM Sources.Section s WHERE s.BookKey = @BookKey AND SectionWeaponMap.SectionKey = s.SectionKey)";
             //const string sectionPlayFilter = @"EXISTS (SELECT * FROM Sources.Section s WHERE s.BookKey = @BookKey AND Play.SectionKey = s.SectionKey)";
             const string playStepFilter = @"EXISTS (SELECT * FROM Interpretations.Play p INNER JOIN Sources.Section s ON p.SectionKey = s.SectionKey WHERE PlayStep.PlayKey = p.PlayKey AND s.BookKey = @BookKey)";
             const string videoFilter = @"SectionKey IN (SELECT s.SectionKey FROM Sources.Section s WHERE s.BookKey = @BookKey)";
+            const string sectionTranslationFilter = @"SectionKey IN (SELECT s.SectionKey FROM Sources.Section s WHERE s.BookKey = @BookKey)";
+
+            ExportTable(videoDS, "Translations.Translator");
 
             foreach (var bookKey in videoDS.From("Sources.Book").ToInt32List("BookKey").Execute())
             {
                 //    ExportTable(videoDS, "Sources.Section", null, new { BookKey = bookKey }, $"Sources.Section.{bookKey}.sql");
                 //    ExportTable(videoDS, "Sources.SectionWeaponMap", sectionWeaponFilter, new { BookKey = bookKey }, $"Sources.SectionWeaponMap.{bookKey}.sql");
                 //    ExportTable(videoDS, "Interpretations.Play", sectionPlayFilter, new { BookKey = bookKey }, $"Interpretations.Play.{bookKey}.sql");
-                ExportTable(videoDS, "Interpretations.PlayStep", playStepFilter, new { BookKey = bookKey }, $"Interpretations.PlayStep.{bookKey}.sql");
+                //ExportTable(videoDS, "Interpretations.PlayStep", playStepFilter, new { BookKey = bookKey }, $"Interpretations.PlayStep.{bookKey}.sql");
+
                 ExportTable(videoDS, "Interpretations.Video", videoFilter, new { BookKey = bookKey }, $"Interpretations.Video.{bookKey}.sql");
+
+                ExportTable(videoDS, "Translations.Translation", null, new { BookKey = bookKey }, $"Translations.Translation.{bookKey}.sql");
+                ExportTable(videoDS, "Translations.SectionTranslation", sectionTranslationFilter, new { BookKey = bookKey }, $"Translations.SectionTranslation.{bookKey}.sql");
             }
 
             //ExportTable(drillBookDS, "Sources.Part");
 
-            //for (var i = 8; i <= 13; i++)
-            //{
-            //    ExportTable_Sections(drillBookDS, new { PartKey = i }, $"Sources.Section.Part.{i}.sql");
-            //}
+            for (var i = 15; i <= 16; i++)
+            {
+                ExportTable_Sections(drillBookDS, new { PartKey = i }, $"Sources.Section.Part.{i}.sql");
+            }
 
             //ExportTable(videoDS, "Tags.Guard");
             //ExportTable(videoDS, "Tags.GuardModifier");

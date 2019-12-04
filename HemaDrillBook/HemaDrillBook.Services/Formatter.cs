@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace HemaDrillBook
+namespace HemaDrillBook.Services
 {
     static class Formatter
     {

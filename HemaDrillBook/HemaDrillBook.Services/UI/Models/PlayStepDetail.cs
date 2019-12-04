@@ -1,4 +1,6 @@
-﻿namespace HemaDrillBook.UI.Models
+﻿using HemaDrillBook.Services;
+
+namespace HemaDrillBook.UI.Models
 {
     public class PlayStepDetail
     {

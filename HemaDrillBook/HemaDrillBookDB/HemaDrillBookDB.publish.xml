@@ -6,7 +6,7 @@
     <DeployScriptFileName>HemaDrillBookDB.sql</DeployScriptFileName>
     <TargetConnectionString>Data Source=hemavideo.database.windows.net;Persist Security Info=False;User ID=hemavideoadmin;Pooling=False;MultipleActiveResultSets=False;Connect Timeout=60;Encrypt=True;TrustServerCertificate=False</TargetConnectionString>
     <ProfileVersionNumber>1</ProfileVersionNumber>
-    <BlockOnPossibleDataLoss>False</BlockOnPossibleDataLoss>
+    <BlockOnPossibleDataLoss>True</BlockOnPossibleDataLoss>
     <DropObjectsNotInSource>True</DropObjectsNotInSource>
     <IgnoreAnsiNulls>False</IgnoreAnsiNulls>
   </PropertyGroup>

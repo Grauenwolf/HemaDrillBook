@@ -248,10 +248,10 @@
             {
                 <h3>Plays in subsections</h3>
 
-                @foreach (var play in Model.Subsections.ChildPlays().OrderBy(p => p.PlayNameFull))
+                @foreach (var play in Model.Subsections.ChildPlays().OrderBy(p => p.PlayFullName))
                 {
                     <div>
-                        <a href="@(play.SectionUrlFragment)/t/plays">@(play.PlayNameFull)</a>
+                        <a href="@(play.SectionUrlFragment)/t/plays">@(play.PlayFullName)</a>
                     </div>
                 }
             }
@@ -398,17 +398,6 @@
         </EditForm>
 
     }
-    else if (Tab == "all" && Model.Weapons.Count > 0)
-    {
-        <h2>Weapons</h2>
-        @foreach (var weapon in Model.Weapons)
-        {
-            <div>
-                @(weapon.WeaponNameFull)
-            </div>
-        }
-    }
-
     else
     {
         <h2>Overview</h2>
@@ -464,7 +453,7 @@
             @foreach (var weapon in Model.Weapons)
             {
                 <div>
-                    @(weapon.WeaponNameFull)
+                    @(weapon.WeaponFullName)
                 </div>
             }
         }

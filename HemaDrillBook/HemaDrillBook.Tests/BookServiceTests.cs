@@ -114,7 +114,7 @@ namespace HemaDrillBook.Tests
                 var rows = await bs.GetPartPlaysAsync(partKey, null);
                 foreach (var row in rows)
                 {
-                    Assert.IsFalse(string.IsNullOrWhiteSpace(row.PlayNameFull), "PlayNameFull shouldn't be null");
+                    Assert.IsFalse(string.IsNullOrWhiteSpace(row.PlayFullName), "PlayFullName shouldn't be null");
                     Assert.IsFalse(string.IsNullOrWhiteSpace(row.SectionUrlFragment), "SectionUrlFragment shouldn't be null");
                 }
             }

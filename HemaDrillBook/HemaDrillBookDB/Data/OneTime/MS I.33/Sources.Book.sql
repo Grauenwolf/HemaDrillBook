@@ -20,7 +20,7 @@ BEGIN
         WiktenauerUrl
     )
     VALUES
-    (5, N'Opera Nova', 'Manciolino', NULL, N'http://wiktenauer.com/wiki/Antonio_Manciolino');
+    (2, N'MS I.33', 'MSI.33', NULL, N'http://wiktenauer.com/wiki/Walpurgis_Fechtbuch_(MS_I.33)');
 
 
     MERGE INTO Sources.Book t
@@ -58,7 +58,7 @@ BEGIN
         AuthorSlug
     )
     VALUES
-    (5, N'Antonio Manciolino', 'Manciolino');
+    (2, N'Clerus Lutegerus', 'Lutegerus');
 
 
     MERGE INTO Sources.Author t
@@ -95,7 +95,7 @@ BEGIN
         AuthorKey
     )
     VALUES
-	(5, 5);
+	(2, 2);
 
 
     MERGE INTO Sources.BookAuthorMap t
@@ -112,7 +112,44 @@ BEGIN
         (s.BookKey, s.AuthorKey);
 
 
+		   DECLARE @AlternateBookName TABLE
+    (
+        AlternateBookNameKey INT NOT NULL PRIMARY KEY,
+        BookKey INT NOT NULL,
+        AlternateBookName NVARCHAR(500) NOT NULL
+    );
 
+    INSERT INTO @AlternateBookName
+    (
+        AlternateBookNameKey,
+        BookKey,
+        AlternateBookName
+    )
+    VALUES
+    (201, 2, N'Walpurgis Fechtbuch'),
+    (202, 2, N'Liber de Arte Dimicatoria '),
+    (203, 2, N'The Tower Fechtbuch');
+
+    
+    SET IDENTITY_INSERT Sources.AlternateBookName ON;
+
+
+    MERGE INTO Sources.AlternateBookName t
+    USING @AlternateBookName s
+    ON t.AlternateBookNameKey = s.AlternateBookNameKey
+    WHEN NOT MATCHED THEN
+        INSERT
+        (
+            AlternateBookNameKey,
+            BookKey,
+            AlternateBookName
+        )
+        VALUES
+        (s.AlternateBookNameKey, s.BookKey, s.AlternateBookName)
+    WHEN MATCHED THEN
+        UPDATE SET BookKey = s.BookKey,
+                   AlternateBookName = s.AlternateBookName;
+
+    SET IDENTITY_INSERT Sources.AlternateBookName OFF;
 
 END;
-GO

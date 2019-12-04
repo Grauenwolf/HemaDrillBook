@@ -1,0 +1,76 @@
+﻿@page "/search/results"
+@inherits SearchResultsBase
+
+@if (Model != null)
+{
+    <h1>Play Search</h1>
+    <div><a href="/search@(SearchParams)">Edit Search</a></div>
+
+    @if (Model.Books.Any(x => x.IsSelected))
+    {
+        <div style="margin-left: 25px">Books: @(string.Join(", ", Model.Books.Where(x => x.IsSelected).Select(x => x.BookName)))</div>
+    }
+    @if (Model.Parts.Any(x => x.IsSelected))
+    {
+        <div style="margin-left: 25px">Parts: @(string.Join(", ", Model.Parts.Where(x => x.IsSelected).Select(x => x.PartName)))</div>
+    }
+    @if (Model.Weapons.Any(x => x.IsSelected))
+    {
+        <div style="margin-left: 25px">Weapons: @(string.Join(", ", Model.Weapons.Where(x => x.IsSelected).Select(x => x.WeaponFullName)))</div>
+    }
+    @if (Model.StartingGuards.Any(x => x.IsSelected))
+    {
+        <div style="margin-left: 25px">Starting Guards: @(string.Join(", ", Model.StartingGuards.Where(x => x.IsSelected).Select(x => x.GuardFullName)))</div>
+    }
+    @if (Model.Measure.Any(x => x.IsSelected))
+    {
+        <div style="margin-left: 25px">Measure: @(string.Join(", ", Model.Measure.Where(x => x.IsSelected).Select(x => x.MeasureFullName)))</div>
+    }
+    @if (Model.Footwork.Any(x => x.IsSelected))
+    {
+        <div style="margin-left: 25px">Footwork: @(string.Join(", ", Model.Footwork.Where(x => x.IsSelected).Select(x => x.FootworkFullName)))</div>
+    }
+    @if (Model.Techniques.Any(x => x.IsSelected))
+    {
+        <div style="margin-left: 25px">Techniques: @(string.Join(", ", Model.Techniques.Where(x => x.IsSelected).Select(x => x.TechniqueFullName)))</div>
+    }
+    @if (Model.Targets.Any(x => x.IsSelected))
+    {
+        <div style="margin-left: 25px">Targets: @(string.Join(", ", Model.Targets.Where(x => x.IsSelected).Select(x => x.TargetName)))</div>
+    }
+    @if (Model.Guards.Any(x => x.IsSelected))
+    {
+        <div style="margin-left: 25px">Guards: @(string.Join(", ", Model.Guards.Where(x => x.IsSelected).Select(x => x.GuardFullName)))</div>
+    }
+
+    if (Model.Results.Count == 0)
+    {
+        <h2>No results.</h2>
+    }
+    else
+    {
+        @foreach (var book in Model.DistinctBooks())
+        {
+            <h2>@book.BookName</h2>
+            @foreach (var part in Model.DistinctParts(book.BookKey))
+            {
+                <h3>@part.PartName</h3>
+                @foreach (var play in Model.Plays(part.PartKey))
+                {
+                    <div>
+                        <a href="@play.SectionUrlFragment/t/plays">@play.PlayFullName</a>
+                    </div>
+                }
+            }
+        }
+    }
+
+}
+else if (LoadFailed)
+{
+    <h1>Error loading page.</h1>
+}
+else
+{
+    <h1>Loading</h1>
+}

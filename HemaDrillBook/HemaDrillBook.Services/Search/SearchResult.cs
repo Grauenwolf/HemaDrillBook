@@ -1,17 +1,20 @@
-﻿namespace HemaDrillBook.UI.Models
+﻿namespace HemaDrillBook.Services.Search
 {
-    public class PlaySummary
+    public class SearchResult
     {
-        public string SectionUrlFragment => $"/b/{BookSlug}/p/{PartSlug}/s/{SectionSlug}";
-
-        public int PlayKey { get; set; }
+        public int BookKey { get; set; }
+        public int PartKey { get; set; }
         public int SectionKey { get; set; }
+        public string? BookName { get; set; }
+        public string? PartName { get; set; }
         public string? SectionName { get; set; }
-        public string? SectionSlug { get; set; }
-        public string? PartSlug { get; set; }
-        public string? BookSlug { get; set; }
         public string? VariantName { get; set; }
+        public string? BookSlug { get; set; }
+        public string? PartSlug { get; set; }
+        public string? SectionSlug { get; set; }
         public string? PageReference { get; set; }
+
+        public string SectionUrlFragment => $"/b/{BookSlug}/p/{PartSlug}/s/{SectionSlug}";
 
         public string? PlayFullName
         {

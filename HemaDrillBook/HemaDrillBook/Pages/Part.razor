@@ -113,10 +113,10 @@
     else if (Tab == "plays")
     {
         <h2>Plays</h2>
-        foreach (var play in Model.Plays.OrderBy(p => p.PlayNameFull))
+        foreach (var play in Model.Plays.OrderBy(p => p.PlayFullName))
         {
             <div style="margin-left: 25px">
-                <a href="@(play.SectionUrlFragment)/t/plays">@(play.PlayNameFull)</a>
+                <a href="@(play.SectionUrlFragment)/t/plays">@(play.PlayFullName)</a>
             </div>
         }
     }
@@ -182,7 +182,7 @@
             @foreach (var weapon in Model.Weapons)
             {
                 <div>
-                    @(weapon.WeaponNameFull)
+                    @(weapon.WeaponFullName)
                 </div>
             }
         }

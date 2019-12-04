@@ -8,6 +8,6 @@
         //public int? SecondaryWeaponKey { get; set; }
         public string? SecondaryWeaponName { get; set; }
 
-        public string? WeaponNameFull => (SecondaryWeaponName == null) ? PrimaryWeaponName : $"@({PrimaryWeaponName} vs. {SecondaryWeaponName}";
+        public string? WeaponFullName => (SecondaryWeaponName == null) ? PrimaryWeaponName : $"@({PrimaryWeaponName} vs. {SecondaryWeaponName}";
     }
 }

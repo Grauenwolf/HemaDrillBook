@@ -137,6 +137,12 @@
     <Folder Include="Accounts\Progamability" />
     <Folder Include="Accounts\Views" />
     <Folder Include="Interpretations\Programability" />
+    <Folder Include="Search" />
+    <Folder Include="Search\Views" />
+    <Folder Include="Translations" />
+    <Folder Include="Translations\Tables" />
+    <Folder Include="Translations\Views" />
+    <Folder Include="Data\OneTime\MS I.33" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Accounts\Tables\AspNetRoles.sql">
@@ -223,8 +229,6 @@
     <Build Include="Sources\Views\SectionDetail.sql" />
     <Build Include="Interpretations\Views\PlayDetail.sql" />
     <Build Include="Interpretations\Views\PlayStepDetail.sql" />
-    <None Include="Data\OneTime\Manciolino\Sources.Book.sql" />
-    <None Include="Data\OneTime\Manciolino\Sources.Part.sql" />
     <None Include="Data\OneTime\Manciolino\Interpretations.Play.5.sql" />
     <None Include="Data\OneTime\Manciolino\Interpretations.PlaySTep.5.sql" />
     <None Include="Data\OneTime\Manciolino\Sources.Section.5.sql" />
@@ -248,6 +252,30 @@
     <Build Include="Interpretations\Tables\Commentary.sql" />
     <Build Include="Interpretations\Views\CommentaryDetail.sql" />
     <Build Include="Interpretations\Programability\CommentaryDetailFiltered.sql" />
+    <Build Include="Search\Search.sql" />
+    <Build Include="Search\Views\FootworkByPlay.sql" />
+    <Build Include="Search\Views\BookByPlay.sql" />
+    <Build Include="Search\Views\PartByPlay.sql" />
+    <Build Include="Search\Views\WeaponByPlay.sql" />
+    <Build Include="Search\Views\TechniqueByPlay.sql" />
+    <Build Include="Search\Views\GuardByPlay.sql" />
+    <Build Include="Search\Views\TargetByPlay.sql" />
+    <Build Include="Search\Views\MeasureByPlay.sql" />
+    <Build Include="Translations\Tables\SectionTranslation.sql" />
+    <Build Include="Translations\Tables\Translation.sql" />
+    <Build Include="Translations\Tables\Translator.sql" />
+    <Build Include="Translations\Views\SectionTranslationDetail.sql" />
+    <Build Include="Translations\Views\TranslationDetail.sql" />
+    <Build Include="Translations\Translations.sql" />
+    <None Include="Data\OneTime\MS I.33\Sources.Book.sql" />
+    <None Include="Data\OneTime\MS I.33\Sources.Part.sql" />
+    <None Include="Data\OneTime\Manciolino\Sources.Part.sql" />
+    <None Include="Data\OneTime\MS I.33\Sources.Section.2.sql" />
+    <None Include="Data\OneTime\MS I.33\Sources.Section.Part.15.sql" />
+    <None Include="Data\OneTime\MS I.33\Sources.Section.Part.16.sql" />
+    <None Include="Data\OneTime\MS I.33\Interpretations.Video.2.sql" />
+    <None Include="Data\OneTime\Translations.Translator.sql" />
+    <None Include="Data\OneTime\MS I.33\Translations.Translation.2.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="localhost.publish.xml" />

@@ -1,0 +1,120 @@
+﻿@page "/search"
+@inherits SearchBase
+
+@if (Model != null)
+{
+    <h1>Play Search</h1>
+
+    <EditForm Model="@Model" OnValidSubmit="@RunSearch">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <h2>Books</h2>
+        @foreach (var book in Model.Books)
+        {
+            <div style="margin-left:25px">
+                <label>
+                    <InputCheckbox @bind-Value="book.IsSelected" />
+                    @book.BookName
+                </label>
+            </div>
+            @foreach (var part in Model.Parts.Where(p => p.BookKey == book.BookKey))
+            {
+                <div style="margin-left:25px">
+                    <label>
+                        <InputCheckbox @bind-Value="part.IsSelected" />
+                        @part.PartName
+                    </label>
+                </div>
+            }
+        }
+
+        <h2>Weapons</h2>
+        @foreach (var weapon in Model.Weapons)
+        {
+            <div style="margin-left:25px">
+                <label>
+                    <InputCheckbox @bind-Value="weapon.IsSelected" />
+                    @weapon.WeaponFullName
+                </label>
+            </div>
+        }
+
+        <h2>Starting Guards</h2>
+        @foreach (var gaurd in Model.StartingGuards)
+        {
+            <div style="margin-left:25px">
+                <label>
+                    <InputCheckbox @bind-Value="gaurd.IsSelected" />
+                    @gaurd.GuardFullName
+                </label>
+            </div>
+        }
+
+        <h2>Measure</h2>
+        @foreach (var measure in Model.Measure)
+        {
+            <div style="margin-left:25px">
+                <label>
+                    <InputCheckbox @bind-Value="measure.IsSelected" />
+                    @measure.MeasureFullName
+                </label>
+            </div>
+        }
+
+        <h2>Footwork</h2>
+        @foreach (var foot in Model.Footwork)
+        {
+            <div style="margin-left:25px">
+                <label>
+                    <InputCheckbox @bind-Value="foot.IsSelected" />
+                    @foot.FootworkFullName
+                </label>
+            </div>
+        }
+
+        <h2>Techniques</h2>
+        @foreach (var technique in Model.Techniques)
+        {
+            <div style="margin-left:25px">
+                <label>
+                    <InputCheckbox @bind-Value="technique.IsSelected" />
+                    @technique.TechniqueFullName
+                </label>
+            </div>
+        }
+
+        <h2>Targets</h2>
+        @foreach (var technique in Model.Targets)
+        {
+            <div style="margin-left:25px">
+                <label>
+                    <InputCheckbox @bind-Value="technique.IsSelected" />
+                    @technique.TargetName
+                </label>
+            </div>
+        }
+
+        <h2>Guards</h2>
+        @foreach (var gaurd in Model.Guards)
+        {
+            <div style="margin-left:25px">
+                <label>
+                    <InputCheckbox @bind-Value="gaurd.IsSelected" />
+                    @gaurd.GuardFullName
+                </label>
+            </div>
+        }
+
+        <button type="submit">Search</button>
+    </EditForm>
+
+}
+else if (LoadFailed)
+{
+    <h1>Error loading page.</h1>
+}
+else
+{
+    <h1>Loading</h1>
+}
