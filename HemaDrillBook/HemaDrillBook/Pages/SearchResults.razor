@@ -43,7 +43,11 @@
         <div style="margin-left: 25px">Guards: @(string.Join(", ", Model.Guards.Where(x => x.IsSelected).Select(x => x.GuardFullName)))</div>
     }
 
-    if (Model.Results.Count == 0)
+    if (Model.Results == null)
+    {
+        <h2>Searching...</h2>
+    }
+    else if (Model.Results.Count == 0)
     {
         <h2>No results.</h2>
     }

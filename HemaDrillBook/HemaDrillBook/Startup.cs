@@ -68,7 +68,7 @@ namespace HemaDrillBook
             {
                 // Configure sanitizer rules as needed here.
                 // For now, just use default rules + allow class attributes
-                var sanitizer = new Ganss.XSS.HtmlSanitizer();
+                var sanitizer = new HtmlSanitizer();
                 sanitizer.AllowedAttributes.Add("class");
                 return sanitizer;
             });

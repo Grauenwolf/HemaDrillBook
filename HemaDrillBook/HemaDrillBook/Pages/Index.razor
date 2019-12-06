@@ -4,7 +4,7 @@
 @if (User != null)
 {
     <h3>
-        Hello @(string.IsNullOrEmpty(User.DisplayName) ? User.UserName : User.DisplayName)!
+        @("Hello " + (string.IsNullOrEmpty(User.DisplayName) ? User.UserName : User.DisplayName) + "!")
     </h3>}
 else
 {

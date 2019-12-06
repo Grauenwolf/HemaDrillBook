@@ -143,6 +143,11 @@
     <Folder Include="Translations\Tables" />
     <Folder Include="Translations\Views" />
     <Folder Include="Data\OneTime\MS I.33" />
+    <Folder Include="Data\OneTime\Figueyredo" />
+    <Folder Include="Data\OneTime\Viedma" />
+    <Folder Include="Data\OneTime\Giovanni" />
+    <Folder Include="Data\OneTime\Fabris" />
+    <Folder Include="Data\OneTime\Fiore" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Accounts\Tables\AspNetRoles.sql">
@@ -271,11 +276,41 @@
     <None Include="Data\OneTime\MS I.33\Sources.Part.sql" />
     <None Include="Data\OneTime\Manciolino\Sources.Part.sql" />
     <None Include="Data\OneTime\MS I.33\Sources.Section.2.sql" />
-    <None Include="Data\OneTime\MS I.33\Sources.Section.Part.15.sql" />
     <None Include="Data\OneTime\MS I.33\Sources.Section.Part.16.sql" />
+    <None Include="Data\OneTime\MS I.33\Sources.Section.Part.17.sql" />
     <None Include="Data\OneTime\MS I.33\Interpretations.Video.2.sql" />
     <None Include="Data\OneTime\Translations.Translator.sql" />
     <None Include="Data\OneTime\MS I.33\Translations.Translation.2.sql" />
+    <None Include="Data\OneTime\Figueyredo\Interpretations.Video.3.sql" />
+    <None Include="Data\OneTime\Figueyredo\Sources.Section.3.sql" />
+    <None Include="Data\OneTime\Figueyredo\Sources.SectionWeaponMap.3.sql" />
+    <None Include="Data\OneTime\Figueyredo\Translations.SectionTranslation.3.sql" />
+    <None Include="Data\OneTime\Figueyredo\Translations.Translation.3.sql" />
+    <None Include="Data\OneTime\Figueyredo\Sources.Section.Part.19.sql" />
+    <None Include="Data\OneTime\Viedma\Sources.Book.sql" />
+    <None Include="Data\OneTime\Viedma\Sources.Part.sql" />
+    <None Include="Data\OneTime\Figueyredo\Sources.Part.sql" />
+    <None Include="Data\OneTime\Figueyredo\Sources.Book.sql" />
+    <None Include="Data\OneTime\Viedma\Sources.Section.Part.21.sql" />
+    <None Include="Data\OneTime\Viedma\Interpretations.Video.4.sql" />
+    <None Include="Data\OneTime\Viedma\Sources.Section.4.sql" />
+    <None Include="Data\OneTime\Viedma\Sources.SectionWeaponMap.4.sql" />
+    <None Include="Data\OneTime\Giovanni\Interpretations.Video.6.sql" />
+    <None Include="Data\OneTime\Giovanni\Sources.SectionWeaponMap.6.sql" />
+    <None Include="Data\OneTime\Giovanni\Sources.Section.Part.24.sql" />
+    <None Include="Data\OneTime\Giovanni\Sources.Section.Part.22.sql" />
+    <None Include="Data\OneTime\Giovanni\Sources.Section.Part.23.sql" />
+    <None Include="Data\OneTime\Giovanni\Sources.Part.sql" />
+    <None Include="Data\OneTime\Giovanni\Sources.Book.sql" />
+    <None Include="Data\OneTime\Fabris\Sources.Part.sql" />
+    <None Include="Data\OneTime\Fabris\Sources.Book.sql" />
+    <None Include="Data\OneTime\Fabris\Interpretations.Play.7.sql" />
+    <None Include="Data\OneTime\Fabris\Interpretations.PlayStep.7.sql" />
+    <None Include="Data\OneTime\Fabris\Interpretations.Video.7.sql" />
+    <None Include="Data\OneTime\Fabris\Sources.SectionWeaponMap.7.sql" />
+    <None Include="Data\OneTime\Fabris\Sources.Section.Part.25.sql" />
+    <None Include="Data\OneTime\Fabris\Sources.Section.Part.26.sql" />
+    <None Include="Data\OneTime\Fabris\Sources.Section.Part.27.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="localhost.publish.xml" />

@@ -20,7 +20,7 @@
             </div>
             @foreach (var part in Model.Parts.Where(p => p.BookKey == book.BookKey))
             {
-                <div style="margin-left:25px">
+                <div style="margin-left:50px">
                     <label>
                         <InputCheckbox @bind-Value="part.IsSelected" />
                         @part.PartName

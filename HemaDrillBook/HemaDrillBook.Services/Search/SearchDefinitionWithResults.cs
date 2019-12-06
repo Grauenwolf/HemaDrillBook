@@ -5,7 +5,7 @@ namespace HemaDrillBook.Services.Search
 {
     public class SearchDefinitionWithResults : SearchDefinition
     {
-        public List<SearchResult> Results { get; set; } = new List<SearchResult>();
+        public List<SearchResult>? Results { get; set; }
 
         public IEnumerable<(int BookKey, string? BookName)> DistinctBooks()
         {

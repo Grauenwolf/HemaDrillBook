@@ -29,8 +29,8 @@ namespace DevTools
             //ExportTable(videoDS, "Sources.AlternateBookName");
             //ExportTable(videoDS, "Interpretations.VideoService");
 
-            //const string sectionWeaponFilter = @"EXISTS (SELECT * FROM Sources.Section s WHERE s.BookKey = @BookKey AND SectionWeaponMap.SectionKey = s.SectionKey)";
-            //const string sectionPlayFilter = @"EXISTS (SELECT * FROM Sources.Section s WHERE s.BookKey = @BookKey AND Play.SectionKey = s.SectionKey)";
+            const string sectionWeaponFilter = @"EXISTS (SELECT * FROM Sources.Section s WHERE s.BookKey = @BookKey AND SectionWeaponMap.SectionKey = s.SectionKey)";
+            const string sectionPlayFilter = @"EXISTS (SELECT * FROM Sources.Section s WHERE s.BookKey = @BookKey AND Play.SectionKey = s.SectionKey)";
             const string playStepFilter = @"EXISTS (SELECT * FROM Interpretations.Play p INNER JOIN Sources.Section s ON p.SectionKey = s.SectionKey WHERE PlayStep.PlayKey = p.PlayKey AND s.BookKey = @BookKey)";
             const string videoFilter = @"SectionKey IN (SELECT s.SectionKey FROM Sources.Section s WHERE s.BookKey = @BookKey)";
             const string sectionTranslationFilter = @"SectionKey IN (SELECT s.SectionKey FROM Sources.Section s WHERE s.BookKey = @BookKey)";
@@ -39,10 +39,10 @@ namespace DevTools
 
             foreach (var bookKey in videoDS.From("Sources.Book").ToInt32List("BookKey").Execute())
             {
-                //    ExportTable(videoDS, "Sources.Section", null, new { BookKey = bookKey }, $"Sources.Section.{bookKey}.sql");
-                //    ExportTable(videoDS, "Sources.SectionWeaponMap", sectionWeaponFilter, new { BookKey = bookKey }, $"Sources.SectionWeaponMap.{bookKey}.sql");
-                //    ExportTable(videoDS, "Interpretations.Play", sectionPlayFilter, new { BookKey = bookKey }, $"Interpretations.Play.{bookKey}.sql");
-                //ExportTable(videoDS, "Interpretations.PlayStep", playStepFilter, new { BookKey = bookKey }, $"Interpretations.PlayStep.{bookKey}.sql");
+                ExportTable(videoDS, "Sources.Section", null, new { BookKey = bookKey }, $"Sources.Section.{bookKey}.sql");
+                ExportTable(videoDS, "Sources.SectionWeaponMap", sectionWeaponFilter, new { BookKey = bookKey }, $"Sources.SectionWeaponMap.{bookKey}.sql");
+                ExportTable(videoDS, "Interpretations.Play", sectionPlayFilter, new { BookKey = bookKey }, $"Interpretations.Play.{bookKey}.sql");
+                ExportTable(videoDS, "Interpretations.PlayStep", playStepFilter, new { BookKey = bookKey }, $"Interpretations.PlayStep.{bookKey}.sql");
 
                 ExportTable(videoDS, "Interpretations.Video", videoFilter, new { BookKey = bookKey }, $"Interpretations.Video.{bookKey}.sql");
 
@@ -52,7 +52,9 @@ namespace DevTools
 
             //ExportTable(drillBookDS, "Sources.Part");
 
-            for (var i = 15; i <= 16; i++)
+            var partMax = drillBookDS.Sql("SELECT MAX(PartKey) FROM Sources.Part").ToInt32().Execute();
+
+            for (var i = 1; i <= partMax; i++)
             {
                 ExportTable_Sections(drillBookDS, new { PartKey = i }, $"Sources.Section.Part.{i}.sql");
             }
@@ -199,8 +201,7 @@ namespace DevTools
         private static void GenerateSql(SqlServerDataSource dataSource, string tableName, string filename, IReadOnlyList<IReadOnlyDictionary<string, object>> rows)
         {
             var table = dataSource.DatabaseMetadata.GetTableOrView(tableName);
-            var columnsOfInterest = table.Columns.Where(c => c.SqlName != "SysStartTime" &&
-c.SqlName != "SysEndTime").ToList();
+            var columnsOfInterest = table.Columns.Where(c => c.SqlName != "SysStartTime" && c.SqlName != "SysEndTime" && c.SqlName != "ModifiedDate").ToList();
             var primaryColumns = columnsOfInterest.Where(c => c.IsPrimaryKey).ToList();
             var dataColumns = columnsOfInterest.Where(c => !c.IsPrimaryKey).ToList();
             var hasIdentity = columnsOfInterest.Any(c => c.IsIdentity);

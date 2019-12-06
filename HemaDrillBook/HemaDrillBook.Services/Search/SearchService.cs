@@ -32,7 +32,7 @@ namespace HemaDrillBook.Services.Search
 
             searchDefinition.Techniques.AddRange(await ds.Sql(@"SELECT tbp.TechniqueKey, tbp.TechniqueName, tbp.AlternateTechniqueName, COUNT(*) FROM Search.TechniqueByPlay tbp GROUP BY tbp.TechniqueKey, tbp.TechniqueName, tbp.AlternateTechniqueName ORDER BY tbp.TechniqueName").ToCollection<Technique>().ExecuteAsync());
 
-            searchDefinition.Parts.AddRange(await ds.Sql(@"SELECT pbp.PartKey, pbp.PartName, pbp.DisplayOrder, COUNT(*) AS Count FROM Search.PartByPlay pbp GROUP BY pbp.PartKey, pbp.PartName, pbp.DisplayOrder ORDER BY pbp.DisplayOrder").ToCollection<Part>().ExecuteAsync());
+            searchDefinition.Parts.AddRange(await ds.Sql(@"SELECT pbp.PartKey, pbp.PartName, pbp.DisplayOrder, pbp.BookKey, COUNT(*) AS Count FROM Search.PartByPlay pbp GROUP BY pbp.PartKey, pbp.PartName, pbp.DisplayOrder, pbp.BookKey ORDER BY pbp.DisplayOrder").ToCollection<Part>().ExecuteAsync());
 
             searchDefinition.Weapons.AddRange(await ds.Sql(@"SELECT wbp.PrimaryWeaponKey, wbp.SecondaryWeaponKey, wbp.PrimaryWeaponName, wbp.SecondaryWeaponName, COUNT(*) FROM search.WeaponByPlay wbp GROUP BY wbp.PrimaryWeaponKey, wbp.SecondaryWeaponKey, wbp.PrimaryWeaponName, wbp.SecondaryWeaponName ORDER BY wbp.PrimaryWeaponName, wbp.SecondaryWeaponName").ToCollection<Weapon>().ExecuteAsync());
         }
@@ -53,10 +53,23 @@ namespace HemaDrillBook.Services.Search
        pd.PageReference
 	 FROM Interpretations.PlayDetail pd WHERE 1=1 ");
 
-            if (model.Books.Any(x => x.IsSelected))
+            if (model.Books.Any(x => x.IsSelected) || model.Parts.Any(x => x.IsSelected))
             {
-                var selectedKeys = string.Join(", ", model.Books.Where(x => x.IsSelected).Select(x => x.BookKey.ToString()));
-                sql.AppendLine($@" AND EXISTS (SELECT * FROM Search.BookByPlay bbp WHERE bbp.BookKey IN ({selectedKeys}) AND bbp.PlayKey = pd.PlayKey) ");
+                var fragments = new List<string>();
+
+                if (model.Books.Any(x => x.IsSelected))
+                {
+                    var selectedKeys = string.Join(", ", model.Books.Where(x => x.IsSelected).Select(x => x.BookKey.ToString()));
+                    fragments.Add($@" EXISTS (SELECT * FROM Search.BookByPlay bbp WHERE bbp.BookKey IN ({selectedKeys}) AND bbp.PlayKey = pd.PlayKey) ");
+                }
+                if (model.Parts.Any(x => x.IsSelected))
+                {
+                    var selectedKeys = string.Join(", ", model.Parts.Where(x => x.IsSelected).Select(x => x.PartKey.ToString()));
+                    fragments.Add($@" EXISTS (SELECT * FROM Search.PartByPlay pbp WHERE pbp.PartKey IN ({selectedKeys}) AND pbp.PlayKey = pd.PlayKey) ");
+                }
+
+                var fragmentSql = string.Join(" OR ", fragments);
+                sql.AppendLine($@" AND ( {fragmentSql} ) ");
             }
 
             if (model.Weapons.Any(x => x.IsSelected))
@@ -130,7 +143,7 @@ namespace HemaDrillBook.Services.Search
 
             sql.AppendLine(@"ORDER BY pd.BookName, pd.PartName, pd.SectionName, pd.VariantName");
 
-            model.Results.Clear();
+            model.Results = new List<SearchResult>();
             var sqlTemp = sql.ToString();
             model.Results.AddRange(await DataSource(user).Sql(sql.ToString()).ToCollection<SearchResult>().ExecuteAsync());
         }
