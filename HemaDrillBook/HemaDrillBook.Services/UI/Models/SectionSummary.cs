@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using HemaDrillBook.Services;
+using System.Collections.Generic;
 
 namespace HemaDrillBook.UI.Models
 {
@@ -19,7 +20,7 @@ namespace HemaDrillBook.UI.Models
         //    }
         //}
 
-        public string? SectionNameFull => string.IsNullOrEmpty(PageReference) ? SectionName : $"{SectionName} ({PageReference})";
+        public string? SectionNameFull => Formatter.MultiPart(SectionName, PageReference);
         public string SectionUrlFragment => $"/b/{BookSlug}/p/{PartSlug}/s/{SectionSlug}";
         //public string PartUrlFragment => $"/b/{BookSlug}/p/{PartSlug}";
         //public string BookUrlFragment => $"/b/{BookSlug}";

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using HemaDrillBook.Services;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
@@ -62,6 +63,11 @@ namespace HemaDrillBook.UI.Models
 
         public int SectionKey { get; set; }
         public string? SectionName { get; set; }
+
+        public string? PageReference { get; set; }
+
+        public string? SectionNameFull => Formatter.MultiPart(SectionName, PageReference);
+
         public SectionSummaryCollection Subsections { get; } = new SectionSummaryCollection();
 
         [NotMapped]
