@@ -21,7 +21,9 @@ WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = Sources.Section_History));
 
 GO
 
+GRANT SELECT, UPDATE ON Sources.Section TO HemaWeb;
 
+GO
 
 CREATE UNIQUE NONCLUSTERED INDEX UX_Section_SectionName_1
 ON Sources.Section (

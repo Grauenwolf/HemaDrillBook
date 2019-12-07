@@ -44,6 +44,7 @@ namespace HemaDrillBook.Pages
 
         protected VideoInput VideoInput { get; set; } = new VideoInput();
         protected CommentaryInput CommentaryInput { get; set; } = new CommentaryInput();
+        protected bool MayEdit { get; set; }
 
         protected override void OnModelChanged()
         {
@@ -60,6 +61,7 @@ namespace HemaDrillBook.Pages
             {
                 CommentaryInput = new CommentaryInput();
             }
+            MayEdit = false;
         }
 
         protected async void SubmitCommentary()
@@ -131,24 +133,29 @@ namespace HemaDrillBook.Pages
 
         protected override async Task ParametersSetAsync()
         {
-            if (BookSlug == null)
+            if (string.IsNullOrEmpty(BookSlug))
             {
                 Navigation.NavigateTo("/b");
                 return;
             }
-            if (PartSlug == null)
+            if (string.IsNullOrEmpty(PartSlug))
             {
                 Navigation.NavigateTo("/b/" + BookSlug);
                 return;
             }
-            if (SectionSlug == null)
+            if (string.IsNullOrEmpty(SectionSlug))
             {
-                Navigation.NavigateTo("/b/" + BookSlug + "/s/" + SectionSlug);
+                Navigation.NavigateTo("/b/" + BookSlug + "/p/" + PartSlug);
                 return;
             }
 
             if (Model == null)
+            {
                 Model = await BookService.GetSectionDetailAsync(BookSlug, PartSlug, SectionSlug, User);
+
+                if (IsAuthenticated)
+                    MayEdit = await BookService.MayEditPartAsync(Model.PartKey, User);
+            }
         }
     }
 }

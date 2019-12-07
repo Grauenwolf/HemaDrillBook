@@ -1,6 +1,8 @@
 ﻿using HemaDrillBook.Models;
 using HemaDrillBook.Services;
+using HemaDrillBook.Services.UI.Models;
 using HemaDrillBook.UI.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -319,6 +321,35 @@ namespace HemaDrillBook.UI.Services
                     AddWithChildern(subsection);
                 }
             }
+        }
+
+        public async Task<SectionEdit> GetSectionEditAsync(string bookSlug, string partSlug, string sectionSlug, IUser? currentUser)
+        {
+            var ds = DataSource(currentUser);
+
+            var section = (await ds.From("Sources.SectionDetail", new { bookSlug, partSlug, sectionSlug }).ToObject<SectionEdit>().ExecuteAsync())!; //Hack, NeverNull in Chain 3.1
+
+            await CheckPermissionSectionAsync(section.SectionKey, currentUser);
+
+            return section;
+        }
+
+        public async Task UpdateSectionEditAsync(SectionEdit newValues, IUser? currentUser)
+        {
+            var ds = DataSource(currentUser);
+
+            var oldValues = (await ds.From("Sources.Section", new { newValues.SectionKey }).ToObject<SectionEdit>().ExecuteAsync())!; //Hack, NeverNull in Chain 3.1
+
+            await CheckPermissionSectionAsync(oldValues.SectionKey, currentUser);
+            if (oldValues.PartKey != newValues.PartKey)
+                throw new InvalidOperationException("Cannot move section to a different part");
+
+            if (string.IsNullOrWhiteSpace(newValues.PageReference))
+                newValues.PageReference = null;
+
+            await ds.Update("Sources.Section", newValues).ExecuteAsync();
+
+            return;
         }
     }
 }

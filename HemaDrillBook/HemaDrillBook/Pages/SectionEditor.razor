@@ -1,0 +1,40 @@
+﻿@page "/b/{BookSlug}/p/{PartSlug}/s/{SectionSlug}/edit"
+@using HemaDrillBook.Shared
+@inherits SectionEditorBase
+
+@if (Model != null)
+{
+    <h1>@(Model.SectionNameFull)</h1>
+
+    <EditForm Model="@Model" OnValidSubmit="@SubmitChanges">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <p>
+            <label for="name">Section Name: </label>
+            <InputText id="name" @bind-Value="Model.SectionName" />
+            <br />
+            <label for="page">Page Reference: </label>
+            <InputText id="page" @bind-Value="Model.PageReference" />
+            <br />
+            <label for="slug">Slug: </label>
+            <InputText id="slug" @bind-Value="Model.SectionSlug" />
+        </p>
+
+        @if (!string.IsNullOrEmpty(Model.ErrorDisplay))
+        {
+            <p style="color:red">@Model.ErrorDisplay</p>
+        }
+
+        <p><button type="submit">Submit</button></p>
+    </EditForm>
+
+}
+else if (LoadFailed)
+{
+    <h1>Error loading page.</h1>
+}
+else
+{
+    <h1>Loading</h1>
+}

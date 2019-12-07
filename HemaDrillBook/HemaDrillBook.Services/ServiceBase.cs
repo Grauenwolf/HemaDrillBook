@@ -45,13 +45,23 @@ namespace HemaDrillBook.Services
             await CheckPermissionPartAsync(partKey, currentUser);
         }
 
-        protected async Task CheckPermissionSectionAsync(int sectionKey, IUser currentUser)
+        protected async Task CheckPermissionSectionAsync(int sectionKey, IUser? currentUser)
         {
             if (currentUser == null || currentUser.UserKey == 0)
                 throw new UnauthorizedAccessException("Please login.");
 
             var partKey = await DataSource(currentUser).From("Sources.SectionDetail", new { sectionKey }).ToInt32("PartKey").ExecuteAsync();
             await CheckPermissionPartAsync(partKey, currentUser);
+        }
+
+        public async Task<bool> MayEditPartAsync(int partKey, IUser? currentUser)
+        {
+            if (currentUser == null || currentUser.UserKey == 0)
+                return false;
+
+            var result = await DataSource(currentUser).From("Accounts.PartEditorDetail", new { partKey, currentUser.UserKey }).AsCount().ExecuteAsync();
+
+            return (result > 0);
         }
 
         protected async Task CheckPermissionTagEditorAsync(IUser currentUser)

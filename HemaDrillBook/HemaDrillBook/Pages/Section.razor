@@ -6,7 +6,13 @@
 
 @if (Model != null)
 {
-    <h1>@(Model.SectionNameFull)</h1>
+    <h1>
+        @(Model.SectionNameFull)
+        @if (MayEdit)
+        {
+            <a href="@(Model.SectionUrlFragment)/edit">Edit</a>
+        }
+    </h1>
 
     <div id="navigationGrid">
         <div style="font-size:small">

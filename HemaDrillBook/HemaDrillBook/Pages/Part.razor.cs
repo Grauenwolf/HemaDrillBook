@@ -35,12 +35,12 @@ namespace HemaDrillBook.Pages
 
         protected override async Task ParametersSetAsync()
         {
-            if (BookSlug == null)
+            if (string.IsNullOrEmpty(BookSlug))
             {
                 Navigation.NavigateTo("/b");
                 return;
             }
-            if (PartSlug == null)
+            if (string.IsNullOrEmpty(PartSlug))
             {
                 Navigation.NavigateTo("/b/" + BookSlug);
                 return;
