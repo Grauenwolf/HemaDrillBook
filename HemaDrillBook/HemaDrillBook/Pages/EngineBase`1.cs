@@ -43,7 +43,7 @@ namespace HemaDrillBook.Pages
             {
                 StateHasChanged();
                 if (regenerateModel)
-                    Model = null; //HACK: Anchor 3.1 removes the need for the null check
+                    Model = null;
             }
         }
 
