@@ -4,6 +4,17 @@ namespace HemaDrillBook.Services
 {
     static class Formatter
     {
+        public static string? GuardFullNameForDisplay(string prefix, string? guardName, string? alternateGuardName, string? guardModifierName)
+        {
+            if (guardName != null)
+                guardName = prefix + " " + guardName;
+
+            if (guardModifierName != null)
+                guardModifierName = "with " + guardModifierName;
+
+            return MultiPart(guardName, alternateGuardName, guardModifierName);
+        }
+
         public static string? Join(string combiner, params string?[] names)
         {
             names = names.Where(x => !string.IsNullOrWhiteSpace(x)).ToArray();

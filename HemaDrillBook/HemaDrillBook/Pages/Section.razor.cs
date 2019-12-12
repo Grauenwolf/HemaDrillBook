@@ -153,6 +153,8 @@ namespace HemaDrillBook.Pages
             {
                 Model = await BookService.GetSectionDetailAsync(BookSlug, PartSlug, SectionSlug, User);
 
+                PageTitle = Model.SectionName;
+
                 if (IsAuthenticated)
                     MayEdit = await BookService.MayEditPartAsync(Model.PartKey, User);
             }

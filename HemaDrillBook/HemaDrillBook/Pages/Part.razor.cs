@@ -48,6 +48,8 @@ namespace HemaDrillBook.Pages
 
             if (Model == null)
                 Model = await BookService.GetPartDetailAsync(BookSlug, PartSlug, User);
+
+            PageTitle = Model.PartName;
         }
     }
 }

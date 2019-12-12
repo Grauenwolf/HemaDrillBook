@@ -31,7 +31,7 @@ namespace HemaDrillBookTools.Services
             if (modifier != null)
                 result += " " + modifier;
 
-            return result?.Trim(); ;
+            return result?.Trim();
         }
     }
 }

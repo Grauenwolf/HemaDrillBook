@@ -14,16 +14,16 @@ namespace HemaDrillBook.Services
             m_DataSource = dataSource ?? throw new ArgumentNullException(nameof(dataSource));
         }
 
-        protected async Task CheckPermissionBookAsync(int bookKey, IUser currentUser)
-        {
-            if (currentUser == null || currentUser.UserKey == 0)
-                throw new UnauthorizedAccessException("Please login.");
+        //protected async Task CheckPermissionBookAsync(int bookKey, IUser currentUser)
+        //{
+        //    if (currentUser == null || currentUser.UserKey == 0)
+        //        throw new UnauthorizedAccessException("Please login.");
 
-            var result = await DataSource(currentUser).From("Accounts.BookEditorDetail", new { bookKey, currentUser.UserKey }).AsCount().ExecuteAsync();
+        //    var result = await DataSource(currentUser).From("Accounts.BookEditorDetail", new { bookKey, currentUser.UserKey }).AsCount().ExecuteAsync();
 
-            if (result == 0)
-                throw new UnauthorizedAccessException("Permission denied to edit this record.");
-        }
+        //    if (result == 0)
+        //        throw new UnauthorizedAccessException("Permission denied to edit this book.");
+        //}
 
         protected async Task CheckPermissionPartAsync(int partKey, IUser currentUser)
         {
@@ -33,7 +33,7 @@ namespace HemaDrillBook.Services
             var result = await DataSource(currentUser).From("Accounts.PartEditorDetail", new { partKey, currentUser.UserKey }).AsCount().ExecuteAsync();
 
             if (result == 0)
-                throw new UnauthorizedAccessException("Permission denied to edit this record.");
+                throw new UnauthorizedAccessException("Permission denied to edit this part or section.");
         }
 
         protected async Task CheckPermissionPlayAsync(int playKey, IUser currentUser)
@@ -54,6 +54,12 @@ namespace HemaDrillBook.Services
             await CheckPermissionPartAsync(partKey, currentUser);
         }
 
+        protected void CheckPermissionLoggedIn(IUser? currentUser)
+        {
+            if (currentUser == null || currentUser.UserKey == 0)
+                throw new UnauthorizedAccessException("Please login.");
+        }
+
         public async Task<bool> MayEditPartAsync(int partKey, IUser? currentUser)
         {
             if (currentUser == null || currentUser.UserKey == 0)
@@ -71,7 +77,7 @@ namespace HemaDrillBook.Services
 
             var result = await m_DataSource.From("Accounts.BookEditorDetail", new { currentUser.UserKey }).AsCount().ExecuteAsync();
             if (result == 0)
-                throw new UnauthorizedAccessException("Permission denied to edit this record.");
+                throw new UnauthorizedAccessException("Permission denied to edit tags.");
         }
 
         //Disabled null check because of bug in Chain. See https://github.com/docevaad/Chain/issues/317 in Chain 3.1

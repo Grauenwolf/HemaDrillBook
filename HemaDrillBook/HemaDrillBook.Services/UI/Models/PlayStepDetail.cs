@@ -46,8 +46,8 @@ namespace HemaDrillBook.UI.Models
         public string? TechniqueName3 { get; set; }
         public int TempoNumber { get; set; }
 
-        public string? GuardFullName => Formatter.MultiPart(GuardName, AlternateGuardName, GuardModifierName);
-        public string? IntermediateGuardFullName => Formatter.MultiPart(IntermediateGuardName, IntermediateAlternateGuardName, IntermediateGuardModifierName);
+        public string? GuardFullName => Formatter.GuardFullNameForDisplay("into", GuardName, AlternateGuardName, GuardModifierName);
+        public string? IntermediateGuardFullName => Formatter.GuardFullNameForDisplay("thru", IntermediateGuardName, IntermediateAlternateGuardName, IntermediateGuardModifierName);
 
         public string? TargetFull => Formatter.Join("or", TargetName1, TargetName2, TargetName3);
 

@@ -271,7 +271,7 @@ namespace HemaDrillBook.UI.Services
 
             //Previous/Next page, regardless of depth
             var previousPage = (index > 0) ? flatList[index - 1] : null;
-            var nextPage = (index < flatList.Count - 2) ? flatList[index + 1] : null;
+            var nextPage = (index < flatList.Count - 1) ? flatList[index + 1] : null;
             var up = (result.ParentSectionKey != null) ? flatList.Single(x => x.SectionKey == result.ParentSectionKey) : null;
 
             //Previous/Next at the same depth (e.g. chapters)

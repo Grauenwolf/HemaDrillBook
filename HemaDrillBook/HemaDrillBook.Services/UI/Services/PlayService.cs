@@ -51,7 +51,7 @@ namespace HemaDrillBook.UI.Services
 
         public async Task<int> AddVideoAsync(VideoInput video, IUser currentUser)
         {
-            await CheckPermissionSectionAsync(video.SectionKey, currentUser);
+            CheckPermissionLoggedIn(currentUser);
 
             if (video == null)
                 throw new ArgumentNullException(nameof(video), $"{nameof(video)} is null.");

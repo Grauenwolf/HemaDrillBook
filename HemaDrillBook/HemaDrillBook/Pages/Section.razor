@@ -222,11 +222,11 @@
                             }
                             @if (step.IntermediateGuardKey.HasValue || step.IntermediateGuardModifierKey.HasValue)
                             {
-                                <td style=@rowStyle>thru @step.IntermediateGuardFullName into @step.GuardFullName</td>
+                                <td style=@rowStyle>@step.IntermediateGuardFullName @step.GuardFullName</td>
                             }
                             else if (step.GuardKey.HasValue || step.GuardModifierKey.HasValue)
                             {
-                                <td style=@rowStyle>into @step.GuardFullName</td>
+                                <td style=@rowStyle>@step.GuardFullName</td>
                             }
                             else
                             {
@@ -413,28 +413,28 @@
         }
         @if (Model.Plays.Count > 0)
         {
-            <div>Plays in this section: @(Model.Plays.Count)</div>
+            <div><a href=@(Model.SectionUrlFragment + "/t/plays")>Plays</a> in this section: @(Model.Plays.Count)</div>
         }
         @if (Model.Subsections.ChildPlays().Count() > 0)
         {
-            <div>Plays in subsections: @(Model.Subsections.ChildPlays().Count())</div>
+            <div><a href=@(Model.SectionUrlFragment + "/t/plays")>Plays</a> in subsections: @(Model.Subsections.ChildPlays().Count())</div>
         }
 
         @if (Model.Videos.Count > 0)
         {
-            <div>Videos in this section: @(Model.Videos.Count)</div>
+            <div><a href=@(Model.SectionUrlFragment + "/t/videos")>Videos</a> in this section: @(Model.Videos.Count)</div>
         }
         @if (Model.Subsections.ChildVideos().Count() > 0)
         {
-            <div>Videos in subsections: @(Model.Subsections.ChildVideos().Count())</div>
+            <div><a href=@(Model.SectionUrlFragment + "/t/videos")>Videos</a> in subsections: @(Model.Subsections.ChildVideos().Count())</div>
         }
         @if (Model.CommentaryCount > 0)
         {
-            <div>Commentary in this section: @(Model.CommentaryCount)</div>
+            <div><a href=@(Model.SectionUrlFragment + "/t/commentary")>Commentary</a> in this section: @(Model.CommentaryCount)</div>
         }
         @if (Model.Subsections.WalkSections().Any(s => s.CommentaryCount > 0))
         {
-            <div>Commentary in subsections: @(Model.Subsections.WalkSections().Sum(s => s.CommentaryCount))</div>
+            <div><a href=@(Model.SectionUrlFragment + "/t/commentary")>Commentary</a> in subsections: @(Model.Subsections.WalkSections().Sum(s => s.CommentaryCount))</div>
         }
 
         @if (Model.Weapons.Count > 0)

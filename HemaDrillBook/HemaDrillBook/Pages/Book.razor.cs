@@ -29,6 +29,8 @@ namespace HemaDrillBook.Pages
 
             if (Model == null)
                 Model = await BookService.GetBookDetailAsync(BookSlug, User);
+
+            PageTitle = Model.BookName;
         }
     }
 }
