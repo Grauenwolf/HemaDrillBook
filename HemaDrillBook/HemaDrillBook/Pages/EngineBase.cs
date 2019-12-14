@@ -21,6 +21,8 @@ namespace HemaDrillBook.Pages
         [Inject] UserManager<ApplicationUser> UserManager { get; set; }
 
         //protected SqlServerDataSource DataSource { get; set; }
+        [Inject] protected NavigationManager Navigation { get; set; }
+
 #nullable restore
 
         /// <summary>
@@ -58,6 +60,9 @@ namespace HemaDrillBook.Pages
         async protected sealed override Task OnAfterRenderAsync(bool firstRender)
         {
             await JSRuntime.InvokeVoidAsync("setTitle", PageTitle);
+
+            await NavigateToElementAsync();
+
             await base.OnAfterRenderAsync(firstRender);
             try
             {
@@ -172,6 +177,26 @@ namespace HemaDrillBook.Pages
                 LoadFailed = true;
                 Logger.LogError(ex, $"Internal error, loading failed during {nameof(ParametersSetAsync)}");
             }
+        }
+
+        async Task NavigateToElementAsync()
+        {
+            if (!IsConnected)
+                return;
+
+            //ref: https://github.com/aspnet/AspNetCore/issues/8393
+
+            var fragment = new Uri(Navigation.Uri).Fragment;
+
+            if (string.IsNullOrEmpty(fragment))
+                return;
+
+            var elementId = fragment.StartsWith("#") ? fragment.Substring(1) : fragment;
+
+            if (string.IsNullOrEmpty(elementId))
+                return;
+
+            await JSRuntime.InvokeAsync<bool>("scrollToElementId", elementId);
         }
     }
 }

@@ -40,6 +40,7 @@ namespace HemaDrillBook.Services.Search
         public async Task RunSearchAsync(SearchDefinitionWithResults model, IUser? user)
         {
             var sql = new StringBuilder(@"SELECT
+       pd.PlayKey,
        pd.BookKey,
        pd.PartKey,
        pd.SectionKey,

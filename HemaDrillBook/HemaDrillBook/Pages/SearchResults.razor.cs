@@ -11,7 +11,6 @@ namespace HemaDrillBook.Pages
     {
 #nullable disable
         [Inject] SearchService SearchService { get; set; }
-        [Inject] NavigationManager Navigation { get; set; }
 #nullable restore
 
         public string? SearchParams { get; set; }

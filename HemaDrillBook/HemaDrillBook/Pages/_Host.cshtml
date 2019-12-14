@@ -18,19 +18,30 @@
     </app>
 
     <script src="_framework/blazor.server.js"></script>
+
+    <script>
+        setTitle = (title) => {
+            if (title === null)
+                document.title = "HEMA Drill Book";
+            else
+                document.title = "HEMA Drill Book - " + title;
+
+        };
+
+        isPreRendering = () => {
+            return false;
+        };
+
+        window.scrollToElementId = (elementId) => {
+            console.info('scrolling to element', elementId);
+            var element = document.getElementById(elementId);
+            if (!element) {
+                console.warn('element was not found', elementId);
+                return false;
+            }
+            element.scrollIntoView();
+            return true;
+        }
+    </script>
 </body>
 </html>
-
-<script>
-    setTitle = (title) => {
-        if (title === null)
-            document.title = "HEMA Drill Book";
-        else
-            document.title = "HEMA Drill Book - " + title;
-
-    };
-
-    isPreRendering = () => {
-        return false;
-    };
-</script>

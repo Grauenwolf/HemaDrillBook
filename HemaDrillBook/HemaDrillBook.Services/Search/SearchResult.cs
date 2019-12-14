@@ -3,6 +3,7 @@
     public class SearchResult
     {
         public int BookKey { get; set; }
+        public int PlayKey { get; set; }
         public int PartKey { get; set; }
         public int SectionKey { get; set; }
         public string? BookName { get; set; }
@@ -14,7 +15,7 @@
         public string? SectionSlug { get; set; }
         public string? PageReference { get; set; }
 
-        public string SectionUrlFragment => $"/b/{BookSlug}/p/{PartSlug}/s/{SectionSlug}";
+        public string SectionUrlFragment => $"/b/{BookSlug}/p/{PartSlug}/s/{SectionSlug}/t/plays#Play_{PlayKey}";
 
         public string? PlayFullName
         {

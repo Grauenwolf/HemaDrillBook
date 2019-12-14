@@ -2,7 +2,7 @@
 {
     public class PlaySummary
     {
-        public string SectionUrlFragment => $"/b/{BookSlug}/p/{PartSlug}/s/{SectionSlug}";
+        public string SectionUrlFragment => $"/b/{BookSlug}/p/{PartSlug}/s/{SectionSlug}/t/plays#Play_{PlayKey}";
 
         public int PlayKey { get; set; }
         public int SectionKey { get; set; }

@@ -11,7 +11,6 @@ namespace HemaDrillBook.Pages
 #nullable disable
         [Inject] BookService BookService { get; set; }
         [Inject] PlayService PlayService { get; set; }
-        [Inject] protected NavigationManager Navigation { get; set; }
 #nullable restore
 
         [Parameter]
