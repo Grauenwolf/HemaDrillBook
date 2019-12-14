@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace HemaDrillBook.Services.Search
+﻿namespace HemaDrillBook.Services.Search
 {
     public class Book : SearchCriteria1
     {

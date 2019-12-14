@@ -1,6 +1,5 @@
-﻿using HemaDrillBook.Api.Models;
-using HemaDrillBook.Api.Services;
-using HemaDrillBook.Data;
+﻿using HemaDrillBook.Data;
+using HemaDrillBook.Services.Api;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;

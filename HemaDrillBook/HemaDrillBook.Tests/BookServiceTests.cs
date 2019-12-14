@@ -1,5 +1,4 @@
-using HemaDrillBook.Services;
-using HemaDrillBook.UI.Services;
+using HemaDrillBook.Services.UI;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Threading.Tasks;

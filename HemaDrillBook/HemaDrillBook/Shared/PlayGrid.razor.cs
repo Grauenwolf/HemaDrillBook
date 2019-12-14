@@ -1,4 +1,4 @@
-﻿using HemaDrillBook.UI.Models;
+﻿using HemaDrillBook.Services.UI;
 using Microsoft.AspNetCore.Components;
 
 namespace HemaDrillBook.Shared

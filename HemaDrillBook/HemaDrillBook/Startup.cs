@@ -1,9 +1,9 @@
 using Ganss.XSS;
-using HemaDrillBook.Api.Services;
 using HemaDrillBook.Areas.Identity;
 using HemaDrillBook.Data;
+using HemaDrillBook.Services.Api;
 using HemaDrillBook.Services.Search;
-using HemaDrillBook.UI.Services;
+using HemaDrillBook.Services.UI;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Hosting;
