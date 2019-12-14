@@ -161,7 +161,7 @@ namespace HemaDrillBook.Services.UI
 
         private async Task GetSectionDetailCore(SectionDetail section, IUser? currentUser)
         {
-            var (subsections, previousPage, nextPage, up, previousSection, nextSection, breadCrumb) = await GetSubsectionsAsync(section.PartKey, section.SectionKey, /*includeSubsectionWeapons, includeSubsectionPlays,*/ currentUser);
+            var (subsections, previousPage, nextPage, up, previousSection, nextSection, breadCrumb) = await GetSubsectionsAsync(section.PartKey, section.SectionKey, currentUser);
 
             breadCrumb.Insert(0, new AppLink() { Name = section.PartName, UrlFragment = section.PartUrlFragment });
             breadCrumb.Insert(0, new AppLink() { Name = section.BookName, UrlFragment = section.BookUrlFragment });
@@ -230,7 +230,7 @@ namespace HemaDrillBook.Services.UI
             return result;
         }
 
-        async Task<(IList<SectionSummary> List, SectionSummary? PreviousPage, SectionSummary? NextPage, SectionSummary? Up, SectionSummary? NextSection, SectionSummary? PreviousSection, List<AppLink> BreadCrumb)> GetSubsectionsAsync(int partKey, int sectionKey, /*bool includeWeapons, bool includePlays,*/ IUser? currentUser)
+        async Task<(IList<SectionSummary> List, SectionSummary? PreviousPage, SectionSummary? NextPage, SectionSummary? Up, SectionSummary? NextSection, SectionSummary? PreviousSection, List<AppLink> BreadCrumb)> GetSubsectionsAsync(int partKey, int sectionKey, IUser? currentUser)
         {
             //This could be more efficient using a recursive CTE
 
@@ -255,9 +255,12 @@ namespace HemaDrillBook.Services.UI
                 section.Plays.AddRange(plays.Where(x => x.SectionKey == section.SectionKey));
             //}
 
+            //if (includeVideos)
+            //{
             var videos = await ds.From("Interpretations.VideoDetail", filter).ToCollection<VideoSummary>().ExecuteAsync();
             foreach (var section in sections)
                 section.Videos.AddRange(videos.Where(x => x.SectionKey == section.SectionKey));
+            //}
 
             var flatList = Flatten(sections);
             var result = flatList.Single(x => x.SectionKey == sectionKey);
@@ -303,12 +306,13 @@ namespace HemaDrillBook.Services.UI
         List<SectionSummary> Flatten(List<SectionSummary> sections)
         {
             var result = new List<SectionSummary>(sections.Count);
-            var roots = sections.Where(s => s.ParentSectionKey == null).ToList();
-            foreach (var section in roots)
+            foreach (var section in sections.Where(s => s.ParentSectionKey == null))
             {
                 AddWithChildern(section);
             }
             return result;
+
+            /*************************/
 
             void AddWithChildern(SectionSummary section)
             {
@@ -331,6 +335,38 @@ namespace HemaDrillBook.Services.UI
             return section;
         }
 
+        public async Task<List<SectionForLists>> PossibleParentsForSectionAsync(int partKey, int sectionKey, IUser? currentUser)
+        {
+            var ds = DataSource(currentUser);
+            var filter = new { partKey };
+            var sections = await ds.From("Sources.SectionDetail", filter).WithSorting("DisplayOrder").ToCollection<SectionForLists>().ExecuteAsync();
+
+            foreach (var section in sections)
+                section.Subsections.AddRange(sections.Where(x => x.ParentSectionKey == section.SectionKey));
+
+            //flaten the list, but don't include the current section or it's children
+            var result = new List<SectionForLists>(sections.Count);
+            foreach (var section in sections.Where(s => s.ParentSectionKey == null && s.SectionKey != sectionKey))
+            {
+                section.Depth = 0;
+                AddWithChildern(section, section.Depth + 1);
+            }
+
+            return result;
+
+            /*************************/
+
+            void AddWithChildern(SectionForLists section, int depth)
+            {
+                result.Add(section);
+                foreach (var subsection in section.Subsections.Where(x => x.SectionKey != sectionKey))
+                {
+                    subsection.Depth = depth;
+                    AddWithChildern(subsection, subsection.Depth + 1);
+                }
+            }
+        }
+
         public async Task UpdateSectionEditAsync(SectionEdit newValues, IUser? currentUser)
         {
             var ds = DataSource(currentUser);
@@ -347,6 +383,15 @@ namespace HemaDrillBook.Services.UI
             await ds.Update("Sources.Section", newValues).ExecuteAsync();
 
             return;
+        }
+
+        public async Task<List<SectionForLists>> GetSectionsWithSameParentAsync(int partKey, int? parentSectionKey, IUser? currentUser)
+        {
+            var ds = DataSource(currentUser);
+            if (parentSectionKey == null)
+                return await ds.From("Sources.SectionDetail", new { partKey }).WithSorting("DisplayOrder").ToCollection<SectionForLists>().ExecuteAsync();
+            else
+                return await ds.From("Sources.SectionDetail", new { partKey, parentSectionKey }).WithSorting("DisplayOrder").ToCollection<SectionForLists>().ExecuteAsync();
         }
     }
 }

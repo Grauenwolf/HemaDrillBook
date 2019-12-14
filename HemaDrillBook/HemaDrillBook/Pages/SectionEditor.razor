@@ -6,27 +6,63 @@
 {
     <h1>@(Model.SectionNameFull)</h1>
 
-    <EditForm Model="@Model" OnValidSubmit="@SubmitChanges">
+    <EditForm Model="@Model" OnValidSubmit="@SubmitChangesAsync">
         <DataAnnotationsValidator />
         <ValidationSummary />
 
         <p>
+            <label for="sectionKey">Section Key: </label>
+            <input type="number" id="sectionKey" readonly value="@(Model.SectionKey)" />
+            <br />
             <label for="name">Section Name: </label>
-            <InputText id="name" @bind-Value="Model.SectionName" />
+            <InputText id="name" @bind-Value="Model.SectionName" style="max-width:600px;width:100%" maxlength="250" />
             <br />
             <label for="page">Page Reference: </label>
-            <InputText id="page" @bind-Value="Model.PageReference" />
+            <InputText id="page" @bind-Value="Model.PageReference" style="max-width:600px;width:100%" maxlength="50" />
             <br />
             <label for="slug">Slug: </label>
-            <InputText id="slug" @bind-Value="Model.SectionSlug" />
+            <InputText id="slug" @bind-Value="Model.SectionSlug" style="max-width:600px;width:100%" maxlength="50" />
+            <br />
+            <label for="parentSection">Parent Section: </label>
+            <InputSelect id="parentSection" @bind-Value="Model.ParentSectionKeyString" @onclick="OnClick" @onkeyup="OnKeyUp">
+                <option value=""></option>
+                @foreach (var section in ParentSections)
+                    {
+                        if (Model.ParentSectionKey == section.SectionKey)
+                        {
+                        <option value="@(section.SectionKey)" selected> @(section.SectionNameWithPrefix)</option>
+                        }
+                        else
+                        {
+                        <option value="@(section.SectionKey)"> @(section.SectionNameWithPrefix)</option>
+                        }
+                    }
+            </InputSelect>
+            <br />
+            <label for="displayOrder">Display Order: </label>
+            <InputNumber id="displayOrder" @bind-Value="Model.DisplayOrder" />
         </p>
+
+        @if (SectionsWithSameParent.Count > 0)
+        {
+            <h4>Other pages with this parent section</h4>
+            <ul>
+                @foreach (var section in SectionsWithSameParent)
+                {
+                    <li>@(section.DisplayOrder + ": " + section.SectionNameFull)</li>
+                }
+            </ul>
+        }
 
         @if (!string.IsNullOrEmpty(Model.ErrorDisplay))
         {
             <p style="color:red">@Model.ErrorDisplay</p>
         }
 
-        <p><button type="submit">Submit</button></p>
+        <p>
+            <button type="submit">Save</button>
+            <button type="button" @onclick="ReturnToSection">Cancel</button>
+        </p>
     </EditForm>
 
 }

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
 using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace HemaDrillBook.Pages
@@ -82,7 +83,7 @@ namespace HemaDrillBook.Pages
             await base.OnInitializedAsync();
             try
             {
-                var result = await JSRuntime.InvokeAsync<bool>("isPreRendering");
+                await JSRuntime.InvokeVoidAsync("isPreRendering");
                 IsConnected = true;
             }
             catch (NullReferenceException)
