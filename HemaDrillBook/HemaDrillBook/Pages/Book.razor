@@ -35,7 +35,7 @@
         <h2>Parts</h2>
         foreach (var part in Model.Parts)
         {
-            <div><a href="@part.PartUrlFragment">@(part.PartName)</a></div>
+            <div><a href="@part.PartUrlFragment">@(part.PartName)</a> @(part.TotalFlairCounts)</div>
         }
     }
 

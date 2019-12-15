@@ -9,6 +9,6 @@
         internal override int Key1 => PrimaryWeaponKey;
         internal override int? Key2 => SecondaryWeaponKey;
 
-        public string? WeaponFullName => (SecondaryWeaponName == null) ? PrimaryWeaponName : $"@({PrimaryWeaponName} vs. {SecondaryWeaponName}";
+        public string? WeaponFullName => (SecondaryWeaponName == null) ? PrimaryWeaponName : $"{PrimaryWeaponName} vs. {SecondaryWeaponName}";
     }
 }

@@ -7,7 +7,31 @@ SELECT p.PartKey,
        p.DisplayOrder,
        p.PartSlug,
        b.BookName,
-       b.BookSlug
+       b.BookSlug,
+       (
+           SELECT COUNT(*)
+           FROM Interpretations.PlayDetail pd
+           WHERE pd.PartKey = p.PartKey
+       ) AS PlayCount,
+       (
+           SELECT COUNT(*)
+           FROM
+           (
+               SELECT DISTINCT
+                      vd.PartKey,
+                      vd.Url,
+                      vd.VideoServiceKey,
+                      vd.VideoServiceVideoId
+               FROM Interpretations.VideoDetail vd
+               WHERE vd.PartKey = p.PartKey
+           ) A
+       ) AS VideoCount,
+       (
+           SELECT COUNT(*)
+           FROM Interpretations.CommentaryDetail cd
+           WHERE cd.PublicNotes IS NOT NULL
+                 AND cd.PartKey = p.PartKey
+       ) AS CommentaryCount
 FROM Sources.Part p
     INNER JOIN Sources.Book b
         ON p.BookKey = b.BookKey;
