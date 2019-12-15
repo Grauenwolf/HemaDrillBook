@@ -163,17 +163,17 @@
         foreach (var section in Model.Subsections)
         {
             <div style="margin-left: 25px">
-                <a href="@(section.SectionUrlFragment)">@(section.SectionNameFull)</a>
+                <a href="@(section.SectionUrlFragment)">@(section.SectionNameFull)</a> @(section.FlairCounts)
             </div>
             foreach (var s2 in section.Subsections)
             {
                 <div style="margin-left: 50px">
-                    <a href="@(s2.SectionUrlFragment)">@(s2.SectionNameFull)</a>
+                    <a href="@(s2.SectionUrlFragment)">@(s2.SectionNameFull)</a> @(section.FlairCounts)
                 </div>
                 foreach (var s3 in s2.Subsections)
                 {
                     <div style="margin-left: 75px">
-                        <a href="@(s3.SectionUrlFragment)">@(s3.SectionNameFull)</a>
+                        <a href="@(s3.SectionUrlFragment)">@(s3.SectionNameFull)</a>  @(section.TotalFlairCounts)
                     </div>
                 }
             }
@@ -397,7 +397,7 @@
             foreach (var section in Model.Subsections)
             {
                 <div style="margin-left: 25px">
-                    <a href="@(section.SectionUrlFragment)">@(section.SectionNameFull) </a>
+                    <a href="@(section.SectionUrlFragment)">@(section.SectionNameFull)</a> @(section.TotalFlairCounts)
                 </div>
             }
         }
