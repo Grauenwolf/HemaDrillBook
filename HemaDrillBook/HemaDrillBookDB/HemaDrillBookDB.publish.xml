@@ -9,6 +9,7 @@
     <BlockOnPossibleDataLoss>True</BlockOnPossibleDataLoss>
     <DropObjectsNotInSource>True</DropObjectsNotInSource>
     <IgnoreAnsiNulls>False</IgnoreAnsiNulls>
+    <GenerateSmartDefaults>True</GenerateSmartDefaults>
   </PropertyGroup>
   <ItemGroup>
     <SqlCmdVariable Include="OneTimeLoad">

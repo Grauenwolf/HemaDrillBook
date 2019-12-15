@@ -1,17 +1,22 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.WindowsAzure.Storage;
+using Microsoft.WindowsAzure.Storage.Auth;
+using Microsoft.WindowsAzure.Storage.Blob;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Tortuga.Chain;
 
 namespace DevTools
 {
     class Program
     {
-        static void Main(string[] args)
+        async static Task Main(string[] args)
         {
             const string videoConnectionString = @"Server=.;Database=HemaVideoDB;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Connect Timeout=60;Encrypt=False;TrustServerCertificate=False";
             const string drillBookConnectionString = @"Server=.;Database=HemaDrillBookDB;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Connect Timeout=60;Encrypt=False;TrustServerCertificate=False";
@@ -29,35 +34,35 @@ namespace DevTools
             //ExportTable(videoDS, "Sources.AlternateBookName");
             //ExportTable(videoDS, "Interpretations.VideoService");
 
-            const string sectionWeaponFilter = @"EXISTS (SELECT * FROM Sources.Section s WHERE s.BookKey = @BookKey AND SectionWeaponMap.SectionKey = s.SectionKey)";
-            const string sectionPlayFilter = @"EXISTS (SELECT * FROM Sources.Section s WHERE s.BookKey = @BookKey AND Play.SectionKey = s.SectionKey)";
-            const string playStepFilter = @"EXISTS (SELECT * FROM Interpretations.Play p INNER JOIN Sources.Section s ON p.SectionKey = s.SectionKey WHERE PlayStep.PlayKey = p.PlayKey AND s.BookKey = @BookKey)";
-            const string videoFilter = @"SectionKey IN (SELECT s.SectionKey FROM Sources.Section s WHERE s.BookKey = @BookKey)";
-            const string sectionTranslationFilter = @"SectionKey IN (SELECT s.SectionKey FROM Sources.Section s WHERE s.BookKey = @BookKey)";
+            //const string sectionWeaponFilter = @"EXISTS (SELECT * FROM Sources.Section s WHERE s.BookKey = @BookKey AND SectionWeaponMap.SectionKey = s.SectionKey)";
+            //const string sectionPlayFilter = @"EXISTS (SELECT * FROM Sources.Section s WHERE s.BookKey = @BookKey AND Play.SectionKey = s.SectionKey)";
+            //const string playStepFilter = @"EXISTS (SELECT * FROM Interpretations.Play p INNER JOIN Sources.Section s ON p.SectionKey = s.SectionKey WHERE PlayStep.PlayKey = p.PlayKey AND s.BookKey = @BookKey)";
+            //const string videoFilter = @"SectionKey IN (SELECT s.SectionKey FROM Sources.Section s WHERE s.BookKey = @BookKey)";
+            //const string sectionTranslationFilter = @"SectionKey IN (SELECT s.SectionKey FROM Sources.Section s WHERE s.BookKey = @BookKey)";
 
-            ExportTable(videoDS, "Translations.Translator");
+            //ExportTable(videoDS, "Translations.Translator");
 
-            foreach (var bookKey in videoDS.From("Sources.Book").ToInt32List("BookKey").Execute())
-            {
-                ExportTable(videoDS, "Sources.Section", null, new { BookKey = bookKey }, $"Sources.Section.{bookKey}.sql");
-                ExportTable(videoDS, "Sources.SectionWeaponMap", sectionWeaponFilter, new { BookKey = bookKey }, $"Sources.SectionWeaponMap.{bookKey}.sql");
-                ExportTable(videoDS, "Interpretations.Play", sectionPlayFilter, new { BookKey = bookKey }, $"Interpretations.Play.{bookKey}.sql");
-                ExportTable(videoDS, "Interpretations.PlayStep", playStepFilter, new { BookKey = bookKey }, $"Interpretations.PlayStep.{bookKey}.sql");
+            //foreach (var bookKey in videoDS.From("Sources.Book").ToInt32List("BookKey").Execute())
+            //{
+            //    ExportTable(videoDS, "Sources.Section", null, new { BookKey = bookKey }, $"Sources.Section.{bookKey}.sql");
+            //    ExportTable(videoDS, "Sources.SectionWeaponMap", sectionWeaponFilter, new { BookKey = bookKey }, $"Sources.SectionWeaponMap.{bookKey}.sql");
+            //    ExportTable(videoDS, "Interpretations.Play", sectionPlayFilter, new { BookKey = bookKey }, $"Interpretations.Play.{bookKey}.sql");
+            //    ExportTable(videoDS, "Interpretations.PlayStep", playStepFilter, new { BookKey = bookKey }, $"Interpretations.PlayStep.{bookKey}.sql");
 
-                ExportTable(videoDS, "Interpretations.Video", videoFilter, new { BookKey = bookKey }, $"Interpretations.Video.{bookKey}.sql");
+            //    ExportTable(videoDS, "Interpretations.Video", videoFilter, new { BookKey = bookKey }, $"Interpretations.Video.{bookKey}.sql");
 
-                ExportTable(videoDS, "Translations.Translation", null, new { BookKey = bookKey }, $"Translations.Translation.{bookKey}.sql");
-                ExportTable(videoDS, "Translations.SectionTranslation", sectionTranslationFilter, new { BookKey = bookKey }, $"Translations.SectionTranslation.{bookKey}.sql");
-            }
+            //    ExportTable(videoDS, "Translations.Translation", null, new { BookKey = bookKey }, $"Translations.Translation.{bookKey}.sql");
+            //    ExportTable(videoDS, "Translations.SectionTranslation", sectionTranslationFilter, new { BookKey = bookKey }, $"Translations.SectionTranslation.{bookKey}.sql");
+            //}
 
-            //ExportTable(drillBookDS, "Sources.Part");
+            ////ExportTable(drillBookDS, "Sources.Part");
 
-            var partMax = drillBookDS.Sql("SELECT MAX(PartKey) FROM Sources.Part").ToInt32().Execute();
+            //var partMax = drillBookDS.Sql("SELECT MAX(PartKey) FROM Sources.Part").ToInt32().Execute();
 
-            for (var i = 1; i <= partMax; i++)
-            {
-                ExportTable_Sections(drillBookDS, new { PartKey = i }, $"Sources.Section.Part.{i}.sql");
-            }
+            //for (var i = 1; i <= partMax; i++)
+            //{
+            //    ExportTable_Sections(drillBookDS, new { PartKey = i }, $"Sources.Section.Part.{i}.sql");
+            //}
 
             //ExportTable(videoDS, "Tags.Guard");
             //ExportTable(videoDS, "Tags.GuardModifier");
@@ -65,6 +70,66 @@ namespace DevTools
             //ExportTable(videoDS, "Tags.Target");
             //ExportTable(videoDS, "Tags.Weapon");
             //ExportTable(videoDS, "Tags.Technique");
+
+            var configuration = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile("appsettings.json").AddEnvironmentVariables().Build();
+
+            var container = GetBlobContainer(configuration["ImageStorageUserName"], configuration["ImageStorageKey"], configuration["ImageStorageContainer"]);
+            var folder = new DirectoryInfo(@"D:\Dropbox\Fencing\Agrippa Tradition\L'Ange\Images");
+            foreach (var image in folder.GetFiles())
+            {
+                if (string.Equals(image.Extension, ".png", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    Console.Write(image.Name);
+                    using (var trans = drillBookDS.BeginTransaction())
+                    {
+                        var record = new
+                        {
+                            ImageName = Path.GetFileNameWithoutExtension(image.Name),
+                            FileName = image.Name,
+                            FileSize = image.Length,
+                            CreatedByUserKey = -1,
+                            ModifiedByUserKey = -1,
+                            CopyrightKey = 1,
+                            ImageSetKey = 1,
+                        };
+                        Console.Write("...database");
+                        var imageKey = await drillBookDS.Insert("Images.Image", record).ToInt32().ExecuteAsync();
+                        var storageName = await drillBookDS.From("Images.ImageDetail", new { imageKey }).ToString("StorageFileName").ExecuteAsync();
+
+                        Console.Write("...storage");
+                        using var stream = image.OpenRead();
+                        await UploadFileToStorageAsync(stream, storageName, container);
+
+                        trans.Commit(); //Don't commit unless we were able to also upload the file
+                        Console.WriteLine("...done!");
+                    }
+                }
+            }
+        }
+
+        public static async Task<bool> UploadFileToStorageAsync(Stream fileStream, string fileName, CloudBlobContainer container)
+        {
+            // Get the reference to the block blob from the container
+            var blockBlob = container.GetBlockBlobReference(fileName);
+
+            // Upload the file
+            await blockBlob.UploadFromStreamAsync(fileStream);
+
+            return await Task.FromResult(true);
+        }
+
+        private static CloudBlobContainer GetBlobContainer(string azureAccountName, string azureAccountKey, string containerName)
+        {
+            var storageCredentials = new StorageCredentials(azureAccountName, azureAccountKey);
+
+            // Create cloud storage account by passing the storage credentials
+            var storageAccount = new CloudStorageAccount(storageCredentials, true);
+
+            // Create the blob client.
+            var blobClient = storageAccount.CreateCloudBlobClient();
+
+            // Get reference to the blob container by passing the name by reading the value from the configuration (appsettings.json)
+            return blobClient.GetContainerReference(containerName);
         }
 
         static string ValueToSqlValue(object value, SqlDbType? dbType)

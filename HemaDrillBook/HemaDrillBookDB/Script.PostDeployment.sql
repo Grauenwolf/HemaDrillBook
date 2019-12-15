@@ -10,35 +10,35 @@ Post-Deployment Script Template
 --------------------------------------------------------------------------------------
 */
 
--- System Users
-:r .\Data\SystemUsers.SQL
-:r .\Data\VideoService.sql
+---- System Users
+--:r .\Data\SystemUsers.SQL
+--:r .\Data\VideoService.sql
 
---Tags
-:r .\Data\OneTime\Tags.Weapon.sql
-:r .\Data\OneTime\Tags.Guard.sql
-:r .\Data\OneTime\Tags.Footwork.sql
-:r .\Data\OneTime\Tags.Measure.sql
-:r .\Data\OneTime\Tags.GuardModifier.sql
-:r .\Data\OneTime\Tags.Target.sql
-:r .\Data\OneTime\Tags.Technique.sql
+----Tags
+--:r .\Data\OneTime\Tags.Weapon.sql
+--:r .\Data\OneTime\Tags.Guard.sql
+--:r .\Data\OneTime\Tags.Footwork.sql
+--:r .\Data\OneTime\Tags.Measure.sql
+--:r .\Data\OneTime\Tags.GuardModifier.sql
+--:r .\Data\OneTime\Tags.Target.sql
+--:r .\Data\OneTime\Tags.Technique.sql
 
 
---Meyer
-:r .\Data\OneTime\Meyer\Sources.Book.sql
-:r .\Data\OneTime\Meyer\Sources.Part.sql
-:r .\Data\OneTime\Meyer\Sources.Section.Part.1.sql
-:r .\Data\OneTime\Meyer\Sources.Section.Part.2.sql
-:r .\Data\OneTime\Meyer\Sources.Section.Part.3.sql
-:r .\Data\OneTime\Meyer\Sources.Section.Part.4.sql
-:r .\Data\OneTime\Meyer\Sources.Section.Part.5.sql
-:r .\Data\OneTime\Meyer\Sources.Section.Part.6.sql
-:r .\Data\OneTime\Meyer\Sources.Section.Part.7.sql
-:r .\Data\OneTime\Meyer\Sources.SectionWeaponMap.1.sql
+----Meyer
+--:r .\Data\OneTime\Meyer\Sources.Book.sql
+--:r .\Data\OneTime\Meyer\Sources.Part.sql
+--:r .\Data\OneTime\Meyer\Sources.Section.Part.1.sql
+--:r .\Data\OneTime\Meyer\Sources.Section.Part.2.sql
+--:r .\Data\OneTime\Meyer\Sources.Section.Part.3.sql
+--:r .\Data\OneTime\Meyer\Sources.Section.Part.4.sql
+--:r .\Data\OneTime\Meyer\Sources.Section.Part.5.sql
+--:r .\Data\OneTime\Meyer\Sources.Section.Part.6.sql
+--:r .\Data\OneTime\Meyer\Sources.Section.Part.7.sql
 --:r .\Data\OneTime\Meyer\Sources.SectionWeaponMap.1.sql
-:r .\Data\OneTime\Meyer\Interpretations.Play.1.sql
-:r .\Data\OneTime\Meyer\Interpretations.PlayStep.1.sql
-:r .\Data\OneTime\Meyer\Interpretations.Video.1.sql
+----:r .\Data\OneTime\Meyer\Sources.SectionWeaponMap.1.sql
+--:r .\Data\OneTime\Meyer\Interpretations.Play.1.sql
+--:r .\Data\OneTime\Meyer\Interpretations.PlayStep.1.sql
+--:r .\Data\OneTime\Meyer\Interpretations.Video.1.sql
 
 
 

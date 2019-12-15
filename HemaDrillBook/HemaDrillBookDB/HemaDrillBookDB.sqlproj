@@ -148,6 +148,10 @@
     <Folder Include="Data\OneTime\Giovanni" />
     <Folder Include="Data\OneTime\Fabris" />
     <Folder Include="Data\OneTime\Fiore" />
+    <Folder Include="Images" />
+    <Folder Include="Images\Tables" />
+    <Folder Include="Images\Views" />
+    <Folder Include="Data\OneTime\L%27Ange" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Accounts\Tables\AspNetRoles.sql">
@@ -311,6 +315,12 @@
     <None Include="Data\OneTime\Fabris\Sources.Section.Part.25.sql" />
     <None Include="Data\OneTime\Fabris\Sources.Section.Part.26.sql" />
     <None Include="Data\OneTime\Fabris\Sources.Section.Part.27.sql" />
+    <Build Include="Images\Images.sql" />
+    <Build Include="Images\Tables\Image.sql" />
+    <Build Include="Images\Tables\ImageSectionMap.sql" />
+    <Build Include="Images\Views\ImageDetail.sql" />
+    <Build Include="Images\Tables\ImageSet.sql" />
+    <None Include="Data\OneTime\L%27Ange\L%27Ange1.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="localhost.publish.xml" />

@@ -17,7 +17,7 @@
     CreatedDate DATETIME2(7) NOT NULL
         CONSTRAINT D_Video_CreateDate
             DEFAULT (GETUTCDATE()),
-    ModifiedByUserKey INT NULL
+    ModifiedByUserKey INT NOT NULL
 		CONSTRAINT FK_Video_ModifiedByUserKey
         REFERENCES Accounts.AspNetUsers (UserKey),
     Author NVARCHAR(250) NULL
