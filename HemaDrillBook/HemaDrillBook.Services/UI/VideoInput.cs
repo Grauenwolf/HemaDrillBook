@@ -19,6 +19,36 @@ namespace HemaDrillBook.Services.UI
 
         public TimeSpan? StartTime { get; set; }
 
+        [NotMapped]
+        public string? StartTimeString
+        {
+            get
+            {
+                if (StartTime.HasValue)
+                    return StartTime.ToString();
+                return "";
+            }
+            set
+            {
+                var temp = value;
+
+                //Fixup for time parsing
+                if (!string.IsNullOrEmpty(temp))
+                {
+                    var parts = temp.Split(':');
+                    if (parts.Length == 1) //we only have seconds
+                        temp = "00:00:" + temp;
+                    else if (parts.Length == 2) //we only have minutes and seconds
+                        temp = "00:" + temp;
+                }
+
+                if (TimeSpan.TryParse(temp, out var time))
+                    StartTime = time;
+                else
+                    StartTime = null;
+            }
+        }
+
         public int SectionKey { get; set; }
         public int VideoServiceKey { get; set; }
         public string? VideoServiceVideoId { get; set; }

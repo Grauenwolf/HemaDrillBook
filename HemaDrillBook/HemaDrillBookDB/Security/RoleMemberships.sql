@@ -1,2 +1,2 @@
-﻿ALTER ROLE [db_owner] ADD MEMBER [HemaWeb];
+﻿--ALTER ROLE [db_owner] ADD MEMBER [HemaWeb];
 

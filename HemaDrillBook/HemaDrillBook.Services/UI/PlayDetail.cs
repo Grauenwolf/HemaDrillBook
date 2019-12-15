@@ -1,5 +1,4 @@
-﻿using HemaDrillBook.Services;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace HemaDrillBook.Services.UI
 {
@@ -13,6 +12,10 @@ namespace HemaDrillBook.Services.UI
         public string? AGuardModifierName { get; set; }
 
         public string? AGuardName { get; set; }
+
+        public string? AlternateMeasureName { get; set; }
+
+        public string? MeasureFullName => Formatter.MultiPart(MeasureName, AlternateMeasureName);
 
         //public int? MeasureKey { get; set; }
         public string? MeasureName { get; set; }

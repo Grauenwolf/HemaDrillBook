@@ -229,6 +229,10 @@
                     <br />
                 }
             }
+            else if (video.VideoServiceKey == 2)
+            {
+                <iframe width="640" height="360" src="https://player.vimeo.com/video/@(video.VideoServiceVideoId)" frameborder="0" allowfullscreen="" mozallowfullscreen="" webkitallowfullscreen=""></iframe>
+            }
             else
             {
                 <div>  <a href="@(video.Url)">@(video.Description ?? video.Url)</a></div>
@@ -265,6 +269,9 @@
                 <br />
                 <label for="description">Author: </label>
                 <InputText id="author" @bind-Value="VideoInput.Author" />
+                <br />
+                <label for="startTime">Start Time: </label>
+                <InputText id="startTime" @bind-Value="VideoInput.StartTimeString" />
             </p>
 
             @if (!string.IsNullOrEmpty(VideoInput.ErrorDisplay))

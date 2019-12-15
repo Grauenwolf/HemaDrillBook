@@ -72,7 +72,19 @@ namespace HemaDrillBook.Services.UI
                     video.VideoServiceVideoId = uri.Segments.Last();
                 }
 
+                if (video.StartTime == null && query.AllKeys.Contains("t"))
+                {
+                    if (int.TryParse(query["t"], out var seconds))
+                        video.StartTime = TimeSpan.FromSeconds(seconds);
+                }
+
                 video.VideoServiceKey = 1;
+            }
+            else if (video.Url.Contains("vimeo.com"))
+            {
+                var uri = new Uri(video.Url);
+                video.VideoServiceVideoId = uri.Segments.Last();
+                video.VideoServiceKey = 2;
             }
             else
             {
