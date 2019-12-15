@@ -25,7 +25,7 @@ namespace HemaDrillBook.Services
         //        throw new UnauthorizedAccessException("Permission denied to edit this book.");
         //}
 
-        protected async Task CheckPermissionPartAsync(int partKey, IUser currentUser)
+        protected async Task CheckPermissionPartAsync(int partKey, IUser? currentUser)
         {
             if (currentUser == null || currentUser.UserKey == 0)
                 throw new UnauthorizedAccessException("Please login.");

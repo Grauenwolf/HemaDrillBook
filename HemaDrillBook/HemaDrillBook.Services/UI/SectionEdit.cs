@@ -11,7 +11,7 @@ namespace HemaDrillBook.Services.UI
 
         public string? PageReference { get; set; }
         public int PartKey { get; set; }
-        public int SectionKey { get; set; }
+        public int? SectionKey { get; set; }
         public int? ParentSectionKey { get; set; }
 
         [NotMapped]

@@ -8,10 +8,6 @@
 {
     <h1>
         @(Model.SectionNameFull)
-        @if (MayEdit)
-        {
-            <a href="@(Model.SectionUrlFragment)/edit">Edit</a>
-        }
     </h1>
 
     <div id="navigationGrid">
@@ -142,6 +138,16 @@
                     <th>
                         <a href=@(Model.SectionUrlFragment + "/t/addCommentary")>Add Commentary</a>
                     </th>
+
+                    @if (MayEdit)
+                    {
+                        <th>
+                            <a href="@(Model.SectionUrlFragment)/edit">Edit Section</a>
+                        </th>
+                        <th>
+                            <a href="@(Model.SectionUrlFragment)/new">Add Section</a>
+                        </th>
+                    }
                 </tr>
             }
             else

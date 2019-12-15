@@ -1,6 +1,6 @@
 ﻿CREATE TABLE Sources.Section
 (
-    SectionKey INT NOT NULL
+    SectionKey INT NOT NULL IDENTITY
         CONSTRAINT PK_Section PRIMARY KEY,
     PartKey INT NOT NULL
         CONSTRAINT FK_Section_PartKey
@@ -21,7 +21,7 @@ WITH (SYSTEM_VERSIONING = ON (HISTORY_TABLE = Sources.Section_History));
 
 GO
 
-GRANT SELECT, UPDATE ON Sources.Section TO HemaWeb;
+GRANT SELECT, INSERT, UPDATE ON Sources.Section TO HemaWeb;
 
 GO
 

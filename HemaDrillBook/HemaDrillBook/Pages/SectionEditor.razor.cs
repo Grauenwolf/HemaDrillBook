@@ -53,7 +53,10 @@ namespace HemaDrillBook.Pages
             try
             {
                 //Save goes here
-                await BookService.UpdateSectionEditAsync(Model, User);
+                if (Model.SectionKey.HasValue)
+                    await BookService.UpdateSectionEditAsync(Model, User);
+                else
+                    await BookService.CreateSectionAsync(Model, User);
             }
             catch (Exception ex)
             {
@@ -67,25 +70,10 @@ namespace HemaDrillBook.Pages
             Navigation.NavigateTo(targetUrl);
         }
 
-        //protected void OnChange()
-        //{
-        //    ParentUpdatedAsync();
-        //}
-
         protected void OnClick()
         {
             ParentUpdated();
         }
-
-        //protected void OnBlur()
-        //{
-        //    ParentUpdatedAsync();
-        //}
-
-        //protected void OnKeyPress()
-        //{
-        //    ParentUpdatedAsync();
-        //}
 
         protected void OnKeyUp()
         {
@@ -94,13 +82,6 @@ namespace HemaDrillBook.Pages
 
         protected void ParentUpdated()
         {
-            //if (Model != null && LastParentSectionKey != Model.ParentSectionKey)
-            //{
-            //    SectionsWithSameParent = await BookService.GetSectionsWithSameParentAsync(Model.PartKey, Model.ParentSectionKey, User);
-            //    LastParentSectionKey = Model.ParentSectionKey;
-            //    StateHasChanged();
-            //}
-
             if (Model != null)
             {
                 SectionsWithSameParent.Clear();
@@ -138,7 +119,9 @@ namespace HemaDrillBook.Pages
 
         protected override async Task ParametersSetAsync()
         {
-            if (string.IsNullOrEmpty(BookSlug) || string.IsNullOrEmpty(PartSlug) || string.IsNullOrEmpty(SectionSlug))
+            var newMode = Navigation.Uri.EndsWith("/new");
+
+            if (string.IsNullOrEmpty(BookSlug) || string.IsNullOrEmpty(PartSlug) || (string.IsNullOrEmpty(SectionSlug) && !newMode))
             {
                 ReturnToSection();
                 return;
@@ -146,8 +129,44 @@ namespace HemaDrillBook.Pages
 
             if (Model == null)
             {
-                Model = await BookService.GetSectionEditAsync(BookSlug, PartSlug, SectionSlug, User);
+                if (newMode)
+                {
+                    if (!string.IsNullOrEmpty(SectionSlug))
+                    {
+                        var parentSection = await BookService.GetSectionEditAsync(BookSlug, PartSlug, SectionSlug, User);
+                        Model = new SectionEdit()
+                        {
+                            ParentSectionKey = parentSection.SectionKey,
+                            SectionName = "New Section",
+                            PartKey = parentSection.PartKey
+                        };
+                    }
+                    else
+                    {
+                        var part = await BookService.GetPartDetailAsync(BookSlug, PartSlug, User);
+                        Model = new SectionEdit()
+                        {
+                            SectionName = "New Section",
+                            PartKey = part.PartKey
+                        };
+                    }
+                }
+                else
+                {
+                    Model = await BookService.GetSectionEditAsync(BookSlug, PartSlug, SectionSlug!, User);
+                }
+
                 ParentSections = await BookService.PossibleParentsForSectionAsync(Model.PartKey, Model.SectionKey, User);
+
+                if (newMode)//Place the new section at the end of the parent section
+                {
+                    Model.DisplayOrder = ParentSections
+                        .Where(x => x.ParentSectionKey == Model.ParentSectionKey)
+                        .Select(x => x.DisplayOrder)
+                        .DefaultIfEmpty(0)
+                        .Max() + 1;
+                }
+
                 ParentUpdated();
             }
         }

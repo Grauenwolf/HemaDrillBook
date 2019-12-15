@@ -330,12 +330,15 @@ namespace HemaDrillBook.Services.UI
 
             var section = (await ds.From("Sources.SectionDetail", new { bookSlug, partSlug, sectionSlug }).ToObject<SectionEdit>().ExecuteAsync())!; //Hack, NeverNull in Chain 3.1
 
-            await CheckPermissionSectionAsync(section.SectionKey, currentUser);
+            if (section.SectionKey.HasValue)
+                await CheckPermissionSectionAsync(section.SectionKey.Value, currentUser);
+            else
+                await CheckPermissionPartAsync(section.PartKey, currentUser);
 
             return section;
         }
 
-        public async Task<List<SectionForLists>> PossibleParentsForSectionAsync(int partKey, int sectionKey, IUser? currentUser)
+        public async Task<List<SectionForLists>> PossibleParentsForSectionAsync(int partKey, int? sectionKey, IUser? currentUser)
         {
             var ds = DataSource(currentUser);
             var filter = new { partKey };
@@ -373,14 +376,42 @@ namespace HemaDrillBook.Services.UI
 
             var oldValues = (await ds.From("Sources.Section", new { newValues.SectionKey }).ToObject<SectionEdit>().ExecuteAsync())!; //Hack, NeverNull in Chain 3.1
 
-            await CheckPermissionSectionAsync(oldValues.SectionKey, currentUser);
+            await CheckPermissionSectionAsync(oldValues.SectionKey!.Value, currentUser);
             if (oldValues.PartKey != newValues.PartKey)
-                throw new InvalidOperationException("Cannot move section to a different part");
+                throw new InvalidOperationException("Cannot move section to a different book/part.");
+
+            if (newValues.ParentSectionKey.HasValue)
+            {
+                var parentPartKey = await ds.From("Sources.Section", new { SectionKey = newValues.ParentSectionKey }).ToInt32("PartKey").ExecuteAsync();
+                if (parentPartKey != newValues.PartKey)
+                    throw new InvalidOperationException("Parent Section is not in the same book/part as this section.");
+            }
 
             if (string.IsNullOrWhiteSpace(newValues.PageReference))
                 newValues.PageReference = null;
 
             await ds.Update("Sources.Section", newValues).ExecuteAsync();
+
+            return;
+        }
+
+        public async Task CreateSectionAsync(SectionEdit newValues, IUser? currentUser)
+        {
+            var ds = DataSource(currentUser);
+
+            await CheckPermissionPartAsync(newValues.PartKey, currentUser);
+
+            if (newValues.ParentSectionKey.HasValue)
+            {
+                var parentPartKey = await ds.From("Sources.Section", new { SectionKey = newValues.ParentSectionKey }).ToInt32("PartKey").ExecuteAsync();
+                if (parentPartKey != newValues.PartKey)
+                    throw new InvalidOperationException("Parent Section is not in the same book/part as this section.");
+            }
+
+            if (string.IsNullOrWhiteSpace(newValues.PageReference))
+                newValues.PageReference = null;
+
+            await ds.Insert("Sources.Section", newValues).ExecuteAsync();
 
             return;
         }
