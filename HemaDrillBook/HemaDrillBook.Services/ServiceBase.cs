@@ -9,6 +9,8 @@ namespace HemaDrillBook.Services
     {
         private readonly SqlServerDataSource m_DataSource;
 
+        protected CachePolicy DefaultCachePolicy() => new CachePolicy(DateTime.Now.AddHours(3));
+
         protected ServiceBase(SqlServerDataSource dataSource)
         {
             m_DataSource = dataSource ?? throw new ArgumentNullException(nameof(dataSource));
@@ -91,5 +93,7 @@ namespace HemaDrillBook.Services
                 throw new UnauthorizedAccessException("Permission denied to edit this record.");
         }
         */
+
+        protected Task CacheBusterAsync() => m_DataSource.Cache.ClearAsync();
     }
 }

@@ -22,6 +22,7 @@ namespace HemaDrillBook.Services.UI
             .From("Sources.BookNameMap", filter)
             .WithSorting("BookName")
             .ToCollection<BookNameMap>()
+            .ReadOrCache($"{nameof(BookService)}.{nameof(GetBookNameMapAsync)}:{includeAlternateNames}", DefaultCachePolicy())
             .ExecuteAsync();
         }
 
@@ -31,21 +32,30 @@ namespace HemaDrillBook.Services.UI
                 .From("Sources.PartDetail", new { BookKey = bookKey })
                 .WithSorting("DisplayOrder")
                 .ToCollection<PartSummary>()
+                .ReadOrCache($"{nameof(BookService)}.{nameof(GetBookPartsAsync)}:{bookKey}", DefaultCachePolicy())
                 .ExecuteAsync();
         }
 
         public async Task<BookDetail> GetBookDetailAsync(string bookSlug, IUser? currentUser)
         {
-            var result = (await DataSource(currentUser)
-                .From("Sources.BookDetail", new { BookSlug = bookSlug })
+            var ds = DataSource(currentUser);
+            var cacheKey = $"{nameof(BookService)}.{nameof(GetBookDetailAsync)}:{bookSlug}";
+            var cachedResult = await ds.Cache.TryReadAsync<BookDetail>(cacheKey);
+            if (cachedResult.KeyFound)
+                return cachedResult.Value;
+
+            var result = (await ds.From("Sources.BookDetail", new { BookSlug = bookSlug })
                 .ToObject<BookDetail>()
                 //.NeverNull() //Hack: This is broken in Chain 3.0. It works in 3.1.
+                .ReadOrCache($"{nameof(BookService)}.{nameof(GetBookDetailAsync)}:{bookSlug}", DefaultCachePolicy())
                 .ExecuteAsync())!;
 
             result.AlternateNames.AddRange(await GetBookAlternateNamesAsync(result.BookKey, currentUser));
             result.Authors.AddRange(await GetAuthorsByBookAsync(result.BookKey, currentUser));
             result.Parts.AddRange(await GetBookPartsAsync(result.BookKey, currentUser));
             result.Weapons.AddRange(await GetBookWeaponsAsync(result.BookKey, currentUser));
+
+            await ds.Cache.WriteAsync(cacheKey, result, DefaultCachePolicy());
 
             return result;
         }
@@ -56,6 +66,7 @@ namespace HemaDrillBook.Services.UI
                 .From("Sources.AlternateBookName", new { BookKey = bookKey })
                 .WithSorting("AlternateBookName")
                 .ToStringList("AlternateBookName")
+                .ReadOrCache($"{nameof(BookService)}.{nameof(GetBookAlternateNamesAsync)}:{bookKey}", DefaultCachePolicy())
                 .ExecuteAsync()!;
         }
 
@@ -65,6 +76,7 @@ namespace HemaDrillBook.Services.UI
                 .From("Sources.BookAuthorMapDetail", new { BookKey = bookKey })
                 .WithSorting("AuthorName")
                 .ToCollection<AuthorSummary>()
+                .ReadOrCache($"{nameof(BookService)}.{nameof(GetAuthorsByBookAsync)}:{bookKey}", DefaultCachePolicy())
                 .ExecuteAsync();
         }
 
@@ -74,6 +86,7 @@ namespace HemaDrillBook.Services.UI
                 .From("Sources.BookWeaponMapDetail", new { BookKey = bookKey })
                 .WithSorting("PrimaryWeaponName", "SecondaryWeaponName")
                 .ToCollection<WeaponPairSummary>()
+                .ReadOrCache($"{nameof(BookService)}.{nameof(GetBookWeaponsAsync)}:{bookKey}", DefaultCachePolicy())
                 .ExecuteAsync();
         }
 
@@ -83,6 +96,7 @@ namespace HemaDrillBook.Services.UI
                 .From("Sources.PartWeaponMapDetail", new { PartKey = partKey })
                 .WithSorting("PrimaryWeaponName", "SecondaryWeaponName")
                 .ToCollection<WeaponPairSummary>()
+                .ReadOrCache($"{nameof(BookService)}.{nameof(GetPartWeaponsAsync)}:{partKey}", DefaultCachePolicy())
                 .ExecuteAsync();
         }
 
@@ -91,6 +105,7 @@ namespace HemaDrillBook.Services.UI
             var result = await DataSource(currentUser)
                 .From("Interpretations.PlayDetail", new { PartKey = partKey })
                 .ToCollection<PlaySummary>()
+                .ReadOrCache($"{nameof(BookService)}.{nameof(GetPartPlaysAsync)}:{partKey}", DefaultCachePolicy())
                 .ExecuteAsync();
 
             result = result.OrderBy(x => x.VariantName ?? x.SectionName).ToList();
@@ -103,6 +118,7 @@ namespace HemaDrillBook.Services.UI
             var result = await DataSource(currentUser)
                 .From("Interpretations.VideoDetail", new { PartKey = partKey })
                 .ToCollection<VideoSummary>()
+                .ReadOrCache($"{nameof(BookService)}.{nameof(GetPartVideosAsync)}:{partKey}", DefaultCachePolicy())
                 .ExecuteAsync();
 
             return result;
@@ -111,15 +127,16 @@ namespace HemaDrillBook.Services.UI
         public async Task<PartDetail> GetPartDetailAsync(string bookSlug, string partSlug, IUser? currentUser)
         {
             var ds = DataSource(currentUser);
-            var part = (await ds.From("Sources.PartDetail", new { bookSlug, partSlug }).ToObject<PartDetail>().ExecuteAsync())!; //Hack, NeverNull in Chain 3.1
+            var cacheKey = $"{nameof(BookService)}.{nameof(GetPartDetailAsync)}:{bookSlug}:{partSlug}";
+            var cachedResult = await ds.Cache.TryReadAsync<PartDetail>(cacheKey);
+            if (cachedResult.KeyFound)
+                return cachedResult.Value;
 
-            await GetPartDetailCore(currentUser, part);
+            var part = (await ds.From("Sources.PartDetail", new { bookSlug, partSlug })
+                .ToObject<PartDetail>()
+                .ReadOrCache($"{nameof(BookService)}.{nameof(GetPartDetailAsync)}:{bookSlug}:{partSlug}", DefaultCachePolicy())
+                .ExecuteAsync())!; //Hack, NeverNull in Chain 3.1
 
-            return part;
-        }
-
-        private async Task GetPartDetailCore(IUser? currentUser, PartDetail part)
-        {
             var flatList = await GetBookPartsAsync(part.BookKey, currentUser);
             var index = flatList.FindIndex(x => x.PartKey == part.PartKey);
             part.PreviousPart = (index > 0) ? flatList[index - 1] : null;
@@ -128,6 +145,10 @@ namespace HemaDrillBook.Services.UI
             part.Sections.AddRange(await GetPartSectionsAsync(part.PartKey, currentUser));
             part.Plays.AddRange(await GetPartPlaysAsync(part.PartKey, currentUser));
             part.Videos.AddRange(await GetPartVideosAsync(part.PartKey, currentUser));
+
+            await ds.Cache.WriteAsync(cacheKey, part, DefaultCachePolicy());
+
+            return part;
         }
 
         public Task<List<VideoDetail>> GetSectionVideosAsync(int sectionKey, IUser? currentUser)
@@ -136,6 +157,7 @@ namespace HemaDrillBook.Services.UI
                 .From("Interpretations.VideoDetail", new { SectionKey = sectionKey })
                 .WithSorting(new SortExpression("ModifiedDate", SortDirection.Descending))
                 .ToCollection<VideoDetail>()
+                .ReadOrCache($"{nameof(BookService)}.{nameof(GetSectionVideosAsync)}:{sectionKey}", DefaultCachePolicy())
                 .ExecuteAsync();
         }
 
@@ -145,38 +167,33 @@ namespace HemaDrillBook.Services.UI
                 .From("Sources.SectionWeaponMapDetail", new { SectionKey = sectionKey })
                 .WithSorting("PrimaryWeaponName", "SecondaryWeaponName")
                 .ToCollection<WeaponPairSummary>()
+                .ReadOrCache($"{nameof(BookService)}.{nameof(GetSectionWeaponsAsync)}:{sectionKey}", DefaultCachePolicy())
                 .ExecuteAsync();
         }
 
         public async Task<SectionDetail> GetSectionDetailAsync(string bookSlug, string partSlug, string sectionSlug, IUser? currentUser)
         {
             var ds = DataSource(currentUser);
-            //var filter = new { sectionKey };
-            var section = (await ds.From("Sources.SectionDetail", new { bookSlug, partSlug, sectionSlug }).ToObject<SectionDetail>().ExecuteAsync())!; //Hack, NeverNull in Chain 3.1
 
-            await GetSectionDetailCore(section, currentUser);
+            //Cannot cache this one because it has user commentary
+            var section = (await ds.From("Sources.SectionDetail", new { bookSlug, partSlug, sectionSlug })
+                .ToObject<SectionDetail>()
+                .ExecuteAsync())!; //Hack, NeverNull in Chain 3.1
 
-            return section;
-        }
-
-        private async Task GetSectionDetailCore(SectionDetail section, IUser? currentUser)
-        {
             var (subsections, previousPage, nextPage, up, previousSection, nextSection, breadCrumb) = await GetSubsectionsAsync(section.PartKey, section.SectionKey, currentUser);
 
-            breadCrumb.Insert(0, new AppLink() { Name = section.PartName, UrlFragment = section.PartUrlFragment });
-            breadCrumb.Insert(0, new AppLink() { Name = section.BookName, UrlFragment = section.BookUrlFragment });
-
+            var breadCrumbCopy = breadCrumb.ToList(); //needed to avoid fouling the cached copy
+            breadCrumbCopy.Insert(0, new AppLink() { Name = section.PartName, UrlFragment = section.PartUrlFragment });
+            breadCrumbCopy.Insert(0, new AppLink() { Name = section.BookName, UrlFragment = section.BookUrlFragment });
             section.Subsections.AddRange(subsections);
             section.PreviousPage = previousPage;
             section.NextPage = nextPage;
             section.Up = up;
             section.PreviousSection = previousSection;
             section.NextSection = nextSection;
-            section.BreadCrumb = breadCrumb;
-
+            section.BreadCrumb = breadCrumbCopy;
             section.Videos.AddRange(await GetSectionVideosAsync(section.SectionKey, currentUser));
             section.Weapons.AddRange(await GetSectionWeaponsAsync(section.SectionKey, currentUser));
-
             section.Plays.AddRange(await GetPlayDetailsForSectionAsync(section.SectionKey, currentUser));
 
             var (commentaries, note) = await GetCommentaryDetailsForSectionAsync(section.SectionKey, currentUser);
@@ -185,18 +202,34 @@ namespace HemaDrillBook.Services.UI
 
             if (section.MyCommentary == null && currentUser?.UserKey != null)
                 section.MyCommentary = new CommentarySummary() { SectionKey = section.SectionKey, UserKey = currentUser.UserKey.Value };
+
+            return section;
         }
 
         public async Task<List<PlayDetail>> GetPlayDetailsForSectionAsync(int sectionKey, IUser? currentUser)
         {
+            var ds = DataSource(currentUser);
+            var cacheKey = $"{nameof(BookService)}.{nameof(GetPlayDetailsForSectionAsync)}:{sectionKey}";
+            var cachedResult = await ds.Cache.TryReadAsync<List<PlayDetail>>(cacheKey);
+            if (cachedResult.KeyFound)
+                return cachedResult.Value;
+
             var filter = new { sectionKey };
             var dataSource = DataSource(currentUser);
-            var plays = await dataSource.From("Interpretations.PlayDetail", filter).WithSorting("VariantName").ToCollection<PlayDetail>().ExecuteAsync();
+            var plays = await dataSource.From("Interpretations.PlayDetail", filter)
+                .WithSorting("VariantName")
+                .ToCollection<PlayDetail>()
+                .ExecuteAsync();
 
-            var steps = await dataSource.From("Interpretations.PlayStepDetail", filter).WithSorting("PlayKey", "TempoNumber", "Actor").ToCollection<PlayStepDetail>().ExecuteAsync();
+            var steps = await dataSource.From("Interpretations.PlayStepDetail", filter)
+                .WithSorting("PlayKey", "TempoNumber", "Actor")
+                .ToCollection<PlayStepDetail>()
+                .ExecuteAsync();
 
             foreach (var play in plays)
                 play.Steps.AddRange(steps.Where(x => x.PlayKey == play.PlayKey));
+
+            await ds.Cache.WriteAsync(cacheKey, plays, DefaultCachePolicy());
 
             return plays;
         }
@@ -217,8 +250,16 @@ namespace HemaDrillBook.Services.UI
         async Task<List<SectionSummary>> GetPartSectionsAsync(int partKey, /*bool includeWeapons, bool includePlays,*/ IUser? currentUser)
         {
             var ds = DataSource(currentUser);
+            var cacheKey = $"{nameof(BookService)}.{nameof(GetPartSectionsAsync)}:{partKey}";
+            var cachedResult = await ds.Cache.TryReadAsync<List<SectionSummary>>(cacheKey);
+            if (cachedResult.KeyFound)
+                return cachedResult.Value;
+
             var filter = new { partKey };
-            var sections = await ds.From("Sources.SectionDetail", filter).WithSorting("DisplayOrder").ToCollection<SectionSummary>().ExecuteAsync();
+            var sections = await ds.From("Sources.SectionDetail", filter)
+                .WithSorting("DisplayOrder")
+                .ToCollection<SectionSummary>()
+                .ExecuteAsync();
 
             foreach (var section in sections)
                 section.Subsections.AddRange(sections.Where(x => x.ParentSectionKey == section.SectionKey));
@@ -227,16 +268,61 @@ namespace HemaDrillBook.Services.UI
             //foreach (var section in result)
             //    section.Depth = 0;
 
+            await ds.Cache.WriteAsync(cacheKey, result, DefaultCachePolicy());
+
             return result;
         }
 
-        async Task<(IList<SectionSummary> List, SectionSummary? PreviousPage, SectionSummary? NextPage, SectionSummary? Up, SectionSummary? NextSection, SectionSummary? PreviousSection, List<AppLink> BreadCrumb)> GetSubsectionsAsync(int partKey, int sectionKey, IUser? currentUser)
+        class SubsectionsResult
         {
+            public SubsectionsResult(IList<SectionSummary> list, SectionSummary? previousPage, SectionSummary? nextPage, SectionSummary? up, SectionSummary? nextSection, SectionSummary? previousSection, List<AppLink> breadCrumb)
+            {
+                List = list;
+                PreviousPage = previousPage;
+                NextPage = nextPage;
+                Up = up;
+                NextSection = nextSection;
+                PreviousSection = previousSection;
+                BreadCrumb = breadCrumb;
+            }
+
+            public void Deconstruct(out IList<SectionSummary> list, out SectionSummary? previousPage, out SectionSummary? nextPage, out SectionSummary? up, out SectionSummary? nextSection, out SectionSummary? previousSection, out List<AppLink> breadCrumb)
+            {
+                list = List;
+                previousPage = PreviousPage;
+                nextPage = NextPage;
+                up = Up;
+                nextSection = NextSection;
+                previousSection = PreviousSection;
+                breadCrumb = BreadCrumb;
+            }
+
+            public IList<SectionSummary> List { get; set; }
+            public SectionSummary? PreviousPage { get; set; }
+            public SectionSummary? NextPage { get; set; }
+            public SectionSummary? Up { get; set; }
+            public SectionSummary? NextSection { get; set; }
+            public SectionSummary? PreviousSection { get; set; }
+            public List<AppLink> BreadCrumb { get; set; }
+        }
+
+        async Task<SubsectionsResult> GetSubsectionsAsync(int partKey, int sectionKey, IUser? currentUser)
+        {
+            var ds = DataSource(currentUser);
+            var cacheKey = $"{nameof(BookService)}.{nameof(GetSubsectionsAsync)}:{partKey}:{sectionKey}";
+            var cachedResult = await ds.Cache.TryReadAsync<SubsectionsResult>(cacheKey);
+            if (cachedResult.KeyFound)
+                return cachedResult.Value;
+
             //This could be more efficient using a recursive CTE
 
-            var ds = DataSource(currentUser);
             var filter = new { partKey };
-            var sections = await ds.From("Sources.SectionDetail", filter).WithSorting("DisplayOrder").ToCollection<SectionSummary>().ExecuteAsync();
+            var sections = await ds.From("Sources.SectionDetail", filter)
+                .WithSorting("DisplayOrder")
+                .ToCollection<SectionSummary>()
+                //Not sure how to cache this one without introducing a race condition
+                //.ReadOrCache($"{nameof(BookService)}.{nameof(GetPartSectionsAsync)}:{partKey}", CachePolicy)
+                .ExecuteAsync();
 
             foreach (var section in sections)
                 section.Subsections.AddRange(sections.Where(x => x.ParentSectionKey == section.SectionKey));
@@ -295,7 +381,10 @@ namespace HemaDrillBook.Services.UI
             }
             breadCrumb.Reverse();
 
-            return (result.Subsections, previousPage, nextPage, up, previousSection, nextSection, breadCrumb);
+            var finalResult = new SubsectionsResult(result.Subsections, previousPage, nextPage, up, previousSection, nextSection, breadCrumb);
+            await ds.Cache.WriteAsync(cacheKey, finalResult, DefaultCachePolicy());
+
+            return finalResult;
         }
 
         /// <summary>
@@ -390,7 +479,7 @@ namespace HemaDrillBook.Services.UI
             if (string.IsNullOrWhiteSpace(newValues.PageReference))
                 newValues.PageReference = null;
 
-            await ds.Update("Sources.Section", newValues).ExecuteAsync();
+            await ds.Update("Sources.Section", newValues).AsNonQuery().ClearCache().ExecuteAsync();
 
             return;
         }
@@ -411,18 +500,18 @@ namespace HemaDrillBook.Services.UI
             if (string.IsNullOrWhiteSpace(newValues.PageReference))
                 newValues.PageReference = null;
 
-            await ds.Insert("Sources.Section", newValues).ExecuteAsync();
+            await ds.Insert("Sources.Section", newValues).AsNonQuery().ClearCache().ExecuteAsync();
 
             return;
         }
 
-        public async Task<List<SectionForLists>> GetSectionsWithSameParentAsync(int partKey, int? parentSectionKey, IUser? currentUser)
-        {
-            var ds = DataSource(currentUser);
-            if (parentSectionKey == null)
-                return await ds.From("Sources.SectionDetail", new { partKey }).WithSorting("DisplayOrder").ToCollection<SectionForLists>().ExecuteAsync();
-            else
-                return await ds.From("Sources.SectionDetail", new { partKey, parentSectionKey }).WithSorting("DisplayOrder").ToCollection<SectionForLists>().ExecuteAsync();
-        }
+        //public async Task<List<SectionForLists>> GetSectionsWithSameParentAsync(int partKey, int? parentSectionKey, IUser? currentUser)
+        //{
+        //    var ds = DataSource(currentUser);
+        //    if (parentSectionKey == null)
+        //        return await ds.From("Sources.SectionDetail", new { partKey }).WithSorting("DisplayOrder").ToCollection<SectionForLists>().ExecuteAsync();
+        //    else
+        //        return await ds.From("Sources.SectionDetail", new { partKey, parentSectionKey }).WithSorting("DisplayOrder").ToCollection<SectionForLists>().ExecuteAsync();
+        //}
     }
 }

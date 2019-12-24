@@ -1,4 +1,5 @@
 ﻿using HemaDrillBook.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,8 @@ namespace HemaDrillBook.Services.Search
 {
     public class SearchService : ServiceBase
     {
+        readonly static CachePolicy SearchResultsCachePolicycachePolicy = new CachePolicy(slidingExpiration: TimeSpan.FromMinutes(30));
+
         public SearchService(SqlServerDataSource dataSource) : base(dataSource)
         {
         }
@@ -17,24 +20,25 @@ namespace HemaDrillBook.Services.Search
         public async Task PopulateSearchDefinitionAsync(SearchDefinition searchDefinition, IUser? user)
         {
             var ds = DataSource(user);
+            var cachePolicy = DefaultCachePolicy();
 
-            searchDefinition.Books.AddRange(await ds.Sql(@"SELECT bbp.BookKey, bbp.BookName, COUNT(*) AS Count FROM Search.BookByPlay bbp GROUP BY bbp.BookKey, bbp.BookName ORDER BY bbp.BookName").ToCollection<Book>().ExecuteAsync());
+            searchDefinition.Books.AddRange(await ds.Sql(@"SELECT bbp.BookKey, bbp.BookName, COUNT(*) AS Count FROM Search.BookByPlay bbp GROUP BY bbp.BookKey, bbp.BookName ORDER BY bbp.BookName").ToCollection<Book>().ReadOrCache("searchDefinition.Books", cachePolicy).ExecuteAsync());
 
-            searchDefinition.Footwork.AddRange(await ds.Sql(@"SELECT fbp.FootworkKey, fbp.FootworkName, fbp.AlternateFootworkName, COUNT(*) AS Count FROM Search.FootworkByPlay fbp GROUP BY fbp.FootworkKey, fbp.FootworkName, fbp.AlternateFootworkName ORDER BY fbp.FootworkName").ToCollection<Footwork>().ExecuteAsync());
+            searchDefinition.Footwork.AddRange(await ds.Sql(@"SELECT fbp.FootworkKey, fbp.FootworkName, fbp.AlternateFootworkName, COUNT(*) AS Count FROM Search.FootworkByPlay fbp GROUP BY fbp.FootworkKey, fbp.FootworkName, fbp.AlternateFootworkName ORDER BY fbp.FootworkName").ToCollection<Footwork>().ReadOrCache("searchDefinition.Footwork", cachePolicy).ExecuteAsync());
 
-            searchDefinition.Measure.AddRange(await ds.Sql(@"SELECT mbp.MeasureKey, mbp.MeasureName, mbp.AlternateMeasureName, COUNT(*) FROM Search.MeasureByPlay mbp GROUP BY mbp.MeasureKey, mbp.MeasureName, mbp.AlternateMeasureName ORDER BY mbp.MeasureName").ToCollection<Measure>().ExecuteAsync());
+            searchDefinition.Measure.AddRange(await ds.Sql(@"SELECT mbp.MeasureKey, mbp.MeasureName, mbp.AlternateMeasureName, COUNT(*) FROM Search.MeasureByPlay mbp GROUP BY mbp.MeasureKey, mbp.MeasureName, mbp.AlternateMeasureName ORDER BY mbp.MeasureName").ToCollection<Measure>().ReadOrCache("searchDefinition.Measure", cachePolicy).ExecuteAsync());
 
-            searchDefinition.Guards.AddRange(await ds.Sql(@"SELECT gbp.GuardKey, gbp.GuardName, gbp.AlternateGuardName, gbp.GuardModifierKey, gbp.GuardModifierName, COUNT(*) AS Count FROM Search.GuardByPlay gbp GROUP BY gbp.GuardKey, gbp.GuardName, gbp.AlternateGuardName, gbp.GuardModifierKey, gbp.GuardModifierName").ToCollection<Guard>().ExecuteAsync());
+            searchDefinition.Guards.AddRange(await ds.Sql(@"SELECT gbp.GuardKey, gbp.GuardName, gbp.AlternateGuardName, gbp.GuardModifierKey, gbp.GuardModifierName, COUNT(*) AS Count FROM Search.GuardByPlay gbp GROUP BY gbp.GuardKey, gbp.GuardName, gbp.AlternateGuardName, gbp.GuardModifierKey, gbp.GuardModifierName").ToCollection<Guard>().ReadOrCache("searchDefinition.Guards", cachePolicy).ExecuteAsync());
 
-            searchDefinition.StartingGuards.AddRange(await ds.Sql(@"SELECT gbp.GuardKey, gbp.GuardName, gbp.AlternateGuardName, gbp.GuardModifierKey, gbp.GuardModifierName, COUNT(*) AS Count FROM Search.GuardByPlay gbp WHERE IsStartingGuard=1 GROUP BY gbp.GuardKey, gbp.GuardName, gbp.AlternateGuardName, gbp.GuardModifierKey, gbp.GuardModifierName ORDER BY gbp.GuardName, gbp.GuardModifierName").ToCollection<Guard>().ExecuteAsync());
+            searchDefinition.StartingGuards.AddRange(await ds.Sql(@"SELECT gbp.GuardKey, gbp.GuardName, gbp.AlternateGuardName, gbp.GuardModifierKey, gbp.GuardModifierName, COUNT(*) AS Count FROM Search.GuardByPlay gbp WHERE IsStartingGuard=1 GROUP BY gbp.GuardKey, gbp.GuardName, gbp.AlternateGuardName, gbp.GuardModifierKey, gbp.GuardModifierName ORDER BY gbp.GuardName, gbp.GuardModifierName").ToCollection<Guard>().ReadOrCache("searchDefinition.StartingGuards", cachePolicy).ExecuteAsync());
 
-            searchDefinition.Targets.AddRange(await ds.Sql(@"SELECT tbp.TargetKey, tbp.TargetName, COUNT(*) FROM Search.TargetByPlay tbp GROUP BY tbp.TargetKey, tbp.TargetName ORDER BY tbp.TargetName").ToCollection<Target>().ExecuteAsync());
+            searchDefinition.Targets.AddRange(await ds.Sql(@"SELECT tbp.TargetKey, tbp.TargetName, COUNT(*) FROM Search.TargetByPlay tbp GROUP BY tbp.TargetKey, tbp.TargetName ORDER BY tbp.TargetName").ToCollection<Target>().ReadOrCache("searchDefinition.Targets", cachePolicy).ExecuteAsync());
 
-            searchDefinition.Techniques.AddRange(await ds.Sql(@"SELECT tbp.TechniqueKey, tbp.TechniqueName, tbp.AlternateTechniqueName, COUNT(*) FROM Search.TechniqueByPlay tbp GROUP BY tbp.TechniqueKey, tbp.TechniqueName, tbp.AlternateTechniqueName ORDER BY tbp.TechniqueName").ToCollection<Technique>().ExecuteAsync());
+            searchDefinition.Techniques.AddRange(await ds.Sql(@"SELECT tbp.TechniqueKey, tbp.TechniqueName, tbp.AlternateTechniqueName, COUNT(*) FROM Search.TechniqueByPlay tbp GROUP BY tbp.TechniqueKey, tbp.TechniqueName, tbp.AlternateTechniqueName ORDER BY tbp.TechniqueName").ToCollection<Technique>().ReadOrCache("searchDefinition.Techniques", cachePolicy).ExecuteAsync());
 
-            searchDefinition.Parts.AddRange(await ds.Sql(@"SELECT pbp.PartKey, pbp.PartName, pbp.DisplayOrder, pbp.BookKey, COUNT(*) AS Count FROM Search.PartByPlay pbp GROUP BY pbp.PartKey, pbp.PartName, pbp.DisplayOrder, pbp.BookKey ORDER BY pbp.DisplayOrder").ToCollection<Part>().ExecuteAsync());
+            searchDefinition.Parts.AddRange(await ds.Sql(@"SELECT pbp.PartKey, pbp.PartName, pbp.DisplayOrder, pbp.BookKey, COUNT(*) AS Count FROM Search.PartByPlay pbp GROUP BY pbp.PartKey, pbp.PartName, pbp.DisplayOrder, pbp.BookKey ORDER BY pbp.DisplayOrder").ToCollection<Part>().ReadOrCache("searchDefinition.Parts", cachePolicy).ExecuteAsync());
 
-            searchDefinition.Weapons.AddRange(await ds.Sql(@"SELECT wbp.PrimaryWeaponKey, wbp.SecondaryWeaponKey, wbp.PrimaryWeaponName, wbp.SecondaryWeaponName, COUNT(*) FROM search.WeaponByPlay wbp GROUP BY wbp.PrimaryWeaponKey, wbp.SecondaryWeaponKey, wbp.PrimaryWeaponName, wbp.SecondaryWeaponName ORDER BY wbp.PrimaryWeaponName, wbp.SecondaryWeaponName").ToCollection<Weapon>().ExecuteAsync());
+            searchDefinition.Weapons.AddRange(await ds.Sql(@"SELECT wbp.PrimaryWeaponKey, wbp.SecondaryWeaponKey, wbp.PrimaryWeaponName, wbp.SecondaryWeaponName, COUNT(*) FROM search.WeaponByPlay wbp GROUP BY wbp.PrimaryWeaponKey, wbp.SecondaryWeaponKey, wbp.PrimaryWeaponName, wbp.SecondaryWeaponName ORDER BY wbp.PrimaryWeaponName, wbp.SecondaryWeaponName").ToCollection<Weapon>().ReadOrCache("searchDefinition.Weapons", cachePolicy).ExecuteAsync());
         }
 
         public async Task RunSearchAsync(SearchDefinitionWithResults model, IUser? user)
@@ -146,7 +150,7 @@ namespace HemaDrillBook.Services.Search
 
             model.Results = new List<SearchResult>();
             var sqlTemp = sql.ToString();
-            model.Results.AddRange(await DataSource(user).Sql(sql.ToString()).ToCollection<SearchResult>().ExecuteAsync());
+            model.Results.AddRange(await DataSource(user).Sql(sql.ToString()).ToCollection<SearchResult>().ReadOrCache(sqlTemp, SearchResultsCachePolicycachePolicy).ExecuteAsync());
         }
     }
 }

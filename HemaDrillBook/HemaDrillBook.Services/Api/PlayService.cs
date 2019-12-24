@@ -41,6 +41,8 @@ namespace HemaDrillBook.Services.Api
 
                 dataSource.Commit();
             }
+
+            await CacheBusterAsync();
             return play.PlayKey.Value;
         }
 

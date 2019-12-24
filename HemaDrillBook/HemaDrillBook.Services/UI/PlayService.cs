@@ -98,7 +98,7 @@ namespace HemaDrillBook.Services.UI
             if (string.IsNullOrWhiteSpace(video.Author))
                 video.Author = null;
 
-            return await DataSource(currentUser).Insert("Interpretations.Video", video).ToInt32().ExecuteAsync();
+            return await DataSource(currentUser).Insert("Interpretations.Video", video).ToInt32().ClearCache().ExecuteAsync();
         }
 
         public async Task UpdateCommentaryAsync(CommentaryInput commentaryInput, IUser currentUser)
@@ -111,6 +111,7 @@ namespace HemaDrillBook.Services.UI
             if (commentaryInput.PublicNotes == "") commentaryInput.PublicNotes = null;
             if (commentaryInput.PrivateNotes == "") commentaryInput.PrivateNotes = null;
 
+            //Don't need to clear the cache because we don't cache commentary
             await DataSource(currentUser).Upsert("Interpretations.Commentary", commentaryInput).ExecuteAsync();
         }
     }
