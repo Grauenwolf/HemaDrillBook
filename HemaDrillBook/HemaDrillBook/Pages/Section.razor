@@ -2,7 +2,7 @@
 @page "/b/{BookSlug}/p/{PartSlug}/s/{SectionSlug}/t"
 @page "/b/{BookSlug}/p/{PartSlug}/s/{SectionSlug}/t/{Tab}"
 @using HemaDrillBook.Shared
-@inherits SectionBase
+@inherits EngineBase<SectionDetail>
 
 @if (Model != null)
 {

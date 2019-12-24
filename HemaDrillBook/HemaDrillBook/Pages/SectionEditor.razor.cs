@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace HemaDrillBook.Pages
 {
-    public class SectionEditorBase : EngineBase<SectionEdit>
+    partial class SectionEditor
     {
 #nullable disable
         [Inject] BookService BookService { get; set; }

@@ -1,8 +1,8 @@
 ﻿namespace HemaDrillBook.Pages
 {
-    public class AboutBase : EngineBase
+    partial class About
     {
-        protected AboutBase()
+        protected About()
         {
             PageTitle = "About";
         }

@@ -1,7 +1,7 @@
 ﻿@page "/b/{BookSlug}/p/{PartSlug}"
 @page "/b/{BookSlug}/p/{PartSlug}/t"
 @page "/b/{BookSlug}/p/{PartSlug}/t/{Tab}"
-@inherits PartBase
+@inherits EngineBase<PartDetail>
 
 @if (Model != null)
 {
