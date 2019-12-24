@@ -46,9 +46,9 @@ namespace HemaDrillBook.Services.UI
 
             var result = (await ds.From("Sources.BookDetail", new { BookSlug = bookSlug })
                 .ToObject<BookDetail>()
-                //.NeverNull() //Hack: This is broken in Chain 3.0. It works in 3.1.
+                .NeverNull()
                 .ReadOrCache($"{nameof(BookService)}.{nameof(GetBookDetailAsync)}:{bookSlug}", DefaultCachePolicy())
-                .ExecuteAsync())!;
+                .ExecuteAsync());
 
             result.AlternateNames.AddRange(await GetBookAlternateNamesAsync(result.BookKey, currentUser));
             result.Authors.AddRange(await GetAuthorsByBookAsync(result.BookKey, currentUser));
@@ -135,7 +135,8 @@ namespace HemaDrillBook.Services.UI
             var part = (await ds.From("Sources.PartDetail", new { bookSlug, partSlug })
                 .ToObject<PartDetail>()
                 .ReadOrCache($"{nameof(BookService)}.{nameof(GetPartDetailAsync)}:{bookSlug}:{partSlug}", DefaultCachePolicy())
-                .ExecuteAsync())!; //Hack, NeverNull in Chain 3.1
+                .NeverNull()
+                .ExecuteAsync());
 
             var flatList = await GetBookPartsAsync(part.BookKey, currentUser);
             var index = flatList.FindIndex(x => x.PartKey == part.PartKey);
@@ -178,7 +179,8 @@ namespace HemaDrillBook.Services.UI
             //Cannot cache this one because it has user commentary
             var section = (await ds.From("Sources.SectionDetail", new { bookSlug, partSlug, sectionSlug })
                 .ToObject<SectionDetail>()
-                .ExecuteAsync())!; //Hack, NeverNull in Chain 3.1
+                .NeverNull()
+                .ExecuteAsync());
 
             var (subsections, previousPage, nextPage, up, previousSection, nextSection, breadCrumb) = await GetSubsectionsAsync(section.PartKey, section.SectionKey, currentUser);
 
@@ -417,7 +419,7 @@ namespace HemaDrillBook.Services.UI
         {
             var ds = DataSource(currentUser);
 
-            var section = (await ds.From("Sources.SectionDetail", new { bookSlug, partSlug, sectionSlug }).ToObject<SectionEdit>().ExecuteAsync())!; //Hack, NeverNull in Chain 3.1
+            var section = (await ds.From("Sources.SectionDetail", new { bookSlug, partSlug, sectionSlug }).ToObject<SectionEdit>().NeverNull().ExecuteAsync());
 
             if (section.SectionKey.HasValue)
                 await CheckPermissionSectionAsync(section.SectionKey.Value, currentUser);
@@ -463,7 +465,7 @@ namespace HemaDrillBook.Services.UI
         {
             var ds = DataSource(currentUser);
 
-            var oldValues = (await ds.From("Sources.Section", new { newValues.SectionKey }).ToObject<SectionEdit>().ExecuteAsync())!; //Hack, NeverNull in Chain 3.1
+            var oldValues = (await ds.From("Sources.Section", new { newValues.SectionKey }).ToObject<SectionEdit>().NeverNull().ExecuteAsync());
 
             await CheckPermissionSectionAsync(oldValues.SectionKey!.Value, currentUser);
             if (oldValues.PartKey != newValues.PartKey)

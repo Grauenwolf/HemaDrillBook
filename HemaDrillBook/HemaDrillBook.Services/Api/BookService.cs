@@ -52,8 +52,8 @@ namespace HemaDrillBook.Services.Api
             var result = (await DataSource(currentUser)
                 .From("Sources.BookDetail", new { BookKey = bookKey })
                 .ToObject<BookDetailWithSections>()
-                //.NeverNull() //Hack: This is broken in Chain 3.0. It works in 3.1.
-                .ExecuteAsync())!;
+                .NeverNull()
+                .ExecuteAsync());
 
             result.Parts.AddRange(await GetBookPartDetailAsync(result.BookKey, currentUser));
             result.AlternateNames.AddRange(await GetBookAlternateNamesAsync(result.BookKey, currentUser));
@@ -66,8 +66,7 @@ namespace HemaDrillBook.Services.Api
         public async Task<BookSummary> GetBookSummaryAsync(int bookKey, IUser currentUser)
         {
             var filter = new { bookKey };
-            //Hack: This is broken in Chain 3.0. It works in 3.1.
-            return (await DataSource(currentUser).From("Sources.Book", filter).ToObject<BookSummary>().ExecuteAsync())!;
+            return await DataSource(currentUser).From("Sources.Book", filter).ToObject<BookSummary>().NeverNull().ExecuteAsync();
         }
 
         //public async Task<BookDetail> GetBookDetailAsync(string bookSlug, IUser? currentUser)
@@ -75,8 +74,8 @@ namespace HemaDrillBook.Services.Api
         //    var result = (await DataSource(currentUser)
         //        .From("Sources.BookDetail", new { BookSlug = bookSlug })
         //        .ToObject<BookDetail>()
-        //        //.NeverNull() //Hack: This is broken in Chain 3.0. It works in 3.1.
-        //        .ExecuteAsync())!;
+        //        .NeverNull()
+        //        .ExecuteAsync());
 
         //    result.AlternateNames.AddRange(await GetBookAlternateNamesAsync(result.BookKey, currentUser));
         //    result.Authors.AddRange(await GetAuthorsByBookAsync(result.BookKey, currentUser));
@@ -160,7 +159,7 @@ namespace HemaDrillBook.Services.Api
         //public async Task<PartDetail> GetPartDetailAsync(int partKey, IUser? currentUser)
         //{
         //    var ds = DataSource(currentUser);
-        //    var part = (await ds.From("Sources.PartDetail", new { partKey }).ToObject<PartDetail>().ExecuteAsync())!; //Hack, NeverNull in Chain 3.1
+        //    var part = (await ds.From("Sources.PartDetail", new { partKey }).ToObject<PartDetail>().NeverNull().ExecuteAsync())!;
 
         //    await GetPartDetailCore(currentUser, part);
 
@@ -170,7 +169,7 @@ namespace HemaDrillBook.Services.Api
         //public async Task<PartDetail> GetPartDetailAsync(string bookSlug, string partSlug, IUser? currentUser)
         //{
         //    var ds = DataSource(currentUser);
-        //    var part = (await ds.From("Sources.PartDetail", new { bookSlug, partSlug }).ToObject<PartDetail>().ExecuteAsync())!; //Hack, NeverNull in Chain 3.1
+        //    var part = (await ds.From("Sources.PartDetail", new { bookSlug, partSlug }).ToObject<PartDetail>().NeverNull().ExecuteAsync())!;
 
         //    await GetPartDetailCore(currentUser, part);
 
@@ -210,7 +209,7 @@ namespace HemaDrillBook.Services.Api
         //{
         //    var ds = DataSource(currentUser);
         //    //var filter = new { sectionKey };
-        //    var section = (await ds.From("Sources.SectionDetail", new { bookSlug, partSlug, sectionSlug }).ToObject<SectionDetail>().ExecuteAsync())!; //Hack, NeverNull in Chain 3.1
+        //    var section = (await ds.From("Sources.SectionDetail", new { bookSlug, partSlug, sectionSlug }).NeverNull().ToObject<SectionDetail>().ExecuteAsync());
 
         //    await GetSectionDetailCore(section, currentUser);
 
@@ -220,7 +219,7 @@ namespace HemaDrillBook.Services.Api
         public async Task<SectionDetail> GetSectionDetailAsync(int sectionKey, IUser? currentUser)
         {
             var ds = DataSource(currentUser);
-            var section = (await ds.From("Sources.SectionDetail", new { sectionKey }).ToObject<SectionDetail>().ExecuteAsync())!; //Hack, NeverNull in Chain 3.1
+            var section = (await ds.From("Sources.SectionDetail", new { sectionKey }).ToObject<SectionDetail>().NeverNull().ExecuteAsync());
 
             await GetSectionDetailCore(section, currentUser);
 

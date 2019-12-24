@@ -86,7 +86,7 @@ namespace HemaDrillBook.Pages
                 await JSRuntime.InvokeVoidAsync("isPreRendering");
                 IsConnected = true;
             }
-            catch (NullReferenceException)
+            catch (InvalidOperationException ex) when (ex.Message.Contains("JavaScript interop calls cannot be issued at this time."))
             {
             }
 

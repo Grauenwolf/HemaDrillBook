@@ -82,8 +82,7 @@ namespace HemaDrillBook.Services
                 throw new UnauthorizedAccessException("Permission denied to edit tags.");
         }
 
-        //Disabled null check because of bug in Chain. See https://github.com/docevaad/Chain/issues/317 in Chain 3.1
-        protected SqlServerDataSource DataSource(IUser? currentUser) => m_DataSource.WithUser(currentUser!);
+        protected SqlServerDataSource DataSource(IUser? currentUser) => m_DataSource.WithUser(currentUser);
 
         /*
         protected async Task CheckPermissionVideoAsync(int videoKey, IUser currentUser)
