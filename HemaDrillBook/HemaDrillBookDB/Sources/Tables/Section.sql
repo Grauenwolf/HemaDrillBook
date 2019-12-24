@@ -48,3 +48,13 @@ ON Sources.Section (
                        SectionSlug
                    )
 WHERE SectionSlug IS NOT NULL;
+GO
+CREATE NONCLUSTERED INDEX IX_Section_PartKey
+ON Sources.Section (PartKey)
+INCLUDE (
+            ParentSectionKey,
+            SectionName,
+            PageReference,
+            DisplayOrder,
+            SectionSlug
+        );
