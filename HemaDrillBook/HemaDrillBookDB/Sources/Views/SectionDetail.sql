@@ -28,11 +28,16 @@ SELECT s.SectionKey,
            SELECT COUNT(*)
            FROM Interpretations.Video v
            WHERE v.SectionKey = s.SectionKey
-       ) AS VideoCount
+       ) AS VideoCount,
+       ismd.StorageFileName AS PrimaryImageFileName,
+       ismd.ImageName AS PrimaryImageName
 FROM Sources.Section s
     INNER JOIN Sources.Part p
         ON s.PartKey = p.PartKey
     INNER JOIN Sources.Book b
-        ON p.BookKey = b.BookKey;
+        ON p.BookKey = b.BookKey
+    LEFT JOIN Images.ImageSectionMapDetail ismd
+        ON s.SectionKey = ismd.SectionKey
+           AND ismd.IsPrimaryImage = 1;
 GO
 GRANT SELECT ON Sources.SectionDetail TO HemaWeb;

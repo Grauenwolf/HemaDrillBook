@@ -106,6 +106,15 @@
                     <td>Plays</td>
                 }
 
+                @if (Model.Images.Count > 0)
+                {
+                    <th> <a href=@(Model.SectionUrlFragment + "/t/images")>Images</a>  </th>
+                }
+                else
+                {
+                    <td>Images</td>
+                }
+
                 @if (Model.TotalVideoCount > 0)
                 {
                     <th> <a href=@(Model.SectionUrlFragment + "/t/videos")>Videos</a>  </th>
@@ -205,6 +214,20 @@
             }
         }
 
+    }
+    else if (Tab == "images" && Model.Images.Count > 0)
+    {
+        <h2>Images</h2>
+
+        @foreach (var image in Model.Images)
+        {
+            <div>
+                <h3>
+                    @image.ImageName
+                </h3>
+                <ImageView ImageFileName="@image.StorageFileName" ImageName="@image.ImageName" />
+            </div>
+        }
     }
     else if (Tab == "videos" && Model.TotalVideoCount > 0)
     {
@@ -356,6 +379,10 @@
     else
     {
         <h2>Overview</h2>
+        @if (Model.PrimaryImageFileName != null)
+        {
+            <ImageView ImageFileName="@Model.PrimaryImageFileName" ImageName="@Model.PrimaryImageName" />
+        }
         @if (Model.Subsections.WalkSections().Count() > 0)
         {
             <div>Subsections: @(Model.Subsections.WalkSections().Count())</div>

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace HemaDrillBook.Shared
 {
-    public class PlayGridBase : ComponentBase
+    partial class PlayGrid
     {
         [Parameter]
         public PlayDetail? Play { get; set; }

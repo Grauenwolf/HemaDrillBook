@@ -51,6 +51,7 @@ namespace HemaDrillBook
             }).AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.Configure<AuthMessageSenderOptions>(Configuration);
+            services.Configure<BlobStorageOptions>(Configuration);
             services.AddTransient<IEmailSender, EmailSender>();
 
             services.AddRazorPages();

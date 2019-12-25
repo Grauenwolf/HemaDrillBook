@@ -1,68 +1,66 @@
-﻿@inherits PlayGridBase
-
-@if (Play != null)
+﻿@if (Play != null)
 {
-<a name="@("Play_" + Play.PlayKey)" id="@("Play_" + Play.PlayKey)"><h3 id="@("Play" + Play.PlayKey)">@(Play.VariantName ?? "Basic Play")</h3></a>
+    <a name="@("Play_" + Play.PlayKey)" id="@("Play_" + Play.PlayKey)"><h3 id="@("Play" + Play.PlayKey)">@(Play.VariantName ?? "Basic Play")</h3></a>
 
-@if (!string.IsNullOrEmpty(Play.AGuardFullName) || !string.IsNullOrEmpty(Play.PGuardFullName) || !string.IsNullOrEmpty(Play.MeasureFullName))
+    @if (!string.IsNullOrEmpty(Play.AGuardFullName) || !string.IsNullOrEmpty(Play.PGuardFullName) || !string.IsNullOrEmpty(Play.MeasureFullName))
     {
-<table class="gridtable">
+        <table class="gridtable">
 
-    <tr><th>Agent</th><th>Patient</th><th>Measure</th></tr>
-    <tr><td style="@agentStyle">@Play.AGuardFullName</td><td style="@patientStyle">@Play.PGuardFullName</td><td>@Play.MeasureFullName</td></tr>
-</table>
+            <tr><th>Agent</th><th>Patient</th><th>Measure</th></tr>
+            <tr><td style="@agentStyle">@Play.AGuardFullName</td><td style="@patientStyle">@Play.PGuardFullName</td><td>@Play.MeasureFullName</td></tr>
+        </table>
     }
-<div />
-<table class="gridtable">
-    <tr>
-        <th>Tempo</th>
-        <th>Footwork</th>
-        <th>Technique</th>
-        <th>Target</th>
-        <th>Guard</th>
-    </tr>
-    @foreach (var step in Play.Steps)
+    <div />
+    <table class="gridtable">
+        <tr>
+            <th>Tempo</th>
+            <th>Footwork</th>
+            <th>Technique</th>
+            <th>Target</th>
+            <th>Guard</th>
+        </tr>
+        @foreach (var step in Play.Steps)
         {
             var rowStyle = agentStyle;
 
-    @if (step.Actor == 'P')
+            @if (step.Actor == 'P')
             {
                 rowStyle = patientStyle;
             }
-    <tr>
-        <td style=@rowStyle>@step.ActorName @step.TempoNumber</td>
-        <td style=@rowStyle>@step.FootworkName</td>
-        <td style=@rowStyle>@step.TechniqueFullName</td>
-        @if (step.TargetFull != null)
+            <tr>
+                <td style=@rowStyle>@step.ActorName @step.TempoNumber</td>
+                <td style=@rowStyle>@step.FootworkName</td>
+                <td style=@rowStyle>@step.TechniqueFullName</td>
+                @if (step.TargetFull != null)
                 {
-        <td style=@rowStyle>at @step.TargetFull</td>
+                    <td style=@rowStyle>at @step.TargetFull</td>
                 }
                 else
                 {
-        <td style=@rowStyle></td>
+                    <td style=@rowStyle></td>
                 }
-        @if (step.IntermediateGuardKey.HasValue || step.IntermediateGuardModifierKey.HasValue)
+                @if (step.IntermediateGuardKey.HasValue || step.IntermediateGuardModifierKey.HasValue)
                 {
-        <td style=@rowStyle>@step.IntermediateGuardFullName @step.GuardFullName</td>
+                    <td style=@rowStyle>@step.IntermediateGuardFullName @step.GuardFullName</td>
                 }
                 else if (step.GuardKey.HasValue || step.GuardModifierKey.HasValue)
                 {
-        <td style=@rowStyle>@step.GuardFullName</td>
+                    <td style=@rowStyle>@step.GuardFullName</td>
                 }
                 else
                 {
-        <td style=@rowStyle></td>
+                    <td style=@rowStyle></td>
                 }
-    </tr>
-    @if (!string.IsNullOrEmpty(step.Notes))
+            </tr>
+            @if (!string.IsNullOrEmpty(step.Notes))
             {
-    <tr>
-        <td colspan="5" style=@rowStyle>
-            @step.Notes
-        </td>
-    </tr>
+                <tr>
+                    <td colspan="5" style=@rowStyle>
+                        @step.Notes
+                    </td>
+                </tr>
 
             }
         }
-</table>
+    </table>
 }

@@ -162,6 +162,16 @@ namespace HemaDrillBook.Services.UI
                 .ExecuteAsync();
         }
 
+        public Task<List<ImageDetail>> GetSectionImagesAsync(int sectionKey, IUser? currentUser)
+        {
+            return DataSource(currentUser)
+                .From("Images.ImageSectionMapDetail", new { SectionKey = sectionKey })
+                .WithSorting(new SortExpression("IsPrimaryImage", SortDirection.Descending), new SortExpression("ImageName", SortDirection.Ascending))
+                .ToCollection<ImageDetail>()
+                .ReadOrCache($"{nameof(BookService)}.{nameof(GetSectionImagesAsync)}:{sectionKey}", DefaultCachePolicy())
+                .ExecuteAsync();
+        }
+
         public Task<List<WeaponPairSummary>> GetSectionWeaponsAsync(int sectionKey, IUser? currentUser)
         {
             return DataSource(currentUser)
@@ -197,6 +207,7 @@ namespace HemaDrillBook.Services.UI
             section.Videos.AddRange(await GetSectionVideosAsync(section.SectionKey, currentUser));
             section.Weapons.AddRange(await GetSectionWeaponsAsync(section.SectionKey, currentUser));
             section.Plays.AddRange(await GetPlayDetailsForSectionAsync(section.SectionKey, currentUser));
+            section.Images.AddRange(await GetSectionImagesAsync(section.SectionKey, currentUser));
 
             var (commentaries, note) = await GetCommentaryDetailsForSectionAsync(section.SectionKey, currentUser);
             section.Commentary.AddRange(commentaries);

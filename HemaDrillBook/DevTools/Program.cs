@@ -2,6 +2,8 @@
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Auth;
 using Microsoft.WindowsAzure.Storage.Blob;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -16,15 +18,27 @@ namespace DevTools
 {
     class Program
     {
+        static void PrintStrings(List<string> list)
+        {
+            foreach (var item in list)
+                Console.WriteLine("\t" + item);
+        }
+
         async static Task Main(string[] args)
         {
+            var configuration = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile("appsettings.json").AddEnvironmentVariables().Build();
+
             const string videoConnectionString = @"Server=.;Database=HemaVideoDB;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Connect Timeout=60;Encrypt=False;TrustServerCertificate=False";
             const string drillBookConnectionString = @"Server=.;Database=HemaDrillBookDB;Integrated Security=True;Persist Security Info=False;Pooling=False;MultipleActiveResultSets=False;Connect Timeout=60;Encrypt=False;TrustServerCertificate=False";
 
+            string productionConnectionString = configuration["ProdConnectionString"];
+
             var videoDS = new SqlServerDataSource(videoConnectionString);
             var drillBookDS = new SqlServerDataSource(drillBookConnectionString);
+            var prodDS = new SqlServerDataSource(productionConnectionString);
             videoDS.TestConnection();
             drillBookDS.TestConnection();
+            prodDS.TestConnection();
 
             //ExportTable(videoDS, "Tags.Footwork");
 
@@ -71,40 +85,124 @@ namespace DevTools
             //ExportTable(videoDS, "Tags.Weapon");
             //ExportTable(videoDS, "Tags.Technique");
 
-            var configuration = new ConfigurationBuilder().SetBasePath(AppContext.BaseDirectory).AddJsonFile("appsettings.json").AddEnvironmentVariables().Build();
+            var devContainer = GetBlobContainer(configuration["ImageStorageUserName"], configuration["ImageStorageKey"], "devimages");
+            var devThumbnailContainer = GetBlobContainer(configuration["ImageStorageUserName"], configuration["ImageStorageKey"], "devimages240");
 
-            var container = GetBlobContainer(configuration["ImageStorageUserName"], configuration["ImageStorageKey"], configuration["ImageStorageContainer"]);
-            var folder = new DirectoryInfo(@"D:\Dropbox\Fencing\Agrippa Tradition\L'Ange\Images");
-            foreach (var image in folder.GetFiles())
+            var prodContainer = GetBlobContainer(configuration["ImageStorageUserName"], configuration["ImageStorageKey"], "images");
+            var prodThumbnailContainer = GetBlobContainer(configuration["ImageStorageUserName"], configuration["ImageStorageKey"], "images240");
+
+            //await DeleteAllImagesAsync(devContainer);
+            //await DeleteAllImagesAsync(devThumbnailContainer);
+
+            //Console.WriteLine("**************************************");
+            //PrintStrings(await ListBlobNamesAsync(devContainer));
+            //Console.WriteLine("**************************************");
+            //PrintStrings(await ListBlobNamesAsync(devThumbnailContainer));
+            //Console.WriteLine("**************************************");
+            //PrintStrings(await ListBlobNamesAsync(prodContainer));
+            //Console.WriteLine("**************************************");
+            //PrintStrings(await ListBlobNamesAsync(prodThumbnailContainer));
+            //Console.WriteLine("**************************************");
+
+            //var folder = new DirectoryInfo(@"D:\Dropbox\Fencing\Agrippa Tradition\L'Ange\Images");
+            //await UploadLangeImages(folder, drillBookDS, devContainer, devThumbnailContainer);
+            //await UploadLangeImages(folder, prodDS, prodContainer, prodThumbnailContainer);
+        }
+
+        static async Task DeleteAllImagesAsync(CloudBlobContainer devContainer)
+        {
+            foreach (CloudBlockBlob item in await ListBlobsAsync(devContainer))
             {
-                if (string.Equals(image.Extension, ".png", StringComparison.InvariantCultureIgnoreCase))
+                await item.DeleteAsync();
+            }
+        }
+
+        public static async Task<List<string>> ListBlobNamesAsync(CloudBlobContainer container)
+        {
+            var blobs = await ListBlobsAsync(container);
+            return blobs.Cast<CloudBlockBlob>().Select(b => b.Name).ToList();
+
+            //Alternate version
+            //return blobs.Select(b => b.Uri.ToString()).Select(s => s.Substring(s.LastIndexOf('/') + 1)).ToList();
+        }
+
+        public static async Task<List<IListBlobItem>> ListBlobsAsync(CloudBlobContainer container)
+        {
+            BlobContinuationToken continuationToken = null; //start at the beginning
+            var results = new List<IListBlobItem>();
+            do
+            {
+                var response = await container.ListBlobsSegmentedAsync(continuationToken);
+                continuationToken = response.ContinuationToken;
+                results.AddRange(response.Results);
+            }
+
+            while (continuationToken != null); //when this is null again, we've reached the end
+            return results;
+        }
+
+        private static async Task UploadLangeImages(DirectoryInfo folder, SqlServerDataSource dataSource, CloudBlobContainer imageContainer, CloudBlobContainer thumbnailContainer)
+        {
+            foreach (var imageFile in folder.GetFiles())
+            {
+                if (string.Equals(imageFile.Extension, ".png", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    Console.Write(image.Name);
-                    using (var trans = drillBookDS.BeginTransaction())
+                    Console.Write(imageFile.Name);
+                    using (var trans = dataSource.BeginTransaction())
                     {
                         var record = new
                         {
-                            ImageName = Path.GetFileNameWithoutExtension(image.Name),
-                            FileName = image.Name,
-                            FileSize = image.Length,
+                            ImageName = Path.GetFileNameWithoutExtension(imageFile.Name),
+                            FileName = imageFile.Name,
+                            FileSize = imageFile.Length,
                             CreatedByUserKey = -1,
                             ModifiedByUserKey = -1,
-                            CopyrightKey = 1,
                             ImageSetKey = 1,
                         };
                         Console.Write("...database");
-                        var imageKey = await drillBookDS.Insert("Images.Image", record).ToInt32().ExecuteAsync();
-                        var storageName = await drillBookDS.From("Images.ImageDetail", new { imageKey }).ToString("StorageFileName").ExecuteAsync();
+                        var imageKey = await dataSource.Insert("Images.Image", record).ToInt32().ExecuteAsync();
+                        var storageName = await dataSource.From("Images.ImageDetail", new { imageKey }).ToString("StorageFileName").ExecuteAsync();
 
                         Console.Write("...storage");
-                        using var stream = image.OpenRead();
-                        await UploadFileToStorageAsync(stream, storageName, container);
+                        using var stream = imageFile.OpenRead();
+                        await UploadFileToStorageAsync(stream, storageName, imageContainer);
+
+                        Console.Write("...more storage");
+                        using var stream2 = CreateThumbnail(imageFile);
+                        await UploadFileToStorageAsync(stream2, storageName, thumbnailContainer);
 
                         trans.Commit(); //Don't commit unless we were able to also upload the file
                         Console.WriteLine("...done!");
                     }
                 }
             }
+        }
+
+        static MemoryStream CreateThumbnail(FileInfo file)
+        {
+            using var fileStream = file.OpenRead();
+            return CreateThumbnail(fileStream);
+        }
+
+        static MemoryStream CreateThumbnail(Stream imageStream)
+        {
+            var result = new MemoryStream();
+
+            using var image = (Image)Image.Load(imageStream);
+
+            var (originalWidth, originalHeight) = image.Size();
+            var largerDimension = Math.Max(originalWidth, originalHeight);
+
+            var sizeFactor = (largerDimension > 240) ? largerDimension / 240.00 : 1.00;
+            var newWidth = (int)(image.Width / sizeFactor);
+            var newHeight = (int)(image.Height / sizeFactor);
+
+            image.Mutate(x => x.Resize(newWidth, newHeight));
+
+            image.SaveAsPng(result);
+
+            result.Seek(0, SeekOrigin.Begin); //return to start
+            return result;
         }
 
         public static async Task<bool> UploadFileToStorageAsync(Stream fileStream, string fileName, CloudBlobContainer container)
@@ -300,9 +398,9 @@ INSERT INTO @{table.Name.Name}
 VALUES
 
 { string.Join(",\r\n", rows.Select(
-    r => "(" + string.Join(", ", columnsOfInterest.Select(c => ValueToSqlValue(r[c.ClrName], c.DbType))) + ")"
+        r => "(" + string.Join(", ", columnsOfInterest.Select(c => ValueToSqlValue(r[c.ClrName], c.DbType))) + ")"
 
-    ))}
+        ))}
 
 ;");
             if (hasIdentity)

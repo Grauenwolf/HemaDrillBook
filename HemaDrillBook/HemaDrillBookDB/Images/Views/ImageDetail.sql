@@ -1,4 +1,5 @@
 ﻿CREATE VIEW Images.ImageDetail
+WITH SCHEMABINDING
 AS
 SELECT i.ImageKey,
        i.ImageName,
@@ -11,6 +12,7 @@ SELECT i.ImageKey,
        (RIGHT(i.FileName, CHARINDEX('.', REVERSE(i.FileName)) - 1)) AS FileType,
        CONVERT(NVARCHAR(10), i.ImageKey) + '_' + i.FileName AS StorageFileName,
 	   ise.ImageSetName,
+	   ise.CopyrightHolder,
 	   ise.Copyright
 FROM Images.Image i
     LEFT JOIN Images.ImageSet ise

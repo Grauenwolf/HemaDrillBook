@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace HemaDrillBook.Shared
 {
-    public class MarkdownBase : ComponentBase
+    partial class MarkdownView
     {
         private string? _content;
 

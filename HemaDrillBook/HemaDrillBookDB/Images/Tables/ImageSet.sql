@@ -7,9 +7,9 @@
     PartKey INT NOT NULL
         CONSTRAINT FK_ImageSet_PartKey
         REFERENCES Sources.Part (PartKey),
-    CopyrightHolder NVARCHAR(100) NOT NULL
+    CopyrightHolder NVARCHAR(100) NULL
         CONSTRAINT C_ImageSet_CopyrightHolder CHECK (LEN(CopyrightHolder) > 0),
-    Copyright NVARCHAR(MAX) NOT NULL
+    Copyright NVARCHAR(MAX) NULL
         CONSTRAINT C_ImageSet_Copyright CHECK (LEN(Copyright) > 0),
     CreatedByUserKey INT NOT NULL
         CONSTRAINT FK_ImageSet_CreatedByUserKey

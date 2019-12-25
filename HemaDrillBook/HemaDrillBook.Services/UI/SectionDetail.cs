@@ -1,6 +1,4 @@
-﻿using HemaDrillBook.Services;
-using HemaDrillBook.Services.UI;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
@@ -67,6 +65,9 @@ namespace HemaDrillBook.Services.UI
 
         public string? PageReference { get; set; }
 
+        public string? PrimaryImageFileName { get; set; }
+        public string? PrimaryImageName { get; set; }
+
         public string? SectionNameFull => Formatter.MultiPart(SectionName, PageReference);
 
         public SectionSummaryCollection Subsections { get; } = new SectionSummaryCollection();
@@ -82,6 +83,7 @@ namespace HemaDrillBook.Services.UI
         public List<VideoDetail> Videos { get; } = new List<VideoDetail>();
 
         public List<WeaponPairSummary> Weapons { get; } = new List<WeaponPairSummary>();
+        public List<ImageDetail> Images { get; } = new List<ImageDetail>();
 
         [NotMapped]
         public List<AppLink> BreadCrumb { get; set; } = new List<AppLink>();

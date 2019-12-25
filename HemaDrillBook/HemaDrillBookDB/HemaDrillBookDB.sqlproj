@@ -321,6 +321,8 @@
     <Build Include="Images\Views\ImageDetail.sql" />
     <Build Include="Images\Tables\ImageSet.sql" />
     <None Include="Data\OneTime\L%27Ange\L%27Ange1.sql" />
+    <Build Include="Images\Tables\ImageSet_History.sql" />
+    <Build Include="Images\Views\ImageSectionMapDetail.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="localhost.publish.xml" />
