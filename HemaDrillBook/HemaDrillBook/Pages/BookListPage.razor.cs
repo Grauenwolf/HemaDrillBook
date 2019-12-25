@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace HemaDrillBook.Pages
 {
-    partial class BookList
+    partial class BookListPage
     {
 #nullable disable
         [Inject] BookService BookService { get; set; }

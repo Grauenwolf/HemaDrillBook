@@ -3,12 +3,12 @@ using Tortuga.Anchor.Modeling.Internals;
 
 namespace HemaDrillBook.Pages
 {
-    public class EngineBase<T> : EngineBase where T : class
+    public class PageBase<T> : PageBase where T : class
     {
         T? m_Model;
         readonly PropertyBag m_Properties;
 
-        public EngineBase()
+        public PageBase()
         {
             m_Properties = new PropertyBag(this);
         }

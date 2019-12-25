@@ -10,12 +10,12 @@ using System.Threading.Tasks;
 
 namespace HemaDrillBook.Pages
 {
-    public class EngineBase : ComponentBase
+    public class PageBase : ComponentBase
     {
 #nullable disable
 
         [Inject] protected IJSRuntime JSRuntime { get; set; }
-        [Inject] protected ILogger<EngineBase> Logger { get; set; }
+        [Inject] protected ILogger<PageBase> Logger { get; set; }
         [CascadingParameter] Task<AuthenticationState> AuthenticationState { get; set; }
 
         //[Inject] SqlServerDataSource RawDataSource { get; set; }

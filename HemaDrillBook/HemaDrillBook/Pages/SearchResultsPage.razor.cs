@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace HemaDrillBook.Pages
 {
-    partial class SearchResults
+    partial class SearchResultsPage
     {
 #nullable disable
         [Inject] SearchService SearchService { get; set; }
