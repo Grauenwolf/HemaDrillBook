@@ -3,6 +3,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HemaDrillBook.Services.UI
 {
+    //public class ImageDetail
+    //{
+    //    public SectionSummaryCollection Sections { get; } = new SectionSummaryCollection();
+
+    //}
+
     public class PartDetail
 
     {

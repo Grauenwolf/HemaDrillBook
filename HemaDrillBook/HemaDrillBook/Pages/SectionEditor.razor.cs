@@ -10,7 +10,8 @@ namespace HemaDrillBook.Pages
     partial class SectionEditor
     {
 #nullable disable
-        [Inject] BookService BookService { get; set; }
+        [Inject] SectionService SectionService { get; set; }
+        [Inject] PartService PartService { get; set; }
 #nullable restore
 
         [Parameter]
@@ -54,9 +55,9 @@ namespace HemaDrillBook.Pages
             {
                 //Save goes here
                 if (Model.SectionKey.HasValue)
-                    await BookService.UpdateSectionEditAsync(Model, User);
+                    await SectionService.UpdateSectionEditAsync(Model, User);
                 else
-                    await BookService.CreateSectionAsync(Model, User);
+                    await SectionService.CreateSectionAsync(Model, User);
             }
             catch (Exception ex)
             {
@@ -133,7 +134,7 @@ namespace HemaDrillBook.Pages
                 {
                     if (!string.IsNullOrEmpty(SectionSlug))
                     {
-                        var parentSection = await BookService.GetSectionEditAsync(BookSlug, PartSlug, SectionSlug, User);
+                        var parentSection = await SectionService.GetSectionEditAsync(BookSlug, PartSlug, SectionSlug, User);
                         Model = new SectionEdit()
                         {
                             ParentSectionKey = parentSection.SectionKey,
@@ -143,7 +144,7 @@ namespace HemaDrillBook.Pages
                     }
                     else
                     {
-                        var part = await BookService.GetPartDetailAsync(BookSlug, PartSlug, User);
+                        var part = await PartService.GetPartDetailAsync(BookSlug, PartSlug, User);
                         Model = new SectionEdit()
                         {
                             SectionName = "New Section",
@@ -153,10 +154,10 @@ namespace HemaDrillBook.Pages
                 }
                 else
                 {
-                    Model = await BookService.GetSectionEditAsync(BookSlug, PartSlug, SectionSlug!, User);
+                    Model = await SectionService.GetSectionEditAsync(BookSlug, PartSlug, SectionSlug!, User);
                 }
 
-                ParentSections = await BookService.PossibleParentsForSectionAsync(Model.PartKey, Model.SectionKey, User);
+                ParentSections = await SectionService.PossibleParentsForSectionAsync(Model.PartKey, Model.SectionKey, User);
 
                 if (newMode)//Place the new section at the end of the parent section
                 {

@@ -1,4 +1,4 @@
-namespace HemaDrillBook
+namespace HemaDrillBook.Models
 {
     public class BlobStorageOptions
     {

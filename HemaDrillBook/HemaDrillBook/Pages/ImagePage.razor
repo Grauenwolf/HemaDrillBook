@@ -1,0 +1,35 @@
+﻿@page "/i/{ImageKey}"
+@inherits PageBase<ImageDetail>
+
+@if (Model != null)
+{
+    <h1>@Model.ImageName</h1>
+
+    <a href="@Model.LinkUrl">
+        <img src="@Model.LinkUrl" alt="@Model.ImageName" style="max-width:100%" />
+    </a>
+
+    @if (Model.Sections.Count > 0)
+    {
+        <h2>Sections</h2>
+        @foreach (var section in Model.Sections)
+        {
+            <div style="margin-left: 25px">
+                <a href="@(section.SectionUrlFragment)">@(section.SectionNameFull) </a> @(section.IsPrimaryImage ? "*" : "")
+            </div>
+        }
+        if (Model.Sections.Any(s => s.IsPrimaryImage))
+        {
+            <div>*: Primary image for section</div>
+        }
+    }
+
+}
+else if (LoadFailed)
+{
+    <h1>Error loading page.</h1>
+}
+else
+{
+    <h1>Loading</h1>
+}

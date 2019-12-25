@@ -225,7 +225,7 @@
                 <h3>
                     @image.ImageName
                 </h3>
-                <ImageView ImageFileName="@image.StorageFileName" ImageName="@image.ImageName" />
+                <ImageView ImageFileName="@image.StorageFileName" ImageName="@image.ImageName" ImageKey="@image.ImageKey" />
             </div>
         }
     }
@@ -381,7 +381,7 @@
         <h2>Overview</h2>
         @if (Model.PrimaryImageFileName != null)
         {
-            <ImageView ImageFileName="@Model.PrimaryImageFileName" ImageName="@Model.PrimaryImageName" />
+            <ImageView ImageFileName="@Model.PrimaryImageFileName" ImageName="@Model.PrimaryImageName" ImageKey="@Model.PrimaryImageKey!.Value" />
         }
         @if (Model.Subsections.WalkSections().Count() > 0)
         {

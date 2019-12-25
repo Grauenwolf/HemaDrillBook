@@ -8,8 +8,7 @@ namespace HemaDrillBook.Pages
     partial class SectionPage
     {
 #nullable disable
-        [Inject] BookService BookService { get; set; }
-        [Inject] PlayService PlayService { get; set; }
+        [Inject] SectionService SectionService { get; set; }
 #nullable restore
 
         [Parameter]
@@ -79,7 +78,7 @@ namespace HemaDrillBook.Pages
             try
             {
                 //Save goes here
-                await PlayService.UpdateCommentaryAsync(CommentaryInput, User);
+                await SectionService.UpdateCommentaryAsync(CommentaryInput, User);
 
                 //Reset the page
                 StateHasChanged();
@@ -111,7 +110,7 @@ namespace HemaDrillBook.Pages
             try
             {
                 //Save goes here
-                await PlayService.AddVideoAsync(VideoInput, User);
+                await SectionService.AddVideoAsync(VideoInput, User);
 
                 //Reset the page
                 VideoInput = new VideoInput();
@@ -149,12 +148,12 @@ namespace HemaDrillBook.Pages
 
             if (Model == null)
             {
-                Model = await BookService.GetSectionDetailAsync(BookSlug, PartSlug, SectionSlug, User);
+                Model = await SectionService.GetSectionDetailAsync(BookSlug, PartSlug, SectionSlug, User);
 
                 PageTitle = Model.SectionName;
 
                 if (IsAuthenticated)
-                    MayEdit = await BookService.MayEditPartAsync(Model.PartKey, User);
+                    MayEdit = await SectionService.MayEditPartAsync(Model.PartKey, User);
             }
         }
     }

@@ -1,6 +1,7 @@
 using Ganss.XSS;
 using HemaDrillBook.Areas.Identity;
 using HemaDrillBook.Data;
+using HemaDrillBook.Models;
 using HemaDrillBook.Services.Api;
 using HemaDrillBook.Services.Search;
 using HemaDrillBook.Services.UI;
@@ -77,7 +78,10 @@ namespace HemaDrillBook
             //Blazor Dependencies
             services.AddSingleton<BookService>();
             services.AddSingleton<PlayService>();
+            services.AddSingleton<PartService>();
             services.AddSingleton<SearchService>();
+            services.AddSingleton<SectionService>();
+            services.AddSingleton<ImageService>();
             //services.AddSingleton<TagsService>();
 
             //REST API Dependencies

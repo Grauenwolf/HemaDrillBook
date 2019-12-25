@@ -11,10 +11,17 @@ SELECT ism.ImageKey,
        id.StorageFileName,
        id.ImageSetName,
        id.CopyrightHolder,
-       id.Copyright
+       id.Copyright,
+       sd.BookSlug,
+       sd.PageReference,
+       sd.PartSlug,
+       sd.SectionName,
+       sd.SectionSlug
 FROM Images.ImageSectionMap ism
     INNER JOIN Images.ImageDetail id
-        ON ism.ImageKey = id.ImageKey;
+        ON ism.ImageKey = id.ImageKey
+    INNER JOIN Sources.SectionDetail sd
+        ON ism.SectionKey = sd.SectionKey;
 GO
 
 GRANT SELECT ON Images.ImageSectionMapDetail TO HemaWeb;

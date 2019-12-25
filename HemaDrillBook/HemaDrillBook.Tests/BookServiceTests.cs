@@ -11,8 +11,8 @@ namespace HemaDrillBook.Tests
         [TestMethod]
         public async Task GetBookNameMapAsync_True()
         {
-            var bs = new BookService(DataSource);
-            var rows = await bs.GetBookNameMapAsync(true, null);
+            var service = new BookService(DataSource);
+            var rows = await service.GetBookNameMapAsync(true, null);
             foreach (var row in rows)
             {
                 Assert.IsFalse(string.IsNullOrWhiteSpace(row.BookSlug), "BookSlug shouldn't be null");
@@ -23,8 +23,8 @@ namespace HemaDrillBook.Tests
         [TestMethod]
         public async Task GetBookNameMapAsync_False()
         {
-            var bs = new BookService(DataSource);
-            var rows = await bs.GetBookNameMapAsync(false, null);
+            var service = new BookService(DataSource);
+            var rows = await service.GetBookNameMapAsync(false, null);
             foreach (var row in rows)
             {
                 Assert.IsFalse(string.IsNullOrWhiteSpace(row.BookSlug), "BookSlug shouldn't be null");
@@ -35,11 +35,11 @@ namespace HemaDrillBook.Tests
         [TestMethod]
         public async Task GetBookDetailAsync()
         {
-            var bs = new BookService(DataSource);
+            var service = new BookService(DataSource);
             var books = await DataSource.From("Sources.Book").ToStringList("BookSlug").ExecuteAsync();
             foreach (var slug in books)
             {
-                var row = await bs.GetBookDetailAsync(slug, null);
+                var row = await service.GetBookDetailAsync(slug, null);
                 Assert.IsFalse(string.IsNullOrWhiteSpace(row.BookSlug), "BookSlug shouldn't be null");
                 Assert.IsFalse(string.IsNullOrWhiteSpace(row.BookName), "BookName shouldn't be null");
 
@@ -60,11 +60,11 @@ namespace HemaDrillBook.Tests
         [TestMethod]
         public async Task GetAuthorsByBookAsync()
         {
-            var bs = new BookService(DataSource);
+            var service = new BookService(DataSource);
             var books = await DataSource.From("Sources.Book").ToInt32List("BookKey").ExecuteAsync();
             foreach (var bookKey in books)
             {
-                var rows = await bs.GetAuthorsByBookAsync(bookKey, null);
+                var rows = await service.GetAuthorsByBookAsync(bookKey, null);
                 foreach (var row in rows)
                 {
                     Assert.IsFalse(string.IsNullOrWhiteSpace(row.AuthorSlug), "AuthorSlug shouldn't be null");
@@ -76,11 +76,11 @@ namespace HemaDrillBook.Tests
         [TestMethod]
         public async Task GetBookWeaponsAsync()
         {
-            var bs = new BookService(DataSource);
+            var service = new BookService(DataSource);
             var books = await DataSource.From("Sources.Book").ToInt32List("BookKey").ExecuteAsync();
             foreach (var bookKey in books)
             {
-                var rows = await bs.GetBookWeaponsAsync(bookKey, null);
+                var rows = await service.GetBookWeaponsAsync(bookKey, null);
                 foreach (var row in rows)
                 {
                     Assert.IsFalse(string.IsNullOrWhiteSpace(row.PrimaryWeaponName), "PrimaryWeaponName shouldn't be null");
@@ -91,11 +91,11 @@ namespace HemaDrillBook.Tests
         [TestMethod]
         public async Task GetPartWeaponsAsync()
         {
-            var bs = new BookService(DataSource);
+            var service = new PartService(DataSource);
             var parts = await DataSource.From("Sources.Part").ToInt32List("PartKey").ExecuteAsync();
             foreach (var partKey in parts)
             {
-                var rows = await bs.GetPartWeaponsAsync(partKey, null);
+                var rows = await service.GetPartWeaponsAsync(partKey, null);
                 foreach (var row in rows)
                 {
                     Assert.IsFalse(string.IsNullOrWhiteSpace(row.PrimaryWeaponName), "PrimaryWeaponName shouldn't be null");
@@ -106,11 +106,11 @@ namespace HemaDrillBook.Tests
         [TestMethod]
         public async Task GetPartPlaysAsync()
         {
-            var bs = new BookService(DataSource);
+            var service = new PartService(DataSource);
             var parts = await DataSource.From("Sources.Part").ToInt32List("PartKey").ExecuteAsync();
             foreach (var partKey in parts)
             {
-                var rows = await bs.GetPartPlaysAsync(partKey, null);
+                var rows = await service.GetPartPlaysAsync(partKey, null);
                 foreach (var row in rows)
                 {
                     Assert.IsFalse(string.IsNullOrWhiteSpace(row.PlayFullName), "PlayFullName shouldn't be null");
@@ -122,14 +122,14 @@ namespace HemaDrillBook.Tests
         [TestMethod]
         public async Task GetPartDetailAsync()
         {
-            var bs = new BookService(DataSource);
+            var service = new PartService(DataSource);
             var books = await DataSource.From("Sources.Book").ToStringList("BookSlug").ExecuteAsync();
             foreach (var bookSlug in books)
             {
                 var parts = await DataSource.From("Sources.PartDetail", new { bookSlug }).ToStringList("PartSlug").ExecuteAsync();
                 foreach (var partSlug in parts)
                 {
-                    var row = await bs.GetPartDetailAsync(bookSlug, partSlug, null);
+                    var row = await service.GetPartDetailAsync(bookSlug, partSlug, null);
                 }
             }
         }
@@ -137,7 +137,7 @@ namespace HemaDrillBook.Tests
         [TestMethod]
         public async Task GetSectionDetailAsync()
         {
-            var bs = new BookService(DataSource);
+            var service = new SectionService(DataSource);
             var books = await DataSource.From("Sources.Book").ToStringList("BookSlug").ExecuteAsync();
             foreach (var bookSlug in books)
             {
@@ -148,7 +148,7 @@ namespace HemaDrillBook.Tests
 
                     foreach (var sectionSlug in sections)
                     {
-                        var row = await bs.GetSectionDetailAsync(bookSlug, partSlug, sectionSlug, null);
+                        var row = await service.GetSectionDetailAsync(bookSlug, partSlug, sectionSlug, null);
                     }
                 }
             }
@@ -157,11 +157,11 @@ namespace HemaDrillBook.Tests
         [TestMethod]
         public async Task GetBookPartsAsync()
         {
-            var bs = new BookService(DataSource);
+            var service = new BookService(DataSource);
             var books = await DataSource.From("Sources.Book").ToInt32List("BookKey").ExecuteAsync();
             foreach (var bookKey in books)
             {
-                var rows = await bs.GetBookPartsAsync(bookKey, null);
+                var rows = await service.GetBookPartsAsync(bookKey, null);
                 foreach (var row in rows)
                 {
                     Assert.IsFalse(string.IsNullOrWhiteSpace(row.PartSlug), "PartSlug shouldn't be null");
@@ -173,11 +173,11 @@ namespace HemaDrillBook.Tests
         [TestMethod]
         public async Task GetBookAlternateNamesAsync()
         {
-            var bs = new BookService(DataSource);
+            var service = new BookService(DataSource);
             var books = await DataSource.From("Sources.Book").ToInt32List("BookKey").ExecuteAsync();
             foreach (var bookKey in books)
             {
-                var rows = await bs.GetBookAlternateNamesAsync(bookKey, null);
+                var rows = await service.GetBookAlternateNamesAsync(bookKey, null);
                 foreach (var row in rows)
                 {
                     Assert.IsFalse(string.IsNullOrWhiteSpace(row), "Name shouldn't be null");

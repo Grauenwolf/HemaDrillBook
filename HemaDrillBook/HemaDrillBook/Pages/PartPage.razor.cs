@@ -7,7 +7,7 @@ namespace HemaDrillBook.Pages
     partial class PartPage
     {
 #nullable disable
-        [Inject] BookService BookService { get; set; }
+        [Inject] PartService PartService { get; set; }
 #nullable restore
 
         [Parameter]
@@ -45,7 +45,7 @@ namespace HemaDrillBook.Pages
             }
 
             if (Model == null)
-                Model = await BookService.GetPartDetailAsync(BookSlug, PartSlug, User);
+                Model = await PartService.GetPartDetailAsync(BookSlug, PartSlug, User);
 
             PageTitle = Model.PartName;
         }
