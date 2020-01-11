@@ -10,6 +10,8 @@
     <DropObjectsNotInSource>True</DropObjectsNotInSource>
     <IgnoreAnsiNulls>False</IgnoreAnsiNulls>
     <GenerateSmartDefaults>True</GenerateSmartDefaults>
+    <IgnoreWithNocheckOnCheckConstraints>True</IgnoreWithNocheckOnCheckConstraints>
+    <IgnoreWithNocheckOnForeignKeys>True</IgnoreWithNocheckOnForeignKeys>
   </PropertyGroup>
   <ItemGroup>
     <SqlCmdVariable Include="OneTimeLoad">
