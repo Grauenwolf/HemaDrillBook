@@ -33,11 +33,26 @@ namespace HemaDrillBook.Services.UI
             part.Weapons.AddRange(await GetPartWeaponsAsync(part.PartKey, currentUser));
             part.Sections.AddRange(await GetPartSectionsAsync(part.PartKey, currentUser));
             part.Plays.AddRange(await GetPartPlaysAsync(part.PartKey, currentUser));
+            part.Images.AddRange(await GetPartImagesAsync(part.PartKey, currentUser));
             part.Videos.AddRange(await GetPartVideosAsync(part.PartKey, currentUser));
 
             await ds.Cache.WriteAsync(cacheKey, part, DefaultCachePolicy());
 
             return part;
+        }
+
+        public async Task<List<PartDetail.ImageSummary>> GetPartImagesAsync(int partKey, IUser? currentUser)
+        {
+            var result = await DataSource(currentUser)
+                .From("Images.ImagePartMap", new { PartKey = partKey })
+                .ToCollection<PartDetail.ImageSummary>()
+                .ReadOrCache($"{nameof(PartDetail.ImageSummary)}.{nameof(GetPartImagesAsync)}:{partKey}", DefaultCachePolicy())
+                .ExecuteAsync();
+
+            //Task-98: Sort the images tab on the Part page
+            result = result.OrderBy(x => x.ImageName).ToList();
+
+            return result;
         }
 
         public async Task<List<PlaySummary>> GetPartPlaysAsync(int partKey, IUser? currentUser)

@@ -67,6 +67,14 @@
             {
                 <td>Plays</td>
             }
+            @if (Model.Images.Any())
+            {
+                <th> <a href=@(Model.PartUrlFragment + "/t/images")>Images</a>  </th>
+            }
+            else
+            {
+                <td>Images</td>
+            }
 
             @if (Model.Videos.Any())
             {
@@ -117,6 +125,20 @@
         {
             <div style="margin-left: 25px">
                 <a href="@(play.SectionUrlFragment)">@(play.PlayFullName)</a>
+            </div>
+        }
+    }
+    else if (Tab == "images")
+    {
+        <h2>Images</h2>
+
+        @foreach (var image in Model.Images)
+        {
+            <div>
+                <h3>
+                    @image.ImageName
+                </h3>
+                <ImageView ImageFileName="@image.StorageFileName" ImageName="@image.ImageName" ImageKey="@image.ImageKey" />
             </div>
         }
     }

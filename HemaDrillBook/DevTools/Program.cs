@@ -107,6 +107,16 @@ namespace DevTools
             //var folder = new DirectoryInfo(@"D:\Dropbox\Fencing\Agrippa Tradition\L'Ange\Images");
             //await UploadLangeImages(folder, drillBookDS, devContainer, devThumbnailContainer);
             //await UploadLangeImages(folder, prodDS, prodContainer, prodThumbnailContainer);
+
+            var imageFolder = new DirectoryInfo(@"D:\Dropbox\Fencing\Agrippa Tradition\L'Ange\Annotated Images");
+            var thumbnailFolder = new DirectoryInfo(@"D:\Dropbox\Fencing\Agrippa Tradition\L'Ange\Annotated Thumbnails");
+            thumbnailFolder.Create();
+
+            foreach (var imageFile in imageFolder.GetFiles())
+            {
+                using var stream2 = CreateThumbnail(imageFile);
+                File.WriteAllBytes(Path.Combine(thumbnailFolder.FullName, imageFile.Name), stream2.ToArray());
+            }
         }
 
         static async Task DeleteAllImagesAsync(CloudBlobContainer devContainer)
@@ -212,6 +222,9 @@ namespace DevTools
 
             // Upload the file
             await blockBlob.UploadFromStreamAsync(fileStream);
+
+            blockBlob.Properties.ContentType = "image/png";
+            await blockBlob.SetPropertiesAsync();
 
             return await Task.FromResult(true);
         }

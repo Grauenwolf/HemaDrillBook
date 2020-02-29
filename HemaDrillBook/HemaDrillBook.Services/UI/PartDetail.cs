@@ -31,7 +31,16 @@ namespace HemaDrillBook.Services.UI
 
         public SectionSummaryCollection Sections { get; } = new SectionSummaryCollection();
         public List<PlaySummary> Plays { get; } = new List<PlaySummary>();
+
+        public List<ImageSummary> Images { get; } = new List<ImageSummary>();
         public List<VideoSummary> Videos { get; } = new List<VideoSummary>();
         public List<WeaponPairSummary> Weapons { get; } = new List<WeaponPairSummary>();
+
+        public class ImageSummary
+        {
+            public int ImageKey { get; set; }
+            public string? ImageName { get; set; }
+            public string? StorageFileName { get; set; }
+        }
     }
 }
