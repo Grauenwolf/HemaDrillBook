@@ -50,7 +50,7 @@ namespace HemaDrillBook.Services.UI
                 .ExecuteAsync();
 
             //Task-98: Sort the images tab on the Part page
-            result = result.OrderBy(x => x.ImageName).ToList();
+            result = result.OrderBy(x => x.ImageName, new NaturalSortComparer()).ToList();
 
             return result;
         }

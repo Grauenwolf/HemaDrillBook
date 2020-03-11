@@ -41,7 +41,7 @@ namespace HemaDrillBook
                 //Remove any OAuth functionality as we won't be using it.
                 emailClient.AuthenticationMechanisms.Remove("XOAUTH2");
 
-                await emailClient.AuthenticateAsync("admin@hemadrillbook.org", "]hFUnJ5L!iMK:");
+                await emailClient.AuthenticateAsync("admin@hemadrillbook.org", Options.SmtpPassword);
 
                 await emailClient.SendAsync(message);
 
