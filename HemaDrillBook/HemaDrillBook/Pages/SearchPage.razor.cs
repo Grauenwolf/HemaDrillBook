@@ -9,9 +9,7 @@ namespace HemaDrillBook.Pages
 {
     partial class SearchPage
     {
-#nullable disable
-        [Inject] SearchService SearchService { get; set; }
-#nullable restore
+        [Inject] SearchService SearchService { get; set; } = null!;
 
         public string? ErrorDisplay { get; set; }
 

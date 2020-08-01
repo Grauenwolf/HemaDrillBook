@@ -1,15 +1,13 @@
 ﻿using HemaDrillBook.Services.UI;
 using Microsoft.AspNetCore.Components;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace HemaDrillBook.Pages
 {
     partial class IndexPage
     {
-#nullable disable
-        [Inject] BookService BookService { get; set; }
-#nullable restore
+        [Inject]
+        BookService BookService { get; set; } = null!;
 
         protected override async Task ParametersSetAsync()
         {

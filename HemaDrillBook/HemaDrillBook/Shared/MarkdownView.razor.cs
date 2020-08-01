@@ -8,9 +8,7 @@ namespace HemaDrillBook.Shared
     {
         private string? _content;
 
-#nullable disable
-        [Inject] public IHtmlSanitizer HtmlSanitizer { get; set; }
-#nullable restore
+        [Inject] public IHtmlSanitizer HtmlSanitizer { get; set; } = null!;
 
         [Parameter]
         public string? Content

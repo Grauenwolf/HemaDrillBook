@@ -9,10 +9,8 @@ namespace HemaDrillBook.Pages
 {
     partial class SectionEditor
     {
-#nullable disable
-        [Inject] SectionService SectionService { get; set; }
-        [Inject] PartService PartService { get; set; }
-#nullable restore
+        [Inject] SectionService SectionService { get; set; } = null!;
+        [Inject] PartService PartService { get; set; } = null!;
 
         [Parameter]
         public string? BookSlug

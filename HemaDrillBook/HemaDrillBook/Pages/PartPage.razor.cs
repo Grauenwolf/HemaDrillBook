@@ -6,9 +6,7 @@ namespace HemaDrillBook.Pages
 {
     partial class PartPage
     {
-#nullable disable
-        [Inject] PartService PartService { get; set; }
-#nullable restore
+        [Inject] PartService PartService { get; set; } = null!;
 
         [Parameter]
         public string? BookSlug

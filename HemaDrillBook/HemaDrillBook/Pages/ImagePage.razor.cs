@@ -6,9 +6,7 @@ namespace HemaDrillBook.Pages
 {
     partial class ImagePage
     {
-#nullable disable
-        [Inject] ImageService ImageService { get; set; }
-#nullable restore
+        [Inject] ImageService ImageService { get; set; } = null!;
 
         [Parameter]
         public string? ImageKey

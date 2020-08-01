@@ -7,12 +7,8 @@ namespace HemaDrillBook.Shared
     partial class ImageView
 
     {
-#nullable disable
-
         [Inject]
-        public IOptions<BlobStorageOptions> Settings { get; set; }
-
-#nullable restore
+        public IOptions<BlobStorageOptions> Settings { get; set; } = null!;
 
         [Parameter]
         public int ImageKey { get; set; }

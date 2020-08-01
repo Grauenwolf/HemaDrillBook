@@ -5,26 +5,21 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
 using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace HemaDrillBook.Pages
 {
     public class PageBase : ComponentBase
     {
-#nullable disable
+        [Inject] protected IJSRuntime JSRuntime { get; set; } = null!;
+        [Inject] protected ILogger<PageBase> Logger { get; set; } = null!;
+        [CascadingParameter] Task<AuthenticationState> AuthenticationState { get; set; } = null!;
 
-        [Inject] protected IJSRuntime JSRuntime { get; set; }
-        [Inject] protected ILogger<PageBase> Logger { get; set; }
-        [CascadingParameter] Task<AuthenticationState> AuthenticationState { get; set; }
+        //[Inject] SqlServerDataSource RawDataSource { get; set; } = null!;
+        [Inject] UserManager<ApplicationUser> UserManager { get; set; } = null!;
 
-        //[Inject] SqlServerDataSource RawDataSource { get; set; }
-        [Inject] UserManager<ApplicationUser> UserManager { get; set; }
-
-        //protected SqlServerDataSource DataSource { get; set; }
-        [Inject] protected NavigationManager Navigation { get; set; }
-
-#nullable restore
+        //protected SqlServerDataSource DataSource { get; set; } = null!;
+        [Inject] protected NavigationManager Navigation { get; set; } = null!;
 
         /// <summary>
         /// Gets or sets a value indicating whether this instance is connected.
