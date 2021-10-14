@@ -24,7 +24,6 @@ namespace HemaDrillBook.Services.UI
 
             var result = (await ds.From("Images.ImageDetail", new { imageKey })
                 .ToObject<ImageDetail>()
-                .NeverNull()
                 .ExecuteAsync());
 
             result.StorageBaseUrl = Settings.StorageBaseUrl;

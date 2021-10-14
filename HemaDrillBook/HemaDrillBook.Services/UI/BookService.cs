@@ -46,7 +46,6 @@ namespace HemaDrillBook.Services.UI
 
             var result = (await ds.From("Sources.BookDetail", new { BookSlug = bookSlug })
                 .ToObject<BookDetail>()
-                .NeverNull()
                 .ReadOrCache($"{nameof(BookService)}.{nameof(GetBookDetailAsync)}:{bookSlug}", DefaultCachePolicy())
                 .ExecuteAsync());
 

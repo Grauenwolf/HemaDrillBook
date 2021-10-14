@@ -52,7 +52,6 @@ namespace HemaDrillBook.Services.Api
             var result = (await DataSource(currentUser)
                 .From("Sources.BookDetail", new { BookKey = bookKey })
                 .ToObject<BookDetailWithSections>()
-                .NeverNull()
                 .ExecuteAsync());
 
             result.Parts.AddRange(await GetBookPartDetailAsync(result.BookKey, currentUser));
@@ -66,7 +65,7 @@ namespace HemaDrillBook.Services.Api
         public async Task<BookSummary> GetBookSummaryAsync(int bookKey, IUser currentUser)
         {
             var filter = new { bookKey };
-            return await DataSource(currentUser).From("Sources.Book", filter).ToObject<BookSummary>().NeverNull().ExecuteAsync();
+            return await DataSource(currentUser).From("Sources.Book", filter).ToObject<BookSummary>().ExecuteAsync();
         }
 
         //public async Task<BookDetail> GetBookDetailAsync(string bookSlug, IUser? currentUser)
@@ -219,7 +218,7 @@ namespace HemaDrillBook.Services.Api
         public async Task<SectionDetail> GetSectionDetailAsync(int sectionKey, IUser? currentUser)
         {
             var ds = DataSource(currentUser);
-            var section = (await ds.From("Sources.SectionDetail", new { sectionKey }).ToObject<SectionDetail>().NeverNull().ExecuteAsync());
+            var section = (await ds.From("Sources.SectionDetail", new { sectionKey }).ToObject<SectionDetail>().ExecuteAsync());
 
             await GetSectionDetailCore(section, currentUser);
 

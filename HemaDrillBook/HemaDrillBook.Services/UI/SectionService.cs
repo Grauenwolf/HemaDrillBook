@@ -110,7 +110,6 @@ namespace HemaDrillBook.Services.UI
             //Cannot cache this one because it has user commentary
             var section = (await ds.From("Sources.SectionDetail", new { bookSlug, partSlug, sectionSlug })
                 .ToObject<SectionDetail>()
-                .NeverNull()
                 .ExecuteAsync());
 
             var (subsections, previousPage, nextPage, up, previousSection, nextSection, breadCrumb) = await GetSubsectionsAsync(section.PartKey, section.SectionKey, currentUser);
@@ -144,7 +143,7 @@ namespace HemaDrillBook.Services.UI
         {
             var ds = DataSource(currentUser);
 
-            var section = (await ds.From("Sources.SectionDetail", new { bookSlug, partSlug, sectionSlug }).ToObject<SectionEdit>().NeverNull().ExecuteAsync());
+            var section = (await ds.From("Sources.SectionDetail", new { bookSlug, partSlug, sectionSlug }).ToObject<SectionEdit>().ExecuteAsync());
 
             if (section.SectionKey.HasValue)
                 await CheckPermissionSectionAsync(section.SectionKey.Value, currentUser);
@@ -204,7 +203,7 @@ namespace HemaDrillBook.Services.UI
         {
             var ds = DataSource(currentUser);
 
-            var oldValues = (await ds.From("Sources.Section", new { newValues.SectionKey }).ToObject<SectionEdit>().NeverNull().ExecuteAsync());
+            var oldValues = (await ds.From("Sources.Section", new { newValues.SectionKey }).ToObject<SectionEdit>().ExecuteAsync());
 
             await CheckPermissionSectionAsync(oldValues.SectionKey!.Value, currentUser);
             if (oldValues.PartKey != newValues.PartKey)

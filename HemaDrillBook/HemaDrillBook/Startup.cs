@@ -34,6 +34,7 @@ namespace HemaDrillBook
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            services.AddDatabaseDeveloperPageExceptionFilter();
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
@@ -103,7 +104,7 @@ namespace HemaDrillBook
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
+                app.UseDeveloperExceptionPage();
             }
             else
             {

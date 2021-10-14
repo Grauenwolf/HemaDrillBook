@@ -23,7 +23,6 @@ namespace HemaDrillBook.Services.UI
 
             var part = (await ds.From("Sources.PartDetail", new { bookSlug, partSlug })
                 .ToObject<PartDetail>()
-                .NeverNull()
                 .ExecuteAsync());
 
             var flatList = await GetBookPartsAsync(part.BookKey, currentUser);

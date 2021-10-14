@@ -24,7 +24,7 @@ namespace HemaDrillBook
         public async Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
             var message = new MimeMessage();
-            message.To.Add(new MailboxAddress(email));
+            message.To.Add(MailboxAddress.Parse(email));
             message.From.Add(new MailboxAddress(Options.FromName, Options.FromEmailAddress));
 
             message.Subject = subject;

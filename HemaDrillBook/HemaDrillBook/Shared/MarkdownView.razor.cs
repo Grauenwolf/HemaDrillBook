@@ -25,7 +25,7 @@ namespace HemaDrillBook.Shared
 
         private MarkupString ConvertStringToMarkupString(string? value)
         {
-            if (!string.IsNullOrWhiteSpace(_content))
+            if (!string.IsNullOrWhiteSpace(value))
             {
                 // Convert markdown string to HTML
                 var html = Markdig.Markdown.ToHtml(value, new MarkdownPipelineBuilder().UseAdvancedExtensions().Build());

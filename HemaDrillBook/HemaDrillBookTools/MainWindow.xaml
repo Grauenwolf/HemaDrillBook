@@ -86,6 +86,7 @@
                 </GroupBox>
 
                 <GroupBox Header="Videos" Visibility="{Binding SectionDetail, Converter={StaticResource NotNullToVisibleConverter}}">
+                    <!-- TODO: Implment this! -->
                     <!-- TODO: Make the StartTime column editable and add a Save button. -->
                     <DataGrid ItemsSource="{Binding SectionDetail.Videos}" AutoGenerateColumns="True" IsReadOnly="True">
                         <DataGrid.Columns>
