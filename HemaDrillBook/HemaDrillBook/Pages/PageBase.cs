@@ -9,190 +9,190 @@ using System.Threading.Tasks;
 
 namespace HemaDrillBook.Pages
 {
-    public class PageBase : ComponentBase
-    {
-        [Inject] protected IJSRuntime JSRuntime { get; set; } = null!;
-        [Inject] protected ILogger<PageBase> Logger { get; set; } = null!;
-        [CascadingParameter] Task<AuthenticationState> AuthenticationState { get; set; } = null!;
+	public class PageBase : ComponentBase
+	{
+		[Inject] protected IJSRuntime JSRuntime { get; set; } = null!;
+		[Inject] protected ILogger<PageBase> Logger { get; set; } = null!;
+		[CascadingParameter] Task<AuthenticationState> AuthenticationState { get; set; } = null!;
 
-        //[Inject] SqlServerDataSource RawDataSource { get; set; } = null!;
-        [Inject] UserManager<ApplicationUser> UserManager { get; set; } = null!;
+		//[Inject] SqlServerDataSource RawDataSource { get; set; } = null!;
+		[Inject] UserManager<ApplicationUser> UserManager { get; set; } = null!;
 
-        //protected SqlServerDataSource DataSource { get; set; } = null!;
-        [Inject] protected NavigationManager Navigation { get; set; } = null!;
+		//protected SqlServerDataSource DataSource { get; set; } = null!;
+		[Inject] protected NavigationManager Navigation { get; set; } = null!;
 
-        /// <summary>
-        /// Gets or sets a value indicating whether this instance is connected.
-        /// </summary>
-        /// <value><c>true</c> if this instance is connected; <c>false</c> if it is pre-rendering.</value>
-        protected bool IsConnected { get; set; }
+		/// <summary>
+		/// Gets or sets a value indicating whether this instance is connected.
+		/// </summary>
+		/// <value><c>true</c> if this instance is connected; <c>false</c> if it is pre-rendering.</value>
+		protected bool IsConnected { get; set; }
 
-        protected bool LoadFailed { get; private set; }
-        protected string? PageTitle { get; set; }
+		protected bool LoadFailed { get; private set; }
+		protected string? PageTitle { get; set; }
 
-        protected ApplicationUser? User { get; private set; }
-        protected bool IsAuthenticated => User != null;
+		protected ApplicationUser? User { get; private set; }
+		protected bool IsAuthenticated => User != null;
 
-        protected virtual void AfterRender(bool firstRender)
-        {
-        }
+		protected virtual void AfterRender(bool firstRender)
+		{
+		}
 
-        protected virtual Task AfterRenderAsync(bool firstRender) => Task.CompletedTask;
+		protected virtual Task AfterRenderAsync(bool firstRender) => Task.CompletedTask;
 
-        protected sealed override void OnAfterRender(bool firstRender)
-        {
-            base.OnAfterRender(firstRender);
-            try
-            {
-                AfterRender(firstRender);
-            }
-            catch (Exception ex)
-            {
-                LoadFailed = true;
-                Logger.LogError(ex, $"Internal error, loading failed during {nameof(AfterRender)}");
-            }
-        }
+		protected sealed override void OnAfterRender(bool firstRender)
+		{
+			base.OnAfterRender(firstRender);
+			try
+			{
+				AfterRender(firstRender);
+			}
+			catch (Exception ex)
+			{
+				LoadFailed = true;
+				Logger.LogError(ex, $"Internal error, loading failed during {nameof(AfterRender)}");
+			}
+		}
 
-        async protected sealed override Task OnAfterRenderAsync(bool firstRender)
-        {
-            await JSRuntime.InvokeVoidAsync("setTitle", PageTitle);
+		async protected sealed override Task OnAfterRenderAsync(bool firstRender)
+		{
+			await JSRuntime.InvokeVoidAsync("setTitle", PageTitle!);
 
-            await NavigateToElementAsync();
+			await NavigateToElementAsync();
 
-            await base.OnAfterRenderAsync(firstRender);
-            try
-            {
-                await AfterRenderAsync(firstRender);
-            }
-            catch (Exception ex)
-            {
-                LoadFailed = true;
-                Logger.LogError(ex, $"Internal error, loading failed during {nameof(AfterRenderAsync)}");
-            }
-        }
+			await base.OnAfterRenderAsync(firstRender);
+			try
+			{
+				await AfterRenderAsync(firstRender);
+			}
+			catch (Exception ex)
+			{
+				LoadFailed = true;
+				Logger.LogError(ex, $"Internal error, loading failed during {nameof(AfterRenderAsync)}");
+			}
+		}
 
-        protected virtual Task InitializedAsync() => Task.CompletedTask;
+		protected virtual Task InitializedAsync() => Task.CompletedTask;
 
-        protected async override sealed Task OnInitializedAsync()
-        {
-            await base.OnInitializedAsync();
-            try
-            {
-                await JSRuntime.InvokeVoidAsync("isPreRendering");
-                IsConnected = true;
-            }
-            catch (InvalidOperationException ex) when (ex.Message.Contains("JavaScript interop calls cannot be issued at this time."))
-            {
-            }
+		protected async override sealed Task OnInitializedAsync()
+		{
+			await base.OnInitializedAsync();
+			try
+			{
+				await JSRuntime.InvokeVoidAsync("isPreRendering");
+				IsConnected = true;
+			}
+			catch (InvalidOperationException ex) when (ex.Message.Contains("JavaScript interop calls cannot be issued at this time."))
+			{
+			}
 
-            //Update authentication state
-            try
-            {
-                var authState = await AuthenticationState;
-                if (authState.User.Identity.IsAuthenticated)
-                {
-                    if (User == null)
-                    {
-                        User = await UserManager.GetUserAsync(authState.User);
-                        //DataSource = RawDataSource.WithUser(User);
-                    }
-                }
-                else
-                {
-                    User = null;
-                    //DataSource = RawDataSource;
-                }
-            }
-            catch (Exception ex)
-            {
-                LoadFailed = true;
-                Logger.LogError(ex, $"Internal error, cannot load user information during {nameof(InitializedAsync)}");
-            }
+			//Update authentication state
+			try
+			{
+				var authState = await AuthenticationState;
+				if (authState.User.Identity?.IsAuthenticated == true)
+				{
+					if (User == null)
+					{
+						User = await UserManager.GetUserAsync(authState.User);
+						//DataSource = RawDataSource.WithUser(User);
+					}
+				}
+				else
+				{
+					User = null;
+					//DataSource = RawDataSource;
+				}
+			}
+			catch (Exception ex)
+			{
+				LoadFailed = true;
+				Logger.LogError(ex, $"Internal error, cannot load user information during {nameof(InitializedAsync)}");
+			}
 
-            try
-            {
-                await InitializedAsync();
-            }
-            catch (Exception ex)
-            {
-                LoadFailed = true;
-                Logger.LogError(ex, $"Internal error, loading failed during {nameof(InitializedAsync)}");
-            }
-        }
+			try
+			{
+				await InitializedAsync();
+			}
+			catch (Exception ex)
+			{
+				LoadFailed = true;
+				Logger.LogError(ex, $"Internal error, loading failed during {nameof(InitializedAsync)}");
+			}
+		}
 
-        protected virtual void Initialized()
-        {
-        }
+		protected virtual void Initialized()
+		{
+		}
 
-        protected override sealed void OnInitialized()
-        {
-            base.OnInitialized();
+		protected override sealed void OnInitialized()
+		{
+			base.OnInitialized();
 
-            try
-            {
-                Initialized();
-            }
-            catch (Exception ex)
-            {
-                LoadFailed = true;
-                Logger.LogError(ex, $"Internal error, loading failed during {nameof(Initialized)}");
-            }
-        }
+			try
+			{
+				Initialized();
+			}
+			catch (Exception ex)
+			{
+				LoadFailed = true;
+				Logger.LogError(ex, $"Internal error, loading failed during {nameof(Initialized)}");
+			}
+		}
 
-        protected virtual void ParametersSet()
-        {
-        }
+		protected virtual void ParametersSet()
+		{
+		}
 
-        protected override sealed void OnParametersSet()
-        {
-            base.OnParametersSet();
+		protected override sealed void OnParametersSet()
+		{
+			base.OnParametersSet();
 
-            try
-            {
-                ParametersSet();
-            }
-            catch (Exception ex)
-            {
-                LoadFailed = true;
-                Logger.LogError(ex, $"Internal error, loading failed during {nameof(ParametersSet)}");
-            }
-            base.OnParametersSet();
-        }
+			try
+			{
+				ParametersSet();
+			}
+			catch (Exception ex)
+			{
+				LoadFailed = true;
+				Logger.LogError(ex, $"Internal error, loading failed during {nameof(ParametersSet)}");
+			}
+			base.OnParametersSet();
+		}
 
-        protected virtual Task ParametersSetAsync() => Task.CompletedTask;
+		protected virtual Task ParametersSetAsync() => Task.CompletedTask;
 
-        protected async sealed override Task OnParametersSetAsync()
-        {
-            await base.OnParametersSetAsync();
-            try
-            {
-                await ParametersSetAsync();
-            }
-            catch (Exception ex)
-            {
-                LoadFailed = true;
-                Logger.LogError(ex, $"Internal error, loading failed during {nameof(ParametersSetAsync)}");
-            }
-        }
+		protected async sealed override Task OnParametersSetAsync()
+		{
+			await base.OnParametersSetAsync();
+			try
+			{
+				await ParametersSetAsync();
+			}
+			catch (Exception ex)
+			{
+				LoadFailed = true;
+				Logger.LogError(ex, $"Internal error, loading failed during {nameof(ParametersSetAsync)}");
+			}
+		}
 
-        async Task NavigateToElementAsync()
-        {
-            if (!IsConnected)
-                return;
+		async Task NavigateToElementAsync()
+		{
+			if (!IsConnected)
+				return;
 
-            //ref: https://github.com/aspnet/AspNetCore/issues/8393
+			//ref: https://github.com/aspnet/AspNetCore/issues/8393
 
-            var fragment = new Uri(Navigation.Uri).Fragment;
+			var fragment = new Uri(Navigation.Uri).Fragment;
 
-            if (string.IsNullOrEmpty(fragment))
-                return;
+			if (string.IsNullOrEmpty(fragment))
+				return;
 
-            var elementId = fragment.StartsWith("#") ? fragment.Substring(1) : fragment;
+			var elementId = fragment.StartsWith("#") ? fragment.Substring(1) : fragment;
 
-            if (string.IsNullOrEmpty(elementId))
-                return;
+			if (string.IsNullOrEmpty(elementId))
+				return;
 
-            await JSRuntime.InvokeAsync<bool>("scrollToElementId", elementId);
-        }
-    }
+			await JSRuntime.InvokeAsync<bool>("scrollToElementId", elementId);
+		}
+	}
 }
