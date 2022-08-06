@@ -19,10 +19,10 @@ namespace HemaDrillBook.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class RegisterModel : PageModel
     {
+        private readonly IEmailSender _emailSender;
+        private readonly ILogger<RegisterModel> _logger;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly ILogger<RegisterModel> _logger;
-        private readonly IEmailSender _emailSender;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
@@ -36,41 +36,12 @@ namespace HemaDrillBook.Areas.Identity.Pages.Account
             _emailSender = emailSender;
         }
 
+        public IList<AuthenticationScheme>? ExternalLogins { get; set; }
+
         [BindProperty]
         public InputModel Input { get; set; } = new InputModel();
 
         public string? ReturnUrl { get; set; }
-
-        public IList<AuthenticationScheme>? ExternalLogins { get; set; }
-
-        public class InputModel
-        {
-            [Required]
-            [StringLength(256, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 1)]
-            [Display(Name = "User Name")]
-            public string? UserName { get; set; }
-
-            [Required]
-            [StringLength(50, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 1)]
-            [Display(Name = "Display Name (people will see this).")]
-            public string? DisplayName { get; set; }
-
-            [Required]
-            [EmailAddress]
-            [Display(Name = "Email")]
-            public string? Email { get; set; }
-
-            [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
-            [DataType(DataType.Password)]
-            [Display(Name = "Password")]
-            public string? Password { get; set; }
-
-            [DataType(DataType.Password)]
-            [Display(Name = "Confirm password")]
-            [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
-            public string? ConfirmPassword { get; set; }
-        }
 
         public async Task OnGetAsync(string? returnUrl = null)
         {
@@ -99,7 +70,7 @@ namespace HemaDrillBook.Areas.Identity.Pages.Account
                         protocol: Request.Scheme);
 
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl!)}'>clicking here</a>.");
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
@@ -119,6 +90,35 @@ namespace HemaDrillBook.Areas.Identity.Pages.Account
 
             // If we got this far, something failed, redisplay form
             return Page();
+        }
+
+        public class InputModel
+        {
+            [DataType(DataType.Password)]
+            [Display(Name = "Confirm password")]
+            [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+            public string? ConfirmPassword { get; set; }
+
+            [Required]
+            [StringLength(50, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 1)]
+            [Display(Name = "Display Name (people will see this).")]
+            public string? DisplayName { get; set; }
+
+            [Required]
+            [EmailAddress]
+            [Display(Name = "Email")]
+            public string? Email { get; set; }
+
+            [Required]
+            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [DataType(DataType.Password)]
+            [Display(Name = "Password")]
+            public string? Password { get; set; }
+
+            [Required]
+            [StringLength(256, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 1)]
+            [Display(Name = "User Name")]
+            public string? UserName { get; set; }
         }
     }
 }

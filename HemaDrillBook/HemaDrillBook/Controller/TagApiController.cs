@@ -1,5 +1,6 @@
 ﻿using HemaDrillBook.Data;
 using HemaDrillBook.Services.Api;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -10,6 +11,7 @@ namespace HemaDrillBook.Controllers
 {
     [Produces("application/json")]
     [Route("api/tag")]
+    [Authorize]
     public class TagApiController : SecureController
     {
         private readonly TagsApiService m_TagsService;

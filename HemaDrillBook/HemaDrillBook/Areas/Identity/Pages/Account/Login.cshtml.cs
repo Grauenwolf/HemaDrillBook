@@ -17,10 +17,10 @@ namespace HemaDrillBook.Areas.Identity.Pages.Account
     [AllowAnonymous]
     public class LoginModel : PageModel
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly ILogger<LoginModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly ILogger<LoginModel> _logger;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         public LoginModel(SignInManager<ApplicationUser> signInManager,
             ILogger<LoginModel> logger,
@@ -33,29 +33,15 @@ namespace HemaDrillBook.Areas.Identity.Pages.Account
             _logger = logger;
         }
 
-        [BindProperty]
-        public InputModel Input { get; set; } = new InputModel();
-
-        public IList<AuthenticationScheme>? ExternalLogins { get; set; }
-
-        public string? ReturnUrl { get; set; }
-
         [TempData]
         public string? ErrorMessage { get; set; }
 
-        public class InputModel
-        {
-            [Required]
-            [Display(Name = "User Name or Email Address")]
-            public string? UserNameOrEmail { get; set; }
+        public IList<AuthenticationScheme>? ExternalLogins { get; set; }
 
-            [Required]
-            [DataType(DataType.Password)]
-            public string? Password { get; set; }
+        [BindProperty]
+        public InputModel Input { get; set; } = new InputModel();
 
-            [Display(Name = "Remember me?")]
-            public bool RememberMe { get; set; }
-        }
+        public string? ReturnUrl { get; set; }
 
         public async Task OnGetAsync(string? returnUrl = null)
         {
@@ -161,10 +147,24 @@ namespace HemaDrillBook.Areas.Identity.Pages.Account
             await _emailSender.SendEmailAsync(
                 user.Email!,
                 "Confirm your email",
-                $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl!)}'>clicking here</a>.");
 
             ModelState.AddModelError(string.Empty, "Verification email sent. Please check your email.");
             return Page();
+        }
+
+        public class InputModel
+        {
+            [Required]
+            [DataType(DataType.Password)]
+            public string? Password { get; set; }
+
+            [Display(Name = "Remember me?")]
+            public bool RememberMe { get; set; }
+
+            [Required]
+            [Display(Name = "User Name or Email Address")]
+            public string? UserNameOrEmail { get; set; }
         }
     }
 }

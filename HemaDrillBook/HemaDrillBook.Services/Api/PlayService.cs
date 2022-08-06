@@ -26,7 +26,7 @@ namespace HemaDrillBook.Services.Api
                 {
                     await dataSource.Update("Interpretations.Play", play).ExecuteAsync();
                     //Replace all steps
-                    await dataSource.DeleteWithFilter("Interpretations.PlayStep", "PlayKey = @PlayKey", new { PlayKey = play.PlayKey.Value }).ExecuteAsync();
+                    await dataSource.DeleteSet("Interpretations.PlayStep", "PlayKey = @PlayKey", new { PlayKey = play.PlayKey.Value }).ExecuteAsync();
                 }
                 else
                 {

@@ -9,6 +9,7 @@ namespace HemaDrillBook.Controllers
 {
     [Produces("application/json")]
     [Route("api/account")]
+    [Authorize]
     public class AccountApiController : SecureController
     {
         private readonly UserManager<ApplicationUser> m_UserManager;
