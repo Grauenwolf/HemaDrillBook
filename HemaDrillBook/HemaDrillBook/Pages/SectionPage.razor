@@ -206,7 +206,7 @@
         {
             <h3>Plays in subsections</h3>
 
-            @foreach (var play in Model.Subsections.ChildPlays().OrderBy(p => p.PlayFullName))
+            @foreach (var play in Model.Subsections.ChildPlays().OrderBy(p => p.PlayFullName, new Tortuga.Anchor.NaturalSortComparer()))
             {
                 <div>
                     <a href="@(play.SectionUrlFragment)">@(play.PlayFullName)</a>
